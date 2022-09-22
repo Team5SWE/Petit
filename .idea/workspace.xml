@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="97f573a7-d941-4a73-a44f-a25ae78b3ebf" name="변경" comment="This is a test" />
+    <list default="true" id="97f573a7-d941-4a73-a44f-a25ae78b3ebf" name="변경" comment="This is not a test. This is django-admin generated files">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -43,7 +45,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663294835744</updated>
-      <workItem from="1663294837061" duration="1178000" />
+      <workItem from="1663294837061" duration="1829000" />
     </task>
     <task id="LOCAL-00001" summary="This is a test">
       <created>1663294922396</created>
@@ -59,7 +61,14 @@
       <option name="project" value="LOCAL" />
       <updated>1663295538751</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="This is not a test. This is django-admin generated files">
+      <created>1663296099807</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1663296099807</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -90,6 +99,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="This is a test" />
-    <option name="LAST_COMMIT_MESSAGE" value="This is a test" />
+    <MESSAGE value="This is not a test. This is django-admin generated files" />
+    <option name="LAST_COMMIT_MESSAGE" value="This is not a test. This is django-admin generated files" />
   </component>
 </project>
