@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'petit.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': BASE_DIR / 'db.mysql',
+        'NAME': 'db.mysql',
         'USER': 'petit',
         'PASSWORD': 'petit123',
         'HOST': '127.0.0.1',
