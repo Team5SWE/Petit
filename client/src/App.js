@@ -1,23 +1,22 @@
 import logo from './logo.svg';
 import './App.css';
+import Navbar from './components/navbar/navbar';
+import Searchbar from './components/search-bar/search-bar';
+import ListSalon from './components/list-salon/list-salon';
 
+const title = 'Start Your Business'
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar></Navbar>
+      <div>
+        <Searchbar></Searchbar>
+        <ListSalon></ListSalon>
+      </div>
+      <div>
+        {title}
+        <button type="button">Register your business now!</button>
+      </div>
     </div>
   );
 }
