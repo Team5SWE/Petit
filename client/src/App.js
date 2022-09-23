@@ -1,4 +1,5 @@
-import logo from './logo.svg';
+import React, {Component} from "react";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 import './App.css';
 import Navbar from './components/navbar/navbar';
 import Searchbar from './components/search-bar/search-bar';
