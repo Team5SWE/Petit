@@ -1,25 +1,32 @@
 import React, {Component} from "react";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import './App.css';
-import Navbar from './components/navbar/navbar';
-import Searchbar from './components/search-bar/search-bar';
-import ListSalon from './components/list-salon/list-salon';
+import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
 
-const title = 'Start Your Business'
-function App() {
-  return (
-    <div className="App">
-      <Navbar></Navbar>
-      <div>
-        <Searchbar></Searchbar>
-        <ListSalon></ListSalon>
-      </div>
-      <div>
-        {title}
-        <button type="button">Register your business now!</button>
-      </div>
-    </div>
-  );
+class App extends Component {
+
+  render(){
+    return(
+      <BrowserRouter>
+
+        <Routes>
+
+          <Route path="/">
+
+            <Route index element={<Home/>} />
+            <Route path="*" element={<NotFound/>} />
+
+          </Route>
+
+        </Routes>
+
+      </BrowserRouter>
+    )
+  }
+
+
+
 }
 
 export default App;
