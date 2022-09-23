@@ -4,8 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97f573a7-d941-4a73-a44f-a25ae78b3ebf" name="변경" comment="Deleted hello.py and added models.py which has general format for how to implement a model (table) to the db.">
+    <list default="true" id="97f573a7-d941-4a73-a44f-a25ae78b3ebf" name="변경" comment="Update pull">
+      <change afterPath="$PROJECT_DIR$/petit/api/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/petit/api/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/petit/api/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/petit/petit/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/petit/petit/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/petit/petit/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/petit/petit/urls.py" afterDir="false" />
     </list>
     <list id="0e570c63-53fb-406e-b15f-eef5ccc9a6f7" name="14707 님이 변경한 내용" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,7 +47,12 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
-  <component name="RunManager" selected="Django 서버.PetitDjango">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\박지수\PycharmProjects\Petit\petit\petit" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.models">
     <configuration name="models" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Petit" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -56,7 +66,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/petit/models.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\박지수\PycharmProjects\Petit\petit\petit\models.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -112,6 +122,7 @@
       <workItem from="1663294837061" duration="1178000" />
       <workItem from="1663898412645" duration="2508000" />
       <workItem from="1663953285322" duration="7000" />
+      <workItem from="1663953385620" duration="8096000" />
     </task>
     <task id="LOCAL-00001" summary="This is a test">
       <created>1663294922396</created>
@@ -141,7 +152,14 @@
       <option name="project" value="LOCAL" />
       <updated>1663900765882</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Update pull">
+      <created>1663953424101</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1663953424101</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -185,7 +203,8 @@
     <MESSAGE value="This is a test" />
     <MESSAGE value="Configured settings.py to be able to connect to mysql" />
     <MESSAGE value="Deleted hello.py and added models.py which has general format for how to implement a model (table) to the db." />
-    <option name="LAST_COMMIT_MESSAGE" value="Deleted hello.py and added models.py which has general format for how to implement a model (table) to the db." />
+    <MESSAGE value="Update pull" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update pull" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Petit$models.coverage" NAME="models 커버리지 결과" MODIFIED="1663899162563" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/petit" />
