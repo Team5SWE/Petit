@@ -3,9 +3,8 @@ import FormInput from "../components/form-input/form-input";
 import "../css/SignUp.css";
 import "../App.css";
 
-export default class SignUp extends Component {
+export default class Login extends Component {
   signInForm = [
-    { key: "fullName", label: "Full name" },
     { key: "email", label: "Email address" },
     { key: "password", label: "Password", isPassword: true },
   ];
@@ -15,7 +14,7 @@ export default class SignUp extends Component {
         <h1>Petit</h1>
         <div className="form-list">
           <div>
-            <h4>Create Your Account</h4>
+            <h4>Sign in</h4>
           </div>
           <div>
             {this.signInForm.map((form) => (
@@ -23,10 +22,10 @@ export default class SignUp extends Component {
             ))}
           </div>
           <div>
-            <button type="button" className="btn btn-primary">Sign Up</button>
+            <button type="button" className="btn btn-primary">Sign In</button>
           </div>
           <div>
-            <span>I'm already a member! <a href="/login">Sign In</a></span>
+            <span>Dont have an account? <a href="/sign-up">Sign Up</a></span>
           </div>
         </div>
       </div>
