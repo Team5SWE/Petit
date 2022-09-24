@@ -79,11 +79,11 @@ WSGI_APPLICATION = 'petit.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db.mysql',
-        'USER': 'petit',
-        'PASSWORD': 'petit123',
-        'HOST': '127.0.0.1',
-        'PORT': '8001',
+        'NAME': 'petitDB',
+        'USER': 'sql5521867',
+        'PASSWORD': 'zJAHuzPAJu',
+        'HOST': 'sql5.freemysqlhosting.net',
+        'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         }

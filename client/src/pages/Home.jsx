@@ -1,29 +1,138 @@
 import React, { Component } from "react";
-import ListSalon from "../components/list-salon/list-salon";
-import Navbar from "../components/navbar/navbar";
-import Searchbar from "../components/search-bar/search-bar";
-import { Link } from 'react-router-dom';
-
+import "../css/Contact.css";
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = { apiResponse: "" };
   }
-  
+
   render() {
-    const title = 'Start Your Business';
     return (
       <div>
-        <Navbar></Navbar>
-        <div>
-          <Searchbar></Searchbar>
-          <ListSalon></ListSalon>
+
+        <div class="header">
+          <h1>PETIT</h1>
+          <p>Online Booking Website For ATLANTA Salon</p>
         </div>
-        <div>
-          {title}
-          <Link to="/sign-up"><button type="button">Register your business now!</button></Link>
+
+
+        <div class="topnav">
+          <a class="active" href="homepage.html">Home</a>
+          <a href="signup.html">List Your Business</a>
+          <a href="ownerlogin.html">Owner Login</a>
+          <a href="contactus.html">Contact Us</a>
         </div>
+
+        <h2>LIST OF SALONS IN ATLANTA</h2>
+        <div id="myBtnContainer">
+          <button class="btn" onclick="filterSelection('all')"> Show all</button>
+          <button class="btn" onclick="filterSelection('hair')"> Hairs</button>
+          <button class="btn" onclick="filterSelection('nails')"> Nails</button>
+          <button class="btn" onclick="filterSelection('lash')"> Lashes</button>
+          <button class="btn" onclick="filterSelection('massage')"> Massage</button>
+        </div>
+
+        <div class="row">
+
+          <div class="column hair">
+
+            <div class="content">
+              <img class="col-img" src="../assets/belahair.jpg" alt="Belahair"/>
+              <h4>Bela Hair</h4>
+              <p class="rating">4 Stars </p>
+              <button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button>
+            </div>
+
+          </div>
+
+          <div class="column hair">
+            <div class="content">
+              <img class="col-img" src="../assets/ATLHair.jpg" alt="ATLHair"/>
+              <h4>ATL Hair</h4>
+              <p class="rating">5 Stars </p>
+              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+            </div>
+          </div>
+          <div class="column hair">
+            <div class="content">
+              <img class="col-img" src="../assets/JamesHair.jpg" alt="JamesHair"/>
+              <h4>James Hair</h4>
+              <p class="rating">5 Stars </p>
+              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+            </div>
+          </div>
+
+          <div class="column nails">
+            <div class="content">
+              <img class="col-img" src="../assets/LushNail.jpg" alt="LushNail"/>
+              <h4>Lush Nails</h4>
+              <p class="rating">5 Stars </p>
+              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+            </div>
+          </div>
+          <div class="column nails">
+            <div class="content">
+              <img src="../assets/Happynail.jpg" alt="Happynail" class="col-img"/>
+              <h4>Happy Nails</h4>
+              <p class="rating">5 Stars </p>
+              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+            </div>
+          </div>
+          <div class="column nails">
+            <div class="content">
+              <img src="../assets/LoveNail.jpg" alt="LoveNail" class="col-img"/>
+              <h4>Love Nail</h4>
+              <p class="rating">5 Stars </p>
+              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+            </div>
+          </div>
+
+          <div class="column lash">
+            <div class="content">
+              <img class="col-img" src="Lashbar.jpg" alt="Lashbar" />
+              <h4>Lash Bar</h4>
+              <p class="rating">5 Stars </p>
+              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+            </div>
+          </div>
+          <div class="column lash">
+            <div class="content">
+              <img src="../assets/Dekalash.jpg" alt="Dekalash" class="col-img"/>
+              <h4>Deka Lash</h4>
+              <p class="rating">5 Stars </p>
+              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+            </div>
+          </div>
+          <div class="column lash">
+            <div class="content">
+              <img src="../assets/thelashlounge.jpg" alt="thelashlounge" class="col-img"/>
+              <h4>The Lash Lounge</h4>
+              <p class="rating">5 Stars </p>
+              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+            </div>
+          </div>
+
+          <div class="column massage">
+            <div class="content">
+              <img src="../assets/envymasssage.jpg" alt="envymasssage" class="col-img"/>
+              <h4>Envy Massage</h4>
+              <p class="rating">5 Stars </p>
+              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+            </div>
+          </div>
+          <div class="column massage">
+            <div class="content">
+              <img src="../assets/Relaxtime.jpg" alt="Relaxtime" class="col-img"/>
+              <h4>Relax Time</h4>
+              <p class="rating">5 Stars </p>
+              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+            </div>
+          </div>
+
+        </div>
+
+
       </div>
     );
   }
