@@ -18,10 +18,10 @@ class Home extends Component {
 
 
         <div class="topnav">
-          <a class="active" href="homepage.html">Home</a>
-          <a href="signup.html">List Your Business</a>
-          <a href="ownerlogin.html">Owner Login</a>
-          <a href="contactus.html">Contact Us</a>
+          <a class="active" href="/">Home</a>
+          <a href="/sign-up">List Your Business</a>
+          <a href="/login">Owner Login</a>
+          <a href="/contact">Contact Us</a>
         </div>
 
         <h2>LIST OF SALONS IN ATLANTA</h2>
