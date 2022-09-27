@@ -8,7 +8,9 @@ import ContactUs from "./pages/ContactUs";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 
-import SalonSite from "./pages/SalonSite"
+import SalonSite from "./pages/SalonSite";
+
+import Appointment from "./pages/appointments/Appointment";
 
 class App extends Component {
 
@@ -23,6 +25,10 @@ class App extends Component {
             <Route path="login" element={<Login/>} />
 
             <Route path="salon" element={<SalonSite/>} />
+
+            <Route path="appointment">
+              <Route path=":appointmentId" element={<Appointment/>} />
+            </Route>
 
             <Route path="contact" element={<ContactUs/>} />
             <Route path="*" element={<NotFound/>} />
