@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+import json
 from .models import Business, Appointment, Employee
 # Create your views here.
 def index(response):
@@ -7,4 +8,5 @@ def index(response):
 
 def view1(response, id):
     ls = Business.objects.get(id=id)
-    return HttpResponse("This is a test for viewing data id number: %s" % ls.name)
+    response_data = {"name": ls.name, "email": ls.email, "description": ls.description}
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
