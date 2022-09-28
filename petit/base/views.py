@@ -20,16 +20,51 @@ def appointments(response, appointmentId):
     appointment = Appointment.objects.get(id=appointmentId)
 
     response_data = dict()
-    response_data["valid"] = False
+    response_data['valid'] = False
 
     # Check if this is a valid appointment
     if appointment is None:
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+    response_data['valid'] = True
+
     business = Business.objects.get(id=appointment.business_id)
 
     employee_name = "TBA"
 
+    address_name = "TBA"
+
     employee = Employee.objects.get(id=appointment.provider_id)
+
+    if employee is not None:
+        employee_name = employee.first+' '+employee.last
+
+    address = Address.objects.get(business_id= appointment.business_id)
+
+    if address is not None:
+        address_name = address.street + ', ' + address.city + ', '+ address.state + ',' + str(address.zip)
+
+    date = appointment.date
+    start = appointment.start
+    end = appointment.end
+    service = appointment.service
+
+    if date_manager.has_expired(date, end) :
+        response_data['finished'] = True
+    else:
+        response_data['finished'] = False
+
+    response_data['business'] = business.name
+    response_data['businessEmail'] = business.email
+    response_data['provider'] = employee_name
+    response_data['date'] = date
+    response_data['start'] = start
+    response_data['end'] = end
+    response_data['service'] = service
+    response_data['address'] = address_name
+
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
 
 
