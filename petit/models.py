@@ -18,6 +18,15 @@ class Employee(models.Model):
     works_at = models.ForeignKey(Business, on_delete=models.CASCADE)
 
 
+# Full Address:
+class Address(models.Model):
+    street = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    zip = models.IntegerField(max_length=5)
+    business_id = models.ForeignKey(Business, on_delete=models.CASCADE)
+
+
 class Appointment(models.Model):
     business_id = models.ForeignKey(Business, on_delete=models.CASCADE)
     client_email = models.CharField(max_length=50)
@@ -26,4 +35,4 @@ class Appointment(models.Model):
     date = models.CharField(max_length=15)
     start = models.CharField(max_length=5)
     end = models.CharField(max_length=5)
-
+    address_id = models.ForeignKey(Address, on_delete=models.CASCADE)
