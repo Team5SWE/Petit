@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import json
-from .models import Business, Appointment, Employee
+import sys
+from .models import Business, Appointment, Employee, Address
+from utility import date_manager
+
 # Create your views here.
 def index(response):
     return HttpResponse("This is a test of our first view")
@@ -12,7 +15,7 @@ def view1(response, id):
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
-def appointments(appointmentId):
+def appointments(response, appointmentId):
 
     appointment = Appointment.objects.get(id=appointmentId)
 
