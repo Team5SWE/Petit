@@ -1,0 +1,34 @@
+body {
+    background-image: url("../assets/appt4.png");
+    background-color: #ffeaeb;
+}
+.appointment-container
+{
+    background-color: hsla(0, 0%, 100%, 0.395);
+}
+.appointment-container .box
+{
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 10px;
+    text-align: center;
+    width: max-content;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+}
+.search-button {
+    margin: auto;
+}
+.search-button a
+{
+    background-color: #ffffff;
+    color: black; 
+    border: none;
+    padding: 5px 3px;
+    text-align: right;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 20px;
+    cursor: pointer;
+}

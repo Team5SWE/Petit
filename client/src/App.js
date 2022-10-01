@@ -26,8 +26,8 @@ class App extends Component {
 
             <Route path="salon" element={<SalonSite/>} />
 
-            <Route path="appointment">
-              <Route path=":appointmentId" element={<Appointment/>} />
+            <Route path="appointment" element={<Appointment/>}>
+              {/* <Route path=":appointmentId" element={<Appointment/>} /> */}
             </Route>
 
             <Route path="contact" element={<ContactUs/>} />
