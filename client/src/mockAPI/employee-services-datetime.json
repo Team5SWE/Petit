@@ -1,0 +1,37 @@
+{"dateTime":  [
+    {   "label": "Morning",
+        "avail": [
+        {"time": "10:00", "con": "AM"},
+        {"time": "11:00", "con": "AM"}
+    ]},
+    {   "label": "Afternoon",
+        "avail" : [
+        {"time": "12:00", "con": "PM"},
+        {"time": "1:00", "con": "PM"},
+        {"time": "2:00", "con": "PM"},
+        {"time": "3:00", "con": "PM"},
+        {"time": "4:00", "con": "PM"},
+        {"time": "5:00", "con": "PM"},
+        {"time": "6:00", "con": "PM"}
+    ]}
+],
+"servicesList": [
+    { "key": 1, "value": "Classic Full Set", "text": "Classic Full Set", "price": 130 },
+    { "key": 2, "value": "Hybrid Full Set", "text": "Hybrid Full Set", "price": 150 },
+    { "key": 3, "value": "Volume Full Set", "text": "Volume Full Set", "price": 180 },
+    { "key": 4, "value": "Mega Volume Full Set", "text": "Mega Volume Full Set", "price": 240 },
+    { "key": 5, "value": "Classic 2 Weeks Refill", "text": "Classic 2 Weeks Refill", "price": 65 },
+    { "key": 6, "value": "Classic 4 Weeks Refill", "text": "Classic 4 Weeks Refill", "price": 110 },
+    { "key": 7, "value": "Hybrid 2 Weeks Refill", "text": "Hybrid 2 Weeks Refill", "price": 75 },
+    { "key": 8, "value": "Hybrid 4 Weeks Refill", "text": "Hybrid 4 Weeks Refill", "price": 120 },
+    { "key": 9, "value": "Volume 2 Weeks Refill", "text": "Volume 2 Weeks Refill", "price": 80 },
+    { "key": 10, "value": "Volume 4 Weeks Refill", "text": "Volume 4 Weeks Refill", "price": 130 },
+    { "key": 11, "value": "Mega Volume 2 Weeks Refill", "text": "Mega Volume 2 Weeks Refill", "price": 100 },
+    { "key": 12, "value": "Mega Volume 4 Weeks Refill", "text": "Mega Volume 4 Weeks Refill", "price": 160 },
+    { "key": 13, "value": "Removal", "text": "Removal", "price": 40 }
+],
+"employeeList": [
+    { "value": "Jane", "text": "Jane" },
+    { "value": "John", "text": "John" }
+  ]
+}
