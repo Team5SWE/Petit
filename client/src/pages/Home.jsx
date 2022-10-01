@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "../css/Contact.css";
+import { Link } from 'react-router-dom'
 
 class Home extends Component {
   constructor(props) {
@@ -31,6 +32,7 @@ class Home extends Component {
           <button class="btn" onclick="filterSelection('nails')"> Nails</button>
           <button class="btn" onclick="filterSelection('lash')"> Lashes</button>
           <button class="btn" onclick="filterSelection('massage')"> Massage</button>
+          <Link to="/appointment"><button class="btn"> Appointment</button></Link>
         </div>
 
         <div class="row">
