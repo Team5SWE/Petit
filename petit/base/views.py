@@ -4,7 +4,7 @@ from django.http import HttpResponse
 import json
 import sys
 from .models import Business, Appointment, Employee, Address
-
+import datetime
 
 
 # Create your views here.
@@ -125,6 +125,38 @@ def get_business_appointments(request, business_id):
         business = None
 
 
+def get_employee_timeslots(request):
+
+    employee_id = request.GET.get('empId', None)
+
+    date = request.GET.get('date', None)
+
+    if date is None:
+        current_day = datetime.date.today()
+        date = datetime.date.strftime(current_day, "%m/%d/%Y")
+
+    response_data = dict()
+    response_data['valid'] = False
+
+    if employee_id is None:
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+    try:
+        employee = Employee.objects.get(id=employee_id)
+    except django.db.models.ObjectDoesNotExist:
+        employee = None
+
+    if employee is None:
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+    response_data['valid'] = True
+
+    response_data['employee'] = employee.first + ' ' + employee.last
+    response_data['date'] = date
+    response_data['slots'] = get_available_slots_per_employee(date, employee)
+
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
+
 ####################################################################
 #  _____  ____    _                _     _           _
 # |  __ \|  _ \  | |              | |   (_)         | |
@@ -220,3 +252,22 @@ def get_businesses_by_address(address_state=None, address_city=None, address_zip
         businesses.add(address.business_id)
 
     return list(businesses)
+
+
+def get_available_slots_per_employee(appointment_date, employee=None):
+
+    if employee is None:
+        return []
+
+    possible_times = {"08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+                      "16:00", "17:00"}
+
+    busy_times = set()
+    current_appointments = Appointment.objects.filter(provider_id=employee, date=appointment_date)
+    for appointment in current_appointments:
+        busy_times.add(appointment.start)
+
+    available_slots = list(possible_times.difference(current_appointments))
+    available_slots.sort()
+
+    return available_slots
