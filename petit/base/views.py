@@ -1,10 +1,11 @@
+import django.db.models
 from django.shortcuts import render
 from django.http import HttpResponse
 import json
 import sys
 from .models import Business, Appointment, Employee, Address
 
-from petit.utility import date_manager, csv
+
 
 # Create your views here.
 def index(response):
@@ -17,7 +18,7 @@ def view1(response, id):
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
-def get_appointment(appointment_id):
+def get_appointment(request, appointment_id):
     """
     View that handles API get request from an appointment
 
@@ -25,60 +26,35 @@ def get_appointment(appointment_id):
     from database related to the appointment
     """
 
-    appointment = Appointment.objects.get(id=appointment_id)
+    try:
+        appointment = Appointment.objects.get(id=appointment_id)
+    except django.db.models.ObjectDoesNotExist:
+        appointment = None
 
-    # Create dictionary to be sent as JSON
-    response_data = dict()
-    response_data['valid'] = False
-
-    # Check if this is a valid appointment
-    if appointment is None:
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-    response_data['valid'] = True
-
-    business = Business.objects.get(id=appointment.business_id)
-
-    # Placeholders in case data is missing
-    employee_name = "TBA"
-
-    address_name = "TBA"
-
-    employee = Employee.objects.get(id=appointment.provider_id)
-
-    if employee is not None:
-        employee_name = employee.first+' '+employee.last
-
-    address = Address.objects.get(business_id= appointment.business_id)
-
-    if address is not None:
-        address_name = address.street + ', ' + address.city + ', '+ address.state + ',' + str(address.zip)
-
-    date = appointment.date
-    start = appointment.start
-    end = appointment.end
-    service = appointment.service
-
-    if date_manager.has_expired(date, end):
-        response_data['finished'] = True
-    else:
-        response_data['finished'] = False
-
-    response_data['business'] = business.name
-    response_data['businessEmail'] = business.email
-    response_data['provider'] = employee_name
-    response_data['date'] = date
-    response_data['start'] = start
-    response_data['end'] = end
-    response_data['service'] = service
-    response_data['address'] = address_name
+    response_data = appointment_to_object(appointment)
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
-def get_business(business_id):
+def get_business(response, business_id):
 
-    business = Business.objects.get(id=business_id)
+    # Check if business with provided id exists
+    try:
+        business = Business.objects.get(id=business_id)
+    except django.db.models.ObjectDoesNotExist:
+        business = None
+
+    response_data = business_to_object(business)
+
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+def get_business_employees(request, business_id):
+
+    try:
+        business = Business.objects.get(id=business_id)
+    except django.db.models.ObjectDoesNotExist:
+        business = None
 
     response_data = dict()
     response_data['valid'] = False
@@ -86,13 +62,125 @@ def get_business(business_id):
     if business is None:
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-    response_data['name'] = business.name
-    response_data['email'] = business.email
-    response_data['description'] = business.description
-    response_data['services'] = csv.csv_to_list(business.services)
+    response_data['valid'] = True
 
-    
+    employee_objects = []
+
+    employees = Employee.objects.filter(works_at=business_id)
+    for employee in employees:
+        employee_obj = employee_to_object(employee)
+        employee_objects.append(employee_obj)
+
+    response_data['employees'] = employee_objects
+
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
+def get_business_appointments(request, business_id):
+
+    try:
+        business = Business.objects.get(id=business_id)
+    except django.db.models.ObjectDoesNotExist:
+        business = None
 
 
+def get_businesses(request):
+    """
+    Returns an object with the list business based on query parameters
+    ex: state, city, zip
+    If none provide, returns all businesses
+    """
+
+    state_name = request.GET.get('state', None)
+    city_name = request.GET.get('city', None)
+    zip_code = request.GET.get('zip', None)
+
+    business_list = get_businesses_by_address(state_name, city_name, zip_code)
+
+    response_data = dict()
+    businesses = []
+
+    for business in business_list:
+        businesses.append(business_to_object(business))
+
+    response_data['businesses'] = businesses
+
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+# Get Objects from database
+def business_to_object(business=None):
+
+    business_obj = dict()
+    business_obj['valid'] = False
+
+    if business is not None:
+        business_obj['valid'] = True
+    else:
+        return business_obj
+
+    business_obj['name'] = business.name
+    business_obj['email'] = business.email
+    business_obj['description'] = business.description
+    business_obj['services'] = business.services.split(',')
+
+    addresses = []
+    for address in Address.objects.filter(business_id=business):
+        address_string = address_to_string(address)
+        addresses.append(address_string)
+
+    business_obj['addresses'] = addresses
+
+    return business_obj
+
+
+def employee_to_object(employee=None):
+    employee_obj = dict()
+
+    employee_obj['name'] = employee.first + " " + employee.last
+    employee_obj['email'] = employee.email
+    employee_obj['phone'] = employee.phone
+
+    return employee_obj
+
+
+def appointment_to_object(appointment=None):
+
+    response_data = dict()
+    response_data['valid'] = False
+
+    if appointment is None:
+        return response_data
+
+    response_data['business'] = appointment.business_id.name
+    response_data['businessEmail'] = appointment.business_id.email
+    response_data['provider'] = appointment.provider_id.first + " " + appointment.provider_id.last
+    response_data['date'] = appointment.date
+    response_data['start'] = appointment.start
+    response_data['end'] = appointment.end
+    response_data['service'] = appointment.service
+    response_data['address'] = address_to_string(appointment.address_id)
+
+    return response_data
+
+
+def get_businesses_by_address(address_state=None, address_city=None, address_zip=None):
+
+    addresses = Address.objects.all()
+    if address_state is not None:
+        addresses = addresses.filter(state=address_state)
+    if address_city is not None:
+        addresses = addresses.filter(city=address_city)
+    if address_zip is not None:
+        addresses = addresses.filter(zip=address_zip)
+
+    businesses = set()
+    for address in addresses:
+        businesses.add(address.business_id)
+
+    return list(businesses)
+
+
+# UTILITY FUNCTIONS
+def address_to_string(address):
+    return address.street + ', ' + address.city + ', ' + address.state + ' ' + address.zip

@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 class Business(models.Model):
     name = models.CharField(max_length=100)
@@ -23,7 +24,7 @@ class Address(models.Model):
     street = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
-    zip = models.IntegerField
+    zip = models.CharField(max_length=5)
     business_id = models.ForeignKey(Business, on_delete=models.CASCADE)
 
 

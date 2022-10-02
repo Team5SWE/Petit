@@ -23,7 +23,7 @@ class Address(models.Model):
     street = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
-    zip = models.IntegerField(max_length=5)
+    zip = models.CharField(max_length=5)
     business_id = models.ForeignKey(Business, on_delete=models.CASCADE)
 
 
