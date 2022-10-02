@@ -17,6 +17,15 @@ def view1(response, id):
     response_data = {"name": ls.name, "email": ls.email, "description": ls.description}
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+######################################################################################
+#   _____ ______ _______   _    _          _   _ _____  _      ______ _____   _____
+#  / ____|  ____|__   __| | |  | |   /\   | \ | |  __ \| |    |  ____|  __ \ / ____|
+# | |  __| |__     | |    | |__| |  /  \  |  \| | |  | | |    | |__  | |__) | (___
+# | | |_ |  __|    | |    |  __  | / /\ \ | . ` | |  | | |    |  __| |  _  / \___ \
+# | |__| | |____   | |    | |  | |/ ____ \| |\  | |__| | |____| |____| | \ \ ____) |
+#  \_____|______|  |_|    |_|  |_/_/    \_\_| \_|_____/|______|______|_|  \_\_____/
+#####################################################################################
+
 
 def get_appointment(request, appointment_id):
     """
@@ -35,6 +44,10 @@ def get_appointment(request, appointment_id):
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+#################################
+# BUSINESS GET REQUESTS        #
+###############################
+
 
 def get_business(response, business_id):
 
@@ -47,6 +60,34 @@ def get_business(response, business_id):
     response_data = business_to_object(business)
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+def get_businesses(request):
+    """
+    Returns an object with the list business based on query parameters
+    ex: state, city, zip
+    If none provide, returns all businesses
+    """
+
+    state_name = request.GET.get('state', None)
+    city_name = request.GET.get('city', None)
+    zip_code = request.GET.get('zip', None)
+
+    business_list = get_businesses_by_address(state_name, city_name, zip_code)
+
+    response_data = dict()
+    businesses = []
+
+    for business in business_list:
+        businesses.append(business_to_object(business))
+
+    response_data['businesses'] = businesses
+
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+#################################
+# BUSINESS RELATED GET REQUESTS#
+###############################
 
 
 def get_business_employees(request, business_id):
@@ -84,31 +125,18 @@ def get_business_appointments(request, business_id):
         business = None
 
 
-def get_businesses(request):
-    """
-    Returns an object with the list business based on query parameters
-    ex: state, city, zip
-    If none provide, returns all businesses
-    """
-
-    state_name = request.GET.get('state', None)
-    city_name = request.GET.get('city', None)
-    zip_code = request.GET.get('zip', None)
-
-    business_list = get_businesses_by_address(state_name, city_name, zip_code)
-
-    response_data = dict()
-    businesses = []
-
-    for business in business_list:
-        businesses.append(business_to_object(business))
-
-    response_data['businesses'] = businesses
-
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
+####################################################################
+#  _____  ____    _                _     _           _
+# |  __ \|  _ \  | |              | |   (_)         | |
+# | |  | | |_) | | |_ ___     ___ | |__  _  ___  ___| |_ ___
+# | |  | |  _ <  | __/ _ \   / _ \| '_ \| |/ _ \/ __| __/ __|
+# | |__| | |_) | | || (_) | | (_) | |_) | |  __/ (__| |_\__ \
+# |_____/|____/   \__\___/   \___/|_.__/| |\___|\___|\__|___/
+#                                      _/ |
+#                                     |__/
+####################################################################
 
 
-# Get Objects from database
 def business_to_object(business=None):
 
     business_obj = dict()
@@ -134,16 +162,6 @@ def business_to_object(business=None):
     return business_obj
 
 
-def employee_to_object(employee=None):
-    employee_obj = dict()
-
-    employee_obj['name'] = employee.first + " " + employee.last
-    employee_obj['email'] = employee.email
-    employee_obj['phone'] = employee.phone
-
-    return employee_obj
-
-
 def appointment_to_object(appointment=None):
 
     response_data = dict()
@@ -164,6 +182,29 @@ def appointment_to_object(appointment=None):
     return response_data
 
 
+def employee_to_object(employee=None):
+    employee_obj = dict()
+
+    employee_obj['name'] = employee.first + " " + employee.last
+    employee_obj['email'] = employee.email
+    employee_obj['phone'] = employee.phone
+
+    return employee_obj
+
+###################################################################
+#  _    _ _   _ _ _ _   _
+# | |  | | | (_) (_) | (_)
+# | |  | | |_ _| |_| |_ _  ___  ___
+# | |  | | __| | | | __| |/ _ \/ __|
+# | |__| | |_| | | | |_| |  __/\__ \
+#  \____/ \__|_|_|_|\__|_|\___||___/
+###################################################################
+
+
+def address_to_string(address):
+    return address.street + ', ' + address.city + ', ' + address.state + ' ' + address.zip
+
+
 def get_businesses_by_address(address_state=None, address_city=None, address_zip=None):
 
     addresses = Address.objects.all()
@@ -179,8 +220,3 @@ def get_businesses_by_address(address_state=None, address_city=None, address_zip
         businesses.add(address.business_id)
 
     return list(businesses)
-
-
-# UTILITY FUNCTIONS
-def address_to_string(address):
-    return address.street + ', ' + address.city + ', ' + address.state + ' ' + address.zip
