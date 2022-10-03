@@ -4,17 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97f573a7-d941-4a73-a44f-a25ae78b3ebf" name="변경" comment="Configured settings to enable CORS please pip download the necessary files">
-      <change afterPath="$PROJECT_DIR$/petit/base/migrations/0002_address.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/petit/utility/date_manager.py" afterDir="false" />
+    <list default="true" id="97f573a7-d941-4a73-a44f-a25ae78b3ebf" name="변경" comment="Commiting files edited from 9/27/2022 meeting">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/petit/base/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/petit/base/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/petit/base/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/petit/base/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/petit/base/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/petit/base/views.py" afterDir="false" />
     </list>
-    <list id="0e570c63-53fb-406e-b15f-eef5ccc9a6f7" name="14707 님이 변경한 내용" comment="">
-      <change beforePath="$PROJECT_DIR$/petit/base/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/petit/base/views.py" afterDir="false" />
-    </list>
+    <list id="0e570c63-53fb-406e-b15f-eef5ccc9a6f7" name="14707 님이 변경한 내용" comment="Files G has altered" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -33,18 +27,6 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/petit/base/views.py">
-      <ranges>
-        <range start1="3" end1="4" start2="3" end2="7" changelist="97f573a7-d941-4a73-a44f-a25ae78b3ebf" />
-        <range start1="14" end1="15" start2="17" end2="18" changelist="97f573a7-d941-4a73-a44f-a25ae78b3ebf" />
-        <range start1="19" end1="20" start2="22" end2="23" changelist="0e570c63-53fb-406e-b15f-eef5ccc9a6f7" />
-        <range start1="25" end1="25" start2="28" end2="30" changelist="0e570c63-53fb-406e-b15f-eef5ccc9a6f7" />
-        <range start1="28" end1="28" start2="33" end2="35" changelist="0e570c63-53fb-406e-b15f-eef5ccc9a6f7" />
-        <range start1="31" end1="31" start2="38" end2="69" changelist="0e570c63-53fb-406e-b15f-eef5ccc9a6f7" />
-      </ranges>
-    </file>
-  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -54,14 +36,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "WebServerToolWindowFactoryState": "false",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "last_opened_file_path": "C:/Users/박지수/PycharmProjects/Petit/petit",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/박지수/PycharmProjects/Petit/petit&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\박지수\PycharmProjects\Petit\petit\petit" />
@@ -141,7 +123,10 @@
       <workItem from="1663985304649" duration="1115000" />
       <workItem from="1664242020999" duration="3487000" />
       <workItem from="1664253057519" duration="1464000" />
-      <workItem from="1664321999872" duration="7179000" />
+      <workItem from="1664321999872" duration="7240000" />
+      <workItem from="1664590003350" duration="1781000" />
+      <workItem from="1664684096270" duration="4611000" />
+      <workItem from="1664822903355" duration="3111000" />
     </task>
     <task id="LOCAL-00001" summary="This is a test">
       <created>1663294922396</created>
@@ -199,7 +184,21 @@
       <option name="project" value="LOCAL" />
       <updated>1664254149109</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Commiting files edited from 9/27/2022 meeting">
+      <created>1664330642432</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1664330642432</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Files G has altered">
+      <created>1664330667741</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1664330667741</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -247,7 +246,9 @@
     <MESSAGE value="Added base files and api file for testing" />
     <MESSAGE value="Tested some functionality of django and made some dummy data in db. Should have code that will display db contents when inputting 1/ behind the default page for the server" />
     <MESSAGE value="Configured settings to enable CORS please pip download the necessary files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Configured settings to enable CORS please pip download the necessary files" />
+    <MESSAGE value="Commiting files edited from 9/27/2022 meeting" />
+    <MESSAGE value="Files G has altered" />
+    <option name="LAST_COMMIT_MESSAGE" value="Files G has altered" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Petit$models.coverage" NAME="models 커버리지 결과" MODIFIED="1663899162563" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/petit" />
