@@ -22,7 +22,9 @@ export default class Login extends Component {
             ))}
           </div>
           <div>
+          <a href='/salon'>
             <button type="button" className="btn btn-primary">Sign In</button>
+            </a>
           </div>
           <div>
             <span>Dont have an account? <a href="/sign-up">Sign Up</a></span>
