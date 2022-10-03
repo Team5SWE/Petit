@@ -20,6 +20,7 @@ class Home extends Component {
 
         <div class="topnav">
           <a class="active" href="/">Home</a>
+          <a href="/about">About</a>
           <a href="/sign-up">List Your Business</a>
           <a href="/login">Owner Login</a>
           <a href="/contact">Contact Us</a>

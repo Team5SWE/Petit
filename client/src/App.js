@@ -6,6 +6,7 @@ import NotFound from "./pages/NotFound";
 import ContactUs from "./pages/ContactUs";
 
 import SignUp from "./pages/SignUp";
+import About from "./pages/About";
 import Login from "./pages/Login";
 
 import SalonSite from "./pages/SalonSite";
@@ -25,6 +26,7 @@ class App extends Component {
             <Route path="login" element={<Login/>} />
 
             <Route path="salon" element={<SalonSite/>} />
+            <Route path="about" element={<About/>} />
 
             <Route path="appointment" element={<Appointment/>}>
               {/* <Route path=":appointmentId" element={<Appointment/>} /> */}
