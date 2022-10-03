@@ -6,10 +6,13 @@ import NotFound from "./pages/NotFound";
 import ContactUs from "./pages/ContactUs";
 
 import SignUp from "./pages/SignUp";
-import About from "./pages/About";
 import Login from "./pages/Login";
 
-import SalonSite from "./pages/SalonSite";
+import About from "./pages/About";
+import SalonSite from "./pages/BusinessDashboard/SalonSite";
+import Employees from "./pages/BusinessDashboard/Employees";
+import Services from "./pages/BusinessDashboard/Services";
+import Schedule from "./pages/BusinessDashboard/Schedule";
 
 import Appointment from "./pages/appointments/Appointment";
 
@@ -25,7 +28,10 @@ class App extends Component {
             <Route path="sign-up" element={<SignUp/>} />
             <Route path="login" element={<Login/>} />
 
-            <Route path="salon" element={<SalonSite/>} />
+            <Route path="salon" element={<SalonSite/>}></Route>
+            <Route path="services" element={<Services/>}></Route>
+            <Route path="employees" element={<Employees/>}></Route>
+            <Route path="schedule" element={<Schedule/>}></Route>
             <Route path="about" element={<About/>} />
 
             <Route path="appointment" element={<Appointment/>}>
