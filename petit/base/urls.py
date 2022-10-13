@@ -11,5 +11,8 @@ urlpatterns = [
 
     path("slots/", views.get_employee_timeslots, name="Slots"),
 
-    path("appointment/<int:id>", views.get_appointment, name="Appointments")
+    path("appointment/<int:id>", views.get_appointment, name="Appointments"),
+
+    path("signup/", views.signup, name="Sign-Up"),
+    path("login/", views.login, name="Login")
 ]

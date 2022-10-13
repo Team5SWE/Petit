@@ -38,9 +38,8 @@ export default class SignUp extends Component {
       password: this.state.password
     }
 
-    fetch('http://127.0.0.1:8000/api/signup', {
+    fetch('http://127.0.0.1:8000/api/signup/', {
       method: 'POST',
-      mode: 'cors',
       credentials: 'include',
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(data)
@@ -92,7 +91,7 @@ export default class SignUp extends Component {
 
           </div>
           <div>
-            <button type="button" className="btn btn-primary">Sign Up</button>
+            <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Sign Up</button>
           </div>
           <div>
             <span>I'm already a member! <a href="/login">Sign In</a></span>

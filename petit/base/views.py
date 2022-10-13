@@ -35,7 +35,6 @@ def get_appointment(request, appointment_id):
     from database related to the appointment
     """
 
-
     try:
         appointment = Appointment.objects.get(id=appointment_id)
     except django.db.models.ObjectDoesNotExist:
@@ -229,9 +228,23 @@ def employee_to_object(employee=None):
 ###############################
 
 def login(request):
+    response_data = dict()
+    response_data['valid'] = False
 
+    if request.method == "GET":
+        email = request.GET.get('empId', None)
+        if not request.COOKIES.get('email'):
+            pass
+
+
+def signup(request):
+    print("Hello")
     if request.method == "POST":
-        pass
+        print("Hello")
+        print(request.POST)
+        #username = request.POST.get('email')
+        #password = request.POST.get('password')
+        #response.set_cookie('id', request.GET())
 
 
 
