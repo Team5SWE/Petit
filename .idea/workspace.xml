@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97f573a7-d941-4a73-a44f-a25ae78b3ebf" name="변경" comment="Changed config on Allowed Hosts to all">
+    <list default="true" id="97f573a7-d941-4a73-a44f-a25ae78b3ebf" name="변경" comment="Login and Signup">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/SignUp.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/SignUp.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/petit/base/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/petit/base/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/petit/base/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/petit/base/views.py" afterDir="false" />
     </list>
     <list id="0e570c63-53fb-406e-b15f-eef5ccc9a6f7" name="14707 님이 변경한 내용" comment="Files G has altered" />
     <option name="SHOW_DIALOG" value="false" />
@@ -132,7 +130,7 @@
       <workItem from="1664822903355" duration="3547000" />
       <workItem from="1665102766901" duration="5565000" />
       <workItem from="1665617391567" duration="96000" />
-      <workItem from="1665617775694" duration="8776000" />
+      <workItem from="1665617775694" duration="15166000" />
     </task>
     <task id="LOCAL-00001" summary="This is a test">
       <created>1663294922396</created>
@@ -218,7 +216,21 @@
       <option name="project" value="LOCAL" />
       <updated>1665103751465</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Login and Signup">
+      <created>1665626969019</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1665626969019</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Login and Signup">
+      <created>1665626983004</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1665626983004</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -270,7 +282,8 @@
     <MESSAGE value="Files G has altered" />
     <MESSAGE value="Before work commit" />
     <MESSAGE value="Changed config on Allowed Hosts to all" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed config on Allowed Hosts to all" />
+    <MESSAGE value="Login and Signup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Login and Signup" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Petit$models.coverage" NAME="models 커버리지 결과" MODIFIED="1663899162563" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/petit" />
