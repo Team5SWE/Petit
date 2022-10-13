@@ -24,10 +24,14 @@ export default class SignUp extends Component {
   handleChange(event){
 
     let field = event.target.name;
+    console.log(field)
     this.setState({
       ...this.state,
       [field]: event.target.value
     })
+
+
+    console.log(this.state)
 
   }
 
@@ -37,6 +41,9 @@ export default class SignUp extends Component {
       username: this.state.fullName,
       password: this.state.password
     }
+
+    console.log(data)
+
 
     fetch('http://127.0.0.1:8000/api/signup/', {
       method: 'POST',
@@ -61,32 +68,32 @@ export default class SignUp extends Component {
           <div>
 
             <div className="form-container">
-              <label className="form-label" htmlFor="fullName" name="bussName">Business Name</label>
-              <input id="bussName" className="form-input" type="text"
+              <label className="form-label" htmlFor="fullName">Business Name</label>
+              <input id="bussName" className="form-input" type="text" name="fullName"
               value={this.fullName} onChange={this.handleChange}/>
             </div>
 
             <div className="form-container">
-              <label className="form-label" htmlFor="email" name="email">Email Address</label>
-              <input id="email" className="form-input" type="text"
+              <label className="form-label" htmlFor="email" >Email Address</label>
+              <input id="email" className="form-input" type="text" name="email"
               value={this.email} onChange={this.handleChange}/>
             </div>
 
             <div className="form-container">
-              <label className="form-label" htmlFor="email" name="email">Phone</label>
-              <input id="email" className="form-input" type="password"
+              <label className="form-label" htmlFor="phone">Phone</label>
+              <input id="phone" className="form-input" type="text" name="phone"
               value={this.phone} onChange={this.handleChange}/>
             </div>
 
             <div className="form-container">
-              <label className="form-label" htmlFor="password" name="password">Password</label>
-              <input id="password" className="form-input" type="password"
+              <label className="form-label" htmlFor="password">Password</label>
+              <input id="password" className="form-input" type="password" name="password"
               value={this.password} onChange={this.handleChange}/>
             </div>
 
             <div className="form-container">
-              <label className="form-label" htmlFor="passwordTwo" name="password">Repeat password</label>
-              <input id="passwordTwo" className="form-input" type="text"
+              <label className="form-label" htmlFor="passwordTwo">Repeat password</label>
+              <input id="passwordTwo" className="form-input" type="password" name="passwordTwo"
               value={this.passwordTwo} onChange={this.handleChange}/>
             </div>
 

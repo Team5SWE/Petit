@@ -238,13 +238,14 @@ def login(request):
 
 
 def signup(request):
-    print("Hello")
+    print("Hello signup")
     if request.method == "POST":
         print("Hello")
-        print(request.POST)
+        print(request.POST.get('username'))
         #username = request.POST.get('email')
         #password = request.POST.get('password')
         #response.set_cookie('id', request.GET())
+    return HttpResponse("This is a test of our first view")
 
 
 

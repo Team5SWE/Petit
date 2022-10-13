@@ -13,6 +13,6 @@ urlpatterns = [
 
     path("appointment/<int:id>", views.get_appointment, name="Appointments"),
 
-    path("signup/", views.signup, name="Sign-Up"),
+    path("signup/", views.signup, name="SignUp"),
     path("login/", views.login, name="Login")
 ]
