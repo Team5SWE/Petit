@@ -40,6 +40,7 @@ export default class SignUp extends Component {
 
     fetch('http://127.0.0.1:8000/api/signup/', {
       method: 'POST',
+      mode: 'cors',
       credentials: 'include',
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(data)
