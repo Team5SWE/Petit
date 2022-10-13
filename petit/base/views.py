@@ -35,6 +35,7 @@ def get_appointment(request, appointment_id):
     from database related to the appointment
     """
 
+
     try:
         appointment = Appointment.objects.get(id=appointment_id)
     except django.db.models.ObjectDoesNotExist:
@@ -222,6 +223,17 @@ def employee_to_object(employee=None):
     employee_obj['phone'] = employee.phone
 
     return employee_obj
+
+#################################
+# BUSINESS RELATED GET REQUESTS#
+###############################
+
+def login(request):
+
+    if request.method == "POST":
+        pass
+
+
 
 ###################################################################
 #  _    _ _   _ _ _ _   _

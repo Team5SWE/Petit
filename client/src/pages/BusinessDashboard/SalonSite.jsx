@@ -21,7 +21,7 @@ class SalonSite extends Component {
   }
 
   callApi() {
-    fetch("http://127.0.0.1:8000/1")
+    fetch("http://127.0.0.1:8000/api/salon/2/")
       .then(res => res.json())
       .then(res => this.setState({ apiResponse: res }))
   }
@@ -36,15 +36,13 @@ class SalonSite extends Component {
     return (
       <div>
 
-        <h1> Welcome to our salon
-          {/* {this.state.apiResponse.name}!  */}
+        <h1> {this.state.apiResponse.name}
+
         </h1>
-        <h4> Email:
-          {/* {this.state.apiResponse.email}  */}
-          test@mysalon.com
+        <h4> {this.state.apiResponse.email}
         </h4>
         {/* <p> {this.state.apiResponse.description} </p> */}
-        <p>My salon do best hairs. In service for 50 years</p>
+        <p>{this.state.apiResponse.description}</p>
         <Grid container
           spacing={4} >
           <Grid item xs={3} >

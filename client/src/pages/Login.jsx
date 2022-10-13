@@ -8,6 +8,7 @@ export default class Login extends Component {
     { key: "email", label: "Email address" },
     { key: "password", label: "Password", isPassword: true },
   ];
+
   render() {
     return (
       <div className="signin-container">
