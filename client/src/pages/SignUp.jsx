@@ -1,5 +1,4 @@
 import { Component } from "react";
-import FormInput from "../components/form-input/form-input";
 import "../css/SignUp.css";
 import "../App.css";
 import "../components/form-input/form-input.css";
@@ -39,11 +38,11 @@ export default class SignUp extends Component {
 
     let data = {
       username: this.state.fullName,
-      password: this.state.password
+      password: this.state.password,
+      passwordTwo: this.state.passwordTwo,
+      email: this.state.email,
+      phone: this.state.phone
     }
-
-    console.log(data)
-
 
     fetch('http://127.0.0.1:8000/api/signup/', {
       method: 'POST',
