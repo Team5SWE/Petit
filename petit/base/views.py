@@ -5,12 +5,23 @@ import json
 import sys
 from .models import Business, Appointment, Employee, Address
 import datetime
+from .utility import date_manager
 
 
 # Create your views here.
+#####################################################################
+#            TEST CASE PLACED HERE FOR DATE_MANAGER
+#####################################################################
 def index(response):
+    date = "02/03/2022"
+    time = "10:30:00"
+    date_2 = "10/10/2023"
+    time_2 = "10:30:00"
+    is_expired = date_manager.has_expired(date, time)
+    is_expired_2 = date_manager.has_expired(date_2, time_2)
+    print(is_expired)
+    print(is_expired_2)
     return HttpResponse("This is a test of our first view")
-
 
 def view1(response, id):
     ls = Business.objects.get(id=id)
@@ -232,16 +243,22 @@ def login(request):
     response_data['valid'] = False
 
     if request.method == "GET":
-        email = request.GET.get('empId', None)
+        email = request.GET.get('email', None)
         if not request.COOKIES.get('email'):
             pass
 
 
 def signup(request):
-    print("Hello signup")
     if request.method == "POST":
-        print("Hello")
-        print(request.POST.get('username'))
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        email_exist = Business.objects.get(email=body['username'])
+
+        if email_exist:
+            email_exist = None
+            return HttpResponse(json.dumps("Email already exist. Please choose another."), content_type="application/json")
+
+        print(body['username'])
         #username = request.POST.get('email')
         #password = request.POST.get('password')
         #response.set_cookie('id', request.GET())

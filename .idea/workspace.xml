@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="97f573a7-d941-4a73-a44f-a25ae78b3ebf" name="변경" comment="Login and Signup">
+      <change afterPath="$PROJECT_DIR$/petit/base/utility/csv.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/petit/base/utility/date_manager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/SignUp.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/SignUp.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/petit/base/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/petit/base/views.py" afterDir="false" />
     </list>
     <list id="0e570c63-53fb-406e-b15f-eef5ccc9a6f7" name="14707 님이 변경한 내용" comment="Files G has altered" />
     <option name="SHOW_DIALOG" value="false" />
@@ -40,12 +42,15 @@
   &quot;keyToString&quot;: {
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/박지수/PycharmProjects/Petit/petit&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/박지수/PycharmProjects/Petit/petit/base&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;settings.nodejs&quot;
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\박지수\PycharmProjects\Petit\petit\base" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\박지수\PycharmProjects\Petit\petit\petit" />
     </key>
@@ -130,7 +135,8 @@
       <workItem from="1664822903355" duration="3547000" />
       <workItem from="1665102766901" duration="5565000" />
       <workItem from="1665617391567" duration="96000" />
-      <workItem from="1665617775694" duration="15166000" />
+      <workItem from="1665617775694" duration="15837000" />
+      <workItem from="1665702330596" duration="4652000" />
     </task>
     <task id="LOCAL-00001" summary="This is a test">
       <created>1663294922396</created>
@@ -230,7 +236,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665626983004</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Login and Signup">
+      <created>1665634329036</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1665634329036</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
