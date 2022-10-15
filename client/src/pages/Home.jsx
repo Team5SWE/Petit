@@ -1,6 +1,20 @@
 import React, { Component } from "react";
 import "../css/Contact.css";
 import { Link } from 'react-router-dom'
+import belahair from "../assets/belahair.jpg";
+import ATLHair from "../assets/ATLHair.jpg";
+import JamesHair from "../assets/JamesHair.jpg";
+import LushNail from "../assets/LushNail.jpg";
+import Happynail from "../assets/Happynail.jpg";
+import LoveNail from "../assets/LoveNail.jpg";
+import Lashbar from "../assets/Lashbar.jpg";
+import Dekalash from "../assets/Dekalash.jpg";
+import thelashlounge from "../assets/thelashlounge.jpg";
+import envymasssage from "../assets/envymasssage.jpg";
+import Relaxtime from "../assets/Relaxtime.jpg";
+import Pe from "../assets/Pe.png";
+
+
 
 class Home extends Component {
   constructor(props) {
@@ -13,7 +27,7 @@ class Home extends Component {
       <div>
 
         <div class="header">
-          <h1>PETIT</h1>
+        <img src={Pe} alt=""/>
           <p>Online Booking Website For ATLANTA Salon</p>
         </div>
 
@@ -24,6 +38,7 @@ class Home extends Component {
           <a href="/sign-up">List Your Business</a>
           <a href="/login">Owner Login</a>
           <a href="/contact">Contact Us</a>
+          <a href="/appointment">Appointment</a>
         </div>
 
         <h2>LIST OF SALONS IN ATLANTA</h2>
@@ -41,7 +56,8 @@ class Home extends Component {
           <div class="column hair">
 
             <div class="content">
-              <img class="col-img" src="../assets/belahair.jpg" alt="Belahair"/>
+              <img class="col-img" src={belahair} alt="Belahair"/>
+              
               <h4>Bela Hair</h4>
               <p class="rating">4 Stars </p>
               <button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button>
@@ -51,7 +67,7 @@ class Home extends Component {
 
           <div class="column hair">
             <div class="content">
-              <img class="col-img" src="../assets/ATLHair.jpg" alt="ATLHair"/>
+              <img class="col-img" src={ATLHair} alt="ATLHair"/>
               <h4>ATL Hair</h4>
               <p class="rating">5 Stars </p>
               <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
@@ -59,7 +75,7 @@ class Home extends Component {
           </div>
           <div class="column hair">
             <div class="content">
-              <img class="col-img" src="../assets/JamesHair.jpg" alt="JamesHair"/>
+              <img class="col-img" src={JamesHair} alt="JamesHair"/>
               <h4>James Hair</h4>
               <p class="rating">5 Stars </p>
               <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
@@ -68,7 +84,7 @@ class Home extends Component {
 
           <div class="column nails">
             <div class="content">
-              <img class="col-img" src="../assets/LushNail.jpg" alt="LushNail"/>
+              <img class="col-img" src={LushNail}alt="LushNail"/>
               <h4>Lush Nails</h4>
               <p class="rating">5 Stars </p>
               <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
@@ -76,7 +92,7 @@ class Home extends Component {
           </div>
           <div class="column nails">
             <div class="content">
-              <img src="../assets/Happynail.jpg" alt="Happynail" class="col-img"/>
+              <img src={Happynail} alt="Happynail" class="col-img"/>
               <h4>Happy Nails</h4>
               <p class="rating">5 Stars </p>
               <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
@@ -84,7 +100,7 @@ class Home extends Component {
           </div>
           <div class="column nails">
             <div class="content">
-              <img src="../assets/LoveNail.jpg" alt="LoveNail" class="col-img"/>
+              <img src={LoveNail} alt="LoveNail" class="col-img"/>
               <h4>Love Nail</h4>
               <p class="rating">5 Stars </p>
               <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
@@ -93,7 +109,7 @@ class Home extends Component {
 
           <div class="column lash">
             <div class="content">
-              <img class="col-img" src="Lashbar.jpg" alt="Lashbar" />
+              <img class="col-img" src={Lashbar} alt="Lashbar" />
               <h4>Lash Bar</h4>
               <p class="rating">5 Stars </p>
               <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
@@ -101,7 +117,7 @@ class Home extends Component {
           </div>
           <div class="column lash">
             <div class="content">
-              <img src="../assets/Dekalash.jpg" alt="Dekalash" class="col-img"/>
+              <img src={Dekalash} alt="Dekalash" class="col-img"/>
               <h4>Deka Lash</h4>
               <p class="rating">5 Stars </p>
               <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
@@ -109,7 +125,7 @@ class Home extends Component {
           </div>
           <div class="column lash">
             <div class="content">
-              <img src="../assets/thelashlounge.jpg" alt="thelashlounge" class="col-img"/>
+              <img src={thelashlounge} alt="thelashlounge" class="col-img"/>
               <h4>The Lash Lounge</h4>
               <p class="rating">5 Stars </p>
               <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
@@ -118,7 +134,7 @@ class Home extends Component {
 
           <div class="column massage">
             <div class="content">
-              <img src="../assets/envymasssage.jpg" alt="envymasssage" class="col-img"/>
+              <img src={envymasssage} alt="envymasssage" class="col-img"/>
               <h4>Envy Massage</h4>
               <p class="rating">5 Stars </p>
               <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
@@ -126,7 +142,7 @@ class Home extends Component {
           </div>
           <div class="column massage">
             <div class="content">
-              <img src="../assets/Relaxtime.jpg" alt="Relaxtime" class="col-img"/>
+              <img src={Relaxtime} alt="Relaxtime" class="col-img"/>
               <h4>Relax Time</h4>
               <p class="rating">5 Stars </p>
               <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
