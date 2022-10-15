@@ -13,7 +13,8 @@ import SalonSite from "./pages/BusinessDashboard/SalonSite";
 import Employees from "./pages/BusinessDashboard/Employees";
 import Services from "./pages/BusinessDashboard/Services";
 import Schedule from "./pages/BusinessDashboard/Schedule";
-
+import Cancel from "./pages/Cancel";
+import Confirm from "./pages/confirm";
 import Appointment from "./pages/appointments/Appointment";
 
 class App extends Component {
@@ -33,8 +34,10 @@ class App extends Component {
             <Route path="employees" element={<Employees/>}></Route>
             <Route path="schedule" element={<Schedule/>}></Route>
             <Route path="about" element={<About/>} />
-
+            <Route path="cancel" element={<Cancel/>} />
+            <Route path="confirm" element={<Confirm/>} />
             <Route path="appointment" element={<Appointment/>}>
+
               {/* <Route path=":appointmentId" element={<Appointment/>} /> */}
             </Route>
 

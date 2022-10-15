@@ -13,7 +13,7 @@ body {
  }
  img {
     width: 150px;
-    height: 130px;
+    height: 150px;
 
 }
 table{
@@ -22,4 +22,8 @@ table{
 }
 .space{
     width: 100px;
+}
+.h1{
+    font-family: 'Courier New', Courier, monospace;
+    font-style: italic;
 }
