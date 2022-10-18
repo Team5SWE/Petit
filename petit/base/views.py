@@ -14,9 +14,9 @@ from .utility import date_manager
 #####################################################################
 def index(response):
     date = "02/03/2022"
-    time = "10:30:00"
+    time = "10:30"
     date_2 = "10/10/2023"
-    time_2 = "10:30:00"
+    time_2 = "10:30"
     is_expired = date_manager.has_expired(date, time)
     is_expired_2 = date_manager.has_expired(date_2, time_2)
     print(is_expired)
