@@ -60,7 +60,7 @@ class Home extends Component {
               
               <h4>Bela Hair</h4>
               <p class="rating">4 Stars </p>
-              <button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button>
+              <Link to="/appointment"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
             </div>
 
           </div>
@@ -70,7 +70,7 @@ class Home extends Component {
               <img class="col-img" src={ATLHair} alt="ATLHair"/>
               <h4>ATL Hair</h4>
               <p class="rating">5 Stars </p>
-              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+              <Link to="/appointment"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
             </div>
           </div>
           <div class="column hair">
@@ -78,7 +78,7 @@ class Home extends Component {
               <img class="col-img" src={JamesHair} alt="JamesHair"/>
               <h4>James Hair</h4>
               <p class="rating">5 Stars </p>
-              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+              <Link to="/appointment"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
             </div>
           </div>
 
@@ -87,7 +87,7 @@ class Home extends Component {
               <img class="col-img" src={LushNail}alt="LushNail"/>
               <h4>Lush Nails</h4>
               <p class="rating">5 Stars </p>
-              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+              <Link to="/appointment"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
             </div>
           </div>
           <div class="column nails">
@@ -95,7 +95,7 @@ class Home extends Component {
               <img src={Happynail} alt="Happynail" class="col-img"/>
               <h4>Happy Nails</h4>
               <p class="rating">5 Stars </p>
-              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+              <Link to="/appointment"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
             </div>
           </div>
           <div class="column nails">
@@ -103,7 +103,7 @@ class Home extends Component {
               <img src={LoveNail} alt="LoveNail" class="col-img"/>
               <h4>Love Nail</h4>
               <p class="rating">5 Stars </p>
-              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+              <Link to="/appointment"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
             </div>
           </div>
 
@@ -112,7 +112,7 @@ class Home extends Component {
               <img class="col-img" src={Lashbar} alt="Lashbar" />
               <h4>Lash Bar</h4>
               <p class="rating">5 Stars </p>
-              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+              <Link to="/appointment"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
             </div>
           </div>
           <div class="column lash">
@@ -120,7 +120,7 @@ class Home extends Component {
               <img src={Dekalash} alt="Dekalash" class="col-img"/>
               <h4>Deka Lash</h4>
               <p class="rating">5 Stars </p>
-              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+              <Link to="/appointment"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
             </div>
           </div>
           <div class="column lash">
@@ -128,7 +128,7 @@ class Home extends Component {
               <img src={thelashlounge} alt="thelashlounge" class="col-img"/>
               <h4>The Lash Lounge</h4>
               <p class="rating">5 Stars </p>
-              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+              <Link to="/appointment"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
             </div>
           </div>
 
@@ -137,7 +137,7 @@ class Home extends Component {
               <img src={envymasssage} alt="envymasssage" class="col-img"/>
               <h4>Envy Massage</h4>
               <p class="rating">5 Stars </p>
-              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+              <Link to="/appointment"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
             </div>
           </div>
           <div class="column massage">
@@ -145,7 +145,7 @@ class Home extends Component {
               <img src={Relaxtime} alt="Relaxtime" class="col-img"/>
               <h4>Relax Time</h4>
               <p class="rating">5 Stars </p>
-              <button class="btn2" onclick="window.location.href= 'ATLHair.html';">Book Now</button>
+              <Link to="/appointment"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
             </div>
           </div>
 
