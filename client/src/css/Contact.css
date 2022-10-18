@@ -76,7 +76,7 @@ main {
     flex-basis: 33%;
     padding: 2em;
    margin-left: auto;
-   margin-righ: auto;
+   margin-right: auto;
    text-align: center;
 
 }
@@ -184,6 +184,7 @@ main {
     cursor: pointer;
 }
 
+
 .rating{
     text-align: right;
     margin-top: -40px;
@@ -220,3 +221,4 @@ input[type=submit]:hover {
   padding: 20px;
 
 }
+

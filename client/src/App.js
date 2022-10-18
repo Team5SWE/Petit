@@ -9,10 +9,10 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 
 import About from "./pages/About";
-import SalonSite from "./pages/BusinessDashboard/SalonSite";
-import Employees from "./pages/BusinessDashboard/Employees";
-import Services from "./pages/BusinessDashboard/Services";
-import Schedule from "./pages/BusinessDashboard/Schedule";
+import SalonSite from "./pages/SalonSite";
+import Employees from "./pages/Employees";
+import Services from "./pages/Services";
+import Schedule from "./pages/Schedule";
 import Cancel from "./pages/Cancel";
 import Confirm from "./pages/confirm";
 import Appointment from "./pages/appointments/Appointment";

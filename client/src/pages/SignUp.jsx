@@ -101,7 +101,8 @@ export default class SignUp extends Component {
             <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Sign Up</button>
           </div>
           <div>
-            <span>I'm already a member! <a href="/login">Sign In</a></span>
+            {/* <span>I'm already a member! <a href="/login">Sign In</a></span> */}
+            <span>I'm already a member! <a href="/salon">Sign In</a></span>
           </div>
         </div>
       </div>
