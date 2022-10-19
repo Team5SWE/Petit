@@ -236,16 +236,38 @@ def employee_to_object(employee=None):
 
 #################################
 # BUSINESS RELATED GET REQUESTS#
-###############################
+################################
 
 def login(request):
-    response_data = dict()
-    response_data['valid'] = False
-
     if request.method == "GET":
-        email = request.GET.get('email', None)
         if not request.COOKIES.get('email'):
             pass
+        # response_data.set_cookie(cookie_name, value, max_age=None, expires=None)
+    elif request.method == "POST":
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        email = body['email']
+        password = body['password']
+
+        try:
+            email_exist = Business.objects.get(email=email)
+        except django.db.models.ObjectDoesNotExist:
+            email_exist = None
+
+
+        if email_exist is None:
+            print('Authentication failed: email doesnt exist')
+            return HttpResponse(json.dumps("Email doesnt exist."), content_type="application/json")
+
+        encrypted_password = encryption.encrypt_password(password)
+
+        if encrypted_password != email_exist.password:
+            print('Incorrect password')
+            return HttpResponse(json.dumps("Incorrect password."), content_type="application/json")
+
+        print('User authenticated!')
+
+    return HttpResponse(json.dumps("Login."), content_type="application/json")
 
 
 def signup(request):
@@ -258,7 +280,12 @@ def signup(request):
             email_exist = None
             return HttpResponse(json.dumps("Email already exist. Please choose another."), content_type="application/json")
 
-        print(body['username'])
+        bs = Business(name=username, email=email, password=encrypted_password, phone=phone,description="",services="")
+        bs.save()
+
+        authentication.send_email(email)
+        print('New account was created with email: ' + email)
+
         #username = request.POST.get('email')
         #password = request.POST.get('password')
         #response.set_cookie('id', request.GET())
