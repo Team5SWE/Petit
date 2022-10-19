@@ -63,7 +63,7 @@ class SalonSite extends Component {
             <div class="content">
               <img class="col-img" src={settings} alt="edit information" />
               <div class="dropdown">
-            <button class="btn3">Edit Information</button>
+            <button class="btn2">Edit Profile</button>
             <div class="dropdown-content">
               <a href="/employees">Employees</a>
               <a href="/services">Services</a>

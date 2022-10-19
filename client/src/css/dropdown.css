@@ -68,25 +68,35 @@
   
   .dropdown:hover .dropbtn {background-color: black;}
 
-  .btn{
+  .rbtn{
+    
     background: pink;
-    margin: 20px;
+    width: min-content;
+    height: min-content;
+    cursor: pointer;
+    position: absolute;
+    right: 50%;
+    border-radius: 2rem;
+    
 }
 
 .add-btn{
-    background: lightblue;
-    width: 40px;
-    height: 40px;
+    background: #0e32e8;
+    color: azure;
+    font-weight: bold;
+    width: 100px;
+    height: 50px;
 }
 .app-title{
     text-align: center;
-    color: lightblue;
+    color: black;
     font-size: 70px;
 }
 .container{
     border: 5px solid pink;
-    border-radius: 25px;
+    border-radius: 100px;
 
 }
+
 
   

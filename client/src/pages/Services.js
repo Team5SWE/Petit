@@ -100,41 +100,50 @@ class Services extends React.Component {
     return (
       <div>
 
-      <h1 className="app-title">MY LIST</h1>
+      <h1 className="app-title">Manage Services</h1>
         
         <div className="container">
         <div
           style={{
-            padding: 30,
-            textAlign: "left",
-            maxWidth: 500,
-            margin: "auto"
+            padding: 50,
+            ///textAlign: "left",
+            maxWidth: 1000,
+            //alignItems: "Left"
+            margin: "left"
           }}
         >
-          Add an Item...
           <br />
           <input
+          style={{maxWidth: 500}}
             type="text"
-            placeholder="Type item here"
+            placeholder="Type a service name here..."
             value={this.state.newItem}
             onChange={e => this.updateInput("newItem", e.target.value)}
           />
+          ' '
           <button
             className="add-btn btn-floating"
             onClick={() => this.addItem()}
             disabled={!this.state.newItem.length}
           >
-            <i class="material-icons"> + </i>
+            Add 
           </button>
           <br /> <br />
+        
           <ul>
             {this.state.list.map(item => {
               return (
+                
                 <li key={item.id}>
-                  {item.value}
-                  <button className="btn btn-floating" onClick={() => this.deleteItem(item.id)}>
-                    <i class="material-icons">x</i>
+                  
+                    
+                  
+                  {item.value}   
+                  <button className="rbtn" onClick={() => this.deleteItem(item.id)}>
+                    Remove
                   </button>
+                  <br /><br />
+                  
                 </li>
               );
             })}
