@@ -5,7 +5,8 @@ import json
 import sys
 from .models import Business, Appointment, Employee, Address
 import datetime
-from .utility import date_manager
+from .utility import date_manager, encryption, authentication
+
 
 
 # Create your views here.
@@ -274,10 +275,27 @@ def signup(request):
     if request.method == "POST":
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
-        email_exist = Business.objects.get(email=body['username'])
 
-        if email_exist:
+        username = body['username']
+        email = body['email']
+        password = body['password']
+        password_two = body['passwordTwo']
+        phone = body['phone']
+
+        try:
+            email_exist = Business.objects.get(email=email)
+        except django.db.models.ObjectDoesNotExist:
             email_exist = None
+
+        if password != password_two:
+            print('Passwords do not match')
+            return HttpResponse(json.dumps("Passwords do not match. Please re-enter."), content_type="application/json")
+
+        encrypted_password = encryption.encrypt_password(password)
+        print(encrypted_password)
+
+        if email_exist is not None:
+            print('Email already exist')
             return HttpResponse(json.dumps("Email already exist. Please choose another."), content_type="application/json")
 
         bs = Business(name=username, email=email, password=encrypted_password, phone=phone,description="",services="")

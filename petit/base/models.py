@@ -4,7 +4,7 @@ from django.db import models
 class Business(models.Model):
     name = models.CharField(max_length=100)
     email = models.CharField(max_length=50)
-    password = models.CharField(max_length=50)
+    password = models.CharField(max_length=64)
     phone = models.CharField(max_length=16)
     description = models.TextField()
     services = models.TextField()
