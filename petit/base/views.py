@@ -5,7 +5,8 @@ import json
 import sys
 from .models import Business, Appointment, Employee, Address
 import datetime
-from .utility import date_manager
+from .utility import date_manager, encryption, authentication
+
 
 
 # Create your views here.
@@ -14,9 +15,9 @@ from .utility import date_manager
 #####################################################################
 def index(response):
     date = "02/03/2022"
-    time = "10:30:00"
+    time = "10:30"
     date_2 = "10/10/2023"
-    time_2 = "10:30:00"
+    time_2 = "10:30"
     is_expired = date_manager.has_expired(date, time)
     is_expired_2 = date_manager.has_expired(date_2, time_2)
     print(is_expired)
@@ -236,29 +237,73 @@ def employee_to_object(employee=None):
 
 #################################
 # BUSINESS RELATED GET REQUESTS#
-###############################
+################################
 
 def login(request):
-    response_data = dict()
-    response_data['valid'] = False
-
     if request.method == "GET":
-        email = request.GET.get('email', None)
         if not request.COOKIES.get('email'):
             pass
+        # response_data.set_cookie(cookie_name, value, max_age=None, expires=None)
+    elif request.method == "POST":
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        email = body['email']
+        password = body['password']
+
+        try:
+            email_exist = Business.objects.get(email=email)
+        except django.db.models.ObjectDoesNotExist:
+            email_exist = None
+
+
+        if email_exist is None:
+            print('Authentication failed: email doesnt exist')
+            return HttpResponse(json.dumps("Email doesnt exist."), content_type="application/json")
+
+        encrypted_password = encryption.encrypt_password(password)
+
+        if encrypted_password != email_exist.password:
+            print('Incorrect password')
+            return HttpResponse(json.dumps("Incorrect password."), content_type="application/json")
+
+        print('User authenticated!')
+
+    return HttpResponse(json.dumps("Login."), content_type="application/json")
 
 
 def signup(request):
     if request.method == "POST":
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
-        email_exist = Business.objects.get(email=body['username'])
 
-        if email_exist:
+        username = body['username']
+        email = body['email']
+        password = body['password']
+        password_two = body['passwordTwo']
+        phone = body['phone']
+
+        try:
+            email_exist = Business.objects.get(email=email)
+        except django.db.models.ObjectDoesNotExist:
             email_exist = None
+
+        if password != password_two:
+            print('Passwords do not match')
+            return HttpResponse(json.dumps("Passwords do not match. Please re-enter."), content_type="application/json")
+
+        encrypted_password = encryption.encrypt_password(password)
+        print(encrypted_password)
+
+        if email_exist is not None:
+            print('Email already exist')
             return HttpResponse(json.dumps("Email already exist. Please choose another."), content_type="application/json")
 
-        print(body['username'])
+        bs = Business(name=username, email=email, password=encrypted_password, phone=phone,description="",services="")
+        bs.save()
+
+        authentication.send_email(email)
+        print('New account was created with email: ' + email)
+
         #username = request.POST.get('email')
         #password = request.POST.get('password')
         #response.set_cookie('id', request.GET())
