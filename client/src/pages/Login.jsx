@@ -1,5 +1,5 @@
 import { Component } from "react";
-import FormInput from "../components/form-input/form-input";
+import "../components/form-input/form-input"; 
 import "../css/SignUp.css";
 import "../App.css";
 
@@ -78,8 +78,8 @@ export default class Login extends Component {
 
           </div>
           
-          <div>
-            <span>Dont have an account? <a href="/sign-up">Sign Up</a></span>
+          <div className="sign-up">
+           <p>Dont have an account? <a href="/sign-up">Sign Up</a></p>
           </div>
         </div>
       </div>
