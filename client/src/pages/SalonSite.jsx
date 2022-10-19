@@ -33,7 +33,7 @@ class SalonSite extends Component {
       <div>
         <h1>{this.state.apiResponse.name} Name</h1>
         <h4> {this.state.apiResponse.email} Email</h4>
-        <p>{this.state.apiResponse.description}</p>
+        <p>{this.state.apiResponse.description} Description</p>
 
 
         <div class="topnav">
@@ -49,13 +49,13 @@ class SalonSite extends Component {
           <div class="column cards">
             <div class="content">
               <img class="col-img" src={services} alt="services" />
-              <Link to="/services"><button class="btn3" >Manage Services</button></Link>
+              <Link to="/services"><button class="btn2" >Manage Services</button></Link>
             </div>
           </div>
           <div class="column cards">
             <div class="content">
               <img class="col-img" src={employee} alt="employees" />
-              <Link to="/employees"><button class="btn3" >Manage Employees</button></Link>
+              <Link to="/employees"><button class="btn2" >Manage Employees</button></Link>
             </div>
           </div>
           <div class="column cards">
@@ -77,7 +77,7 @@ class SalonSite extends Component {
 
             <div class="content">
               <img class="col-img" src={appt} alt="appt" />
-              <Link to="/appointment"><button class="btn3" >Make Appointments</button></Link>
+              <Link to="/appointment"><button class="btn2" >Make Appointments</button></Link>
             </div>
 
           </div>
@@ -85,7 +85,7 @@ class SalonSite extends Component {
 
             <div class="content">
               <img class="col-img" src={list} alt="view all appointments" />
-              <Link to="/schedule"><button class="btn3" >View Appointments</button></Link>
+              <Link to="/schedule"><button class="btn2" >View Appointments</button></Link>
             </div>
 
           </div>

@@ -1,5 +1,4 @@
-import React, {Component} from "react";
-
+import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
 class Services extends React.Component {
@@ -71,7 +70,7 @@ class Services extends React.Component {
     const newItem = {
       id: 1 + Math.random(),
       value: this.state.newItem.slice()
- 
+
     };
 
     // copy current list of items
@@ -95,61 +94,72 @@ class Services extends React.Component {
 
     this.setState({ list: updatedList });
   }
-  
+
   render() {
     return (
       <div>
-
-      <h1 className="app-title">Manage Services</h1>
-        
-        <div className="container">
-        <div
-          style={{
-            padding: 50,
-            ///textAlign: "left",
-            maxWidth: 1000,
-            //alignItems: "Left"
-            margin: "left"
-          }}
-        >
-          <br />
-          <input
-          style={{maxWidth: 500}}
-            type="text"
-            placeholder="Type a service name here..."
-            value={this.state.newItem}
-            onChange={e => this.updateInput("newItem", e.target.value)}
-          />
-          ' '
-          <button
-            className="add-btn btn-floating"
-            onClick={() => this.addItem()}
-            disabled={!this.state.newItem.length}
-          >
-            Add 
-          </button>
-          <br /> <br />
-        
-          <ul>
-            {this.state.list.map(item => {
-              return (
-                
-                <li key={item.id}>
-                  
-                    
-                  
-                  {item.value}   
-                  <button className="rbtn" onClick={() => this.deleteItem(item.id)}>
-                    Remove
-                  </button>
-                  <br /><br />
-                  
-                </li>
-              );
-            })}
-          </ul>
+        <h1 className="app-title">Manage Services</h1>
+        <div class="topnav">
+          <a href="./salon">Go Back</a>
+          <a href="./appointment">Appointment</a>
+          <a href="./contact">Contact Us</a>
+          <a href="/">Sign Out</a>
         </div>
-      </div>
+        <br />
+        <br />
+        <div className="container">
+          <div
+            style={{
+              padding: 50,
+              maxWidth: 900,
+              margin: "left"
+              
+            }}
+          >
+            <br />
+            <input
+              style={{ maxWidth: 500 }}
+              type="text"
+              placeholder="Type a service name here..."
+              value={this.state.newItem}
+              onChange={e => this.updateInput("newItem", e.target.value)}
+            />
+            ' '
+            <button
+              className="addbtn btn-floating"
+              onClick={() => this.addItem()}
+              disabled={!this.state.newItem.length}
+            >
+              ADD
+            </button>
+            <br /> <br />
+
+            <ul>
+              {this.state.list.map(item => {
+                return (
+                
+                  <li key={item.id}>
+                    <table><tr><td>
+                    {item.value}</td><td>
+                    <button className="removebtn" onClick={() => this.deleteItem(item.id)}>
+                      Remove
+                    </button>
+                    </td><br /></tr></table>
+
+                  </li>
+                );
+              })}
+            </ul>
+            
+          </div>
+        </div>
+        <button
+              className="subbtn btn-floating"
+              onClick={() => this.addItem()}
+              disabled={!this.state.newItem.length}
+            >
+              SUBMIT Changes
+            </button>
       </div>
     );
   }
