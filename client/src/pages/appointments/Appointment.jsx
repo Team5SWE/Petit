@@ -19,11 +19,12 @@ class Appointment extends Component {
     this.state = {
       servicesList: [],
       employeeList: [],
-      dateTimeArr: [],
+      timeSlots: [],
       showTime: false,
       service: '',
       employee: '',
-      date: new Date()
+      date: new Date(),
+      businessData: null
     }
     this.handleSearchClick = this.handleSearchClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -31,12 +32,30 @@ class Appointment extends Component {
   getData() {
     return dateTimeArr;
   }
+
   handleSearchClick(e) {
     e.preventDefault();
     this.setState({
       ...this.state,
       showTime: this.state.service && this.state.employee && this.state.date
     })
+
+    let dateParam = this.getFormattedDate(this.state.date)
+    let empParam = this.state.employee
+
+    let fetchUrl = "http://127.0.0.1:8000/api/slots/?empId="+empParam+'&date='+dateParam
+
+    fetch(fetchUrl)
+    .then(res => res.json())
+    .then(res => {
+      if(res.valid){
+        this.setState({...this.state, timeSlots: res.slots})
+        console.log(res.slots)
+        console.log('Time slots')
+        console.log(this.state.timeSlots)
+      }
+    })
+
   }
   handleChange(e) {
     if(e.$d) {
@@ -53,13 +72,54 @@ class Appointment extends Component {
       })
     }
   }
+
   componentDidMount() {
     this.setState({
-      servicesList: dateTimeArr.servicesList,
-      employeeList: dateTimeArr.employeeList,
-      dateTimeArr: dateTimeArr.dateTime
+      servicesList: [],
+      employeeList: [],
+      timeSlots: []
     });
+    this.callApi()
   }
+
+  callApi(){
+
+    // Get basic business data
+    fetch('http://127.0.0.1:8000/api/salon/2/')
+    .then(res => res.json())
+    .then(res => {
+      this.setState({...this.state, businessData: res })
+      if(res.valid){
+        this.setState({...this.state, servicesList: res.services})
+      }
+      console.log(this.state.servicesList)
+    })
+
+    fetch('http://127.0.0.1:8000/api/salon/2/employees/')
+    .then(res => res.json())
+    .then(res => {
+
+      if(res.valid){
+        this.setState({...this.state, employeeList: res.employees})
+      }
+
+    })
+
+  }
+
+
+  getFormattedDate(date) {
+    var year = date.getFullYear();
+
+    var month = (1 + date.getMonth()).toString();
+    month = month.length > 1 ? month : '0' + month;
+
+    var day = date.getDate().toString();
+    day = day.length > 1 ? day : '0' + day;
+
+    return month + '/' + day + '/' + year;
+  }
+
   render() {
     return (
       <div className="appointment-container">
@@ -67,6 +127,8 @@ class Appointment extends Component {
           <h1> Appointment </h1>
         </div>
         <Box className="box" sx={{ m: 1, minWidth: 120 }}>
+
+          {/* Services Drop down menu */}
           <FormControl sx={{ m: 1, minWidth: 120 }} >
             <InputLabel id="input-label">Services</InputLabel>
             <Select
@@ -75,22 +137,22 @@ class Appointment extends Component {
               id="input-label"
               name="service"
               onChange={this.handleChange}>
-              {this.state.servicesList.map(service =>
-                <MenuItem key={service.key} value={service.value}>{service.text} ${service.price}</MenuItem>
+              {this.state.servicesList.map((service, index) =>
+                <MenuItem key={index} value={index}>{service}</MenuItem>
               )}
             </Select>
           </FormControl>
 
           <FormControl sx={{ m: 1, minWidth: 120 }} >
-            <InputLabel id="input-label-employee">Employee</InputLabel>
+            <InputLabel id="input-label-employee">Stylist</InputLabel>
             <Select
               labelId="input-label-employee"
               label="Employee"
               name="employee"
               id="input-label-employee"
               onChange={this.handleChange}>
-              {this.state.employeeList.map(service =>
-                <MenuItem key={service.key} value={service.value}>{service.text} </MenuItem>
+              {this.state.employeeList.map(employee =>
+                <MenuItem key={employee.id} value={employee.id}>{employee.name} </MenuItem>
               )}
             </Select>
           </FormControl>
@@ -116,13 +178,8 @@ class Appointment extends Component {
         <br />
         {this.state.showTime && <div className="avail-date-container">
           Choose your available date below: <br />
-          { this.state.dateTimeArr.map(availTime =>
-              <div>
-                <h5>{availTime.label}</h5>
-                {availTime.avail.map(avail => 
-                  <Button variant="outlined">{avail.time} {avail.con}</Button>
-                )}
-              </div>)
+          { this.state.timeSlots.map(availTime =>
+                <Button variant="outlined">{availTime}</Button>)
           }
         </div>}
       </div>
