@@ -6,13 +6,16 @@ class Services extends React.Component {
     super(props);
     this.state = {
       newItem: "",
-      list: []
+      list: [],
+      responseData: null
     };
   }
 
-  //incorporating local storage 
+  //incorporating local storage
   componentDidMount() {
     this.hydrateStateWithLocalStorage();
+
+    this.callApi();
 
     // add event listener to save state to localStorage
     // when user leaves/refreshes the page
@@ -20,6 +23,17 @@ class Services extends React.Component {
       "beforeunload",
       this.saveStateToLocalStorage.bind(this)
     );
+  }
+
+  callApi() {
+    fetch("http://127.0.0.1:8000/api/salon/2/")
+      .then(res => res.json())
+      .then(res => {
+        this.setState({ apiResponse: res })
+        console.log(res.services)
+        this.updateInput('list', res.services)
+        console.log(this.state.list)
+      })
   }
 
   componentWillUnmount() {
@@ -30,6 +44,26 @@ class Services extends React.Component {
 
     // saves if component has a chance to unmount
     this.saveStateToLocalStorage();
+  }
+
+
+  handleSubmit(){
+    let data = {
+      businessId: 2,
+      servicesList: this.state.list,
+
+    }
+
+    let apiUrl = 'http://127.0.0.1:8000/api/salon/'+2+'/services'
+
+    fetch(apiUrl, {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    });
+
   }
 
   hydrateStateWithLocalStorage() {
@@ -113,7 +147,7 @@ class Services extends React.Component {
               padding: 50,
               maxWidth: 900,
               margin: "left"
-              
+
             }}
           >
             <br />
@@ -137,11 +171,11 @@ class Services extends React.Component {
             <ul>
               {this.state.list.map(item => {
                 return (
-                
-                  <li key={item.id}>
+
+                  <li key={item}>
                     <table><tr><td>
-                    {item.value}</td><td>
-                    <button className="removebtn" onClick={() => this.deleteItem(item.id)}>
+                    {item}</td><td>
+                    <button className="removebtn" onClick={() => this.deleteItem(item)}>
                       Remove
                     </button>
                     </td><br /></tr></table>
@@ -150,7 +184,7 @@ class Services extends React.Component {
                 );
               })}
             </ul>
-            
+
           </div>
         </div>
         <button
