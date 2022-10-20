@@ -69,6 +69,7 @@ def get_business(response, business_id):
     except django.db.models.ObjectDoesNotExist:
         business = None
 
+    # Transform Django model query to dictionary
     response_data = business_to_object(business)
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
@@ -81,6 +82,7 @@ def get_businesses(request):
     If none provide, returns all businesses
     """
 
+    # URL Query parameters
     state_name = request.GET.get('state', None)
     city_name = request.GET.get('city', None)
     zip_code = request.GET.get('zip', None)
@@ -88,8 +90,9 @@ def get_businesses(request):
     business_list = get_businesses_by_address(state_name, city_name, zip_code)
 
     response_data = dict()
-    businesses = []
 
+    # Convert all businesses to dictionaries
+    businesses = []
     for business in business_list:
         businesses.append(business_to_object(business))
 
@@ -131,38 +134,59 @@ def get_business_employees(request, business_id):
 
 def get_business_appointments(request, business_id):
 
+    # Check if business with provided id exists
     try:
         business = Business.objects.get(id=business_id)
     except django.db.models.ObjectDoesNotExist:
         business = None
 
-
-def get_employee_timeslots(request):
-
-    employee_id = request.GET.get('empId', None)
-
     date = request.GET.get('date', None)
 
-    if date is None:
+
+def get_employee_timeslots(request):
+    """
+    Returns an object with the list of available time slots at a specified
+    date for a specific employee.
+    If user doesnt provide date, it will consider the current date
+    """
+
+    # Get query parameters
+    employee_id = request.GET.get('empId', None)
+    date = request.GET.get('date', '')
+
+    # Check if input meets date requirements
+    # If fails, override it with the current date
+    try:
+        test_date = datetime.datetime.strptime(date, '%m/%d/%Y').date()
+        current_time = datetime.datetime.now().strftime("%H:%M")
+
+        # Check if actual date entered has already passed
+        if date_manager.has_expired(date, current_time):
+            raise TypeError
+
+    except (TypeError, ValueError):
+        print('Invalid date')
         current_day = datetime.date.today()
         date = datetime.date.strftime(current_day, "%m/%d/%Y")
 
+    # Create object for response
     response_data = dict()
     response_data['valid'] = False
 
+    # If employee id is not provided return response
     if employee_id is None:
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+    # If query matches no result, return response
     try:
         employee = Employee.objects.get(id=employee_id)
     except django.db.models.ObjectDoesNotExist:
-        employee = None
-
-    if employee is None:
         return HttpResponse(json.dumps(response_data), content_type="application/json")
+
 
     response_data['valid'] = True
 
+    response_data['employeeId'] = employee.id
     response_data['employee'] = employee.first + ' ' + employee.last
     response_data['date'] = date
     response_data['slots'] = get_available_slots_per_employee(date, employee)
@@ -191,6 +215,7 @@ def business_to_object(business=None):
     else:
         return business_obj
 
+    business_obj['id'] = business.id
     business_obj['name'] = business.name
     business_obj['email'] = business.email
     business_obj['description'] = business.description
@@ -229,6 +254,7 @@ def appointment_to_object(appointment=None):
 def employee_to_object(employee=None):
     employee_obj = dict()
 
+    employee_obj['id'] = employee.id
     employee_obj['name'] = employee.first + " " + employee.last
     employee_obj['email'] = employee.email
     employee_obj['phone'] = employee.phone
@@ -357,5 +383,6 @@ def get_available_slots_per_employee(appointment_date, employee=None):
 
     available_slots = list(possible_times.difference(current_appointments))
     available_slots.sort()
+    available_slots = filter(lambda time: date_manager.has_expired(appointment_date, time) == False, available_slots)
 
-    return available_slots
+    return list(available_slots)
