@@ -31,7 +31,7 @@ class SalonSite extends Component {
 
     return (
       <div>
-        <h1>{this.state.apiResponse.name} Name</h1>
+        <h1>{this.state.apiResponse.name} Name of Business</h1>
         <h4> {this.state.apiResponse.email} Email</h4>
         <p>{this.state.apiResponse.description} Description</p>
 
@@ -40,6 +40,7 @@ class SalonSite extends Component {
           <a class="active" href="/">Petit</a>
           <a href="./appointment">Appointment</a>
           <a href="./contact">Contact Us</a>
+          <a href="./appointment">Services</a>
           <a href="/">Sign Out</a>
         </div>
         
