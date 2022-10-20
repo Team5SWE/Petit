@@ -37,4 +37,4 @@ class Appointment(models.Model):
     end = models.CharField(max_length=5, default=None)
     service = models.CharField(max_length=100, default=None)
     address_id = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)
-
+    token = models.CharField(max_length=22, default=None)
