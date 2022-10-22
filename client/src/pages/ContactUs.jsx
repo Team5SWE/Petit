@@ -1,11 +1,12 @@
 import React, {Component} from "react";
+import FormInput from "../components/form-input/form-input";
 import "../css/Contact.css";
 
 class ContactUs extends Component {
 
   render(){
     return(
-      <div>
+      <div className="contact-us">
 
         <div class="header">
           <h1>CONTACT US</h1>
@@ -24,10 +25,10 @@ class ContactUs extends Component {
           <form action="mailto:thienbao96@gmail.com">
 
             <label for="fname">First Name</label>
-            <input type="text" id="fname" name="firstname" placeholder="Your name.."/>
+            <input className="form-input" type="text" id="fname" name="firstname" placeholder="Your name.."/>
 
             <label for="lname">Last Name</label>
-            <input type="text" id="lname" name="lastname" placeholder="Your last name.."/>
+            <input className="form-input" type="text" id="lname" name="lastname" placeholder="Your last name.."/>
 
             <label for="country">Country</label>
 
