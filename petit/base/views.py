@@ -286,7 +286,7 @@ def signup(request):
             print('Email already exist')
             return HttpResponse(json.dumps("Email already exist. Please choose another."), content_type="application/json")
 
-        bs = Business(name=username, email=email, password=encrypted_password, phone=phone,description="",services="")
+        bs = Business(name=username, email=email, password=encrypted_password, phone=phone,description="")
         bs.save()
 
         authentication.send_email(email)
@@ -297,14 +297,14 @@ def signup(request):
         #response.set_cookie('id', request.GET())
     return HttpResponse("This is a test of our first view")
 
-
- # _               _
- #| |             (_)
- #| |__  _   _ ___ _ _ __   ___  ___ ___
- #| '_ \| | | / __| | '_ \ / _ \/ __/ __|
- #| |_) | |_| \__ \ | | | |  __/\__ \__ \
- #|_.__/ \__,_|___/_|_| |_|\___||___/___/
+ #  _               _
+ # | |             (_)
+ # | |__  _   _ ___ _ _ __   ___  ___ ___
+ # | '_ \| | | / __| | '_ \ / _ \/ __/ __|
+ # | |_) | |_| \__ \ | | | |  __/\__ \__ \
+ # |_.__/ \__,_|___/_|_| |_|\___||___/___/
  #########################################
+
 
 def make_appointment(request):
 
@@ -349,6 +349,7 @@ def make_appointment(request):
         response_data['url'] = encryption.generate_random_token()
 
 
+
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
@@ -379,7 +380,6 @@ def business_to_object(business=None):
     business_obj['email'] = business.email
     business_obj['phone'] = business.phone
     business_obj['description'] = business.description
-    business_obj['services'] = business.services.split(',')
 
     addresses = []
     for address in Address.objects.filter(business_id=business):

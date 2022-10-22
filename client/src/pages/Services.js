@@ -30,9 +30,10 @@ class Services extends React.Component {
       .then(res => res.json())
       .then(res => {
         this.setState({ apiResponse: res })
-        console.log(res.services)
-        this.updateInput('list', res.services)
-        console.log(this.state.list)
+        if(res.valid){
+            this.updateInput('list', res.services)
+        }
+
       })
   }
 
