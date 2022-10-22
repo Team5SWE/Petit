@@ -1,14 +1,18 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 
-class Services extends React.Component {
+class Services extends Component {
   constructor(props) {
     super(props);
     this.state = {
       newItem: "",
+      newPrice: "",
+      newCategory: "",
       list: [],
-      responseData: null
+      changes: []
     };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+
   }
 
   //incorporating local storage
@@ -26,14 +30,11 @@ class Services extends React.Component {
   }
 
   callApi() {
-    fetch("http://127.0.0.1:8000/api/salon/2/")
+    fetch("http://127.0.0.1:8000/api/salon/7/")
       .then(res => res.json())
       .then(res => {
-        this.setState({ apiResponse: res })
-        if(res.valid){
+        if(res.valid)
             this.updateInput('list', res.services)
-        }
-
       })
   }
 
@@ -49,13 +50,13 @@ class Services extends React.Component {
 
 
   handleSubmit(){
-    let data = {
-      businessId: 2,
-      servicesList: this.state.list,
 
+    let data = {
+      changeLog: this.state.changes
     }
 
-    let apiUrl = 'http://127.0.0.1:8000/api/salon/'+2+'/services'
+
+    let apiUrl = 'http://127.0.0.1:8000/api/salon/'+7+'/services/'
 
     fetch(apiUrl, {
       method: 'POST',
@@ -63,7 +64,15 @@ class Services extends React.Component {
       credentials: 'include',
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(data)
-    });
+    })
+    .then(res => res.json())
+    .then(res => {
+      if(res.valid){
+          this.updateInput('list', res.services)
+          this.updateInput('changes', [])
+      }
+
+    })
 
   }
 
@@ -95,7 +104,7 @@ class Services extends React.Component {
     }
   }
 
-  updateInput(key, value) {
+  updateInput(key, value){
     // update react state
     this.setState({ [key]: value });
   }
@@ -104,20 +113,27 @@ class Services extends React.Component {
     // create a new item with unique id
     const newItem = {
       id: 1 + Math.random(),
-      value: this.state.newItem.slice()
-
+      name: this.state.newItem.slice(),
+      price: this.state.newPrice.slice(),
+      category: this.state.newCategory.slice(),
+      action: 'add'
     };
 
     // copy current list of items
     const list = [...this.state.list];
+    const changesList = [...this.state.changes]
 
     // add the new item to the list
     list.push(newItem);
+    changesList.push(newItem)
 
     // update state with new list, reset the new item input
     this.setState({
-      list,
-      newItem: ""
+      list: list,
+      changes: changesList,
+      newItem: "",
+      newCategory: "",
+      newPrice: ""
     });
   }
 
@@ -125,9 +141,26 @@ class Services extends React.Component {
     // copy current list of items
     const list = [...this.state.list];
     // filter out the item being deleted
+
+    // Find the object to delete in the services list
+    let serviceToDelete = list.find(item => item.id === id)
+    console.log(serviceToDelete)
+    //If the service element was created in the front end
+    //remove it from the changelog too
+    let changeList = [...this.state.changes]
+
+    if(serviceToDelete !== undefined && serviceToDelete.action === "add"){
+      changeList = changeList.filter(item => item.id !== id)
+    } else {
+      console.log('Removing')
+      serviceToDelete.action = "remove";
+      changeList.push(serviceToDelete)
+    }
+
     const updatedList = list.filter(item => item.id !== id);
 
-    this.setState({ list: updatedList });
+    this.setState({...this.state, list: updatedList, changes: changeList });
+    console.log(this.state)
   }
 
   render() {
@@ -159,24 +192,36 @@ class Services extends React.Component {
               value={this.state.newItem}
               onChange={e => this.updateInput("newItem", e.target.value)}
             />
-            ' '
-            <button
-              className="addbtn btn-floating"
-              onClick={() => this.addItem()}
-              disabled={!this.state.newItem.length}
-            >
-              ADD
-            </button>
-            <br /> <br />
+
+            <input
+              style={{ maxWidth: 500 }}
+              type="text"
+              placeholder="Type a category..."
+              value={this.state.newCategory}
+              onChange={e => this.updateInput("newCategory", e.target.value)}
+            />
+
+            <input
+              style={{ maxWidth: 100 }}
+              type="text"
+              placeholder="Enter price"
+              value={this.state.newPrice}
+              onChange={e => this.updateInput("newPrice", e.target.value)}
+            />
+
+            <button className="addbtn btn-floating" onClick={() => this.addItem()}
+            disabled={!this.state.newItem.length}>ADD</button>
+            <br />
+            <br />
 
             <ul>
-              {this.state.list.map(item => {
+              {this.state.list.map((service) => {
                 return (
 
-                  <li key={item}>
+                  <li key={service.id}>
                     <table><tr><td>
-                    {item}</td><td>
-                    <button className="removebtn" onClick={() => this.deleteItem(item)}>
+                    {service.name}</td><td>
+                    <button className="removebtn" onClick={() => this.deleteItem(service.id)}>
                       Remove
                     </button>
                     </td><br /></tr></table>
@@ -190,8 +235,8 @@ class Services extends React.Component {
         </div>
         <button
               className="subbtn btn-floating"
-              onClick={() => this.addItem()}
-              disabled={!this.state.newItem.length}
+              onClick={this.handleSubmit}
+              disabled={!this.state.changes.length}
             >
               SUBMIT Changes
             </button>
@@ -200,7 +245,4 @@ class Services extends React.Component {
   }
 }
 
-
-
-ReactDOM.render(<Services />, document.getElementById('root'));
 export default Services;

@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import json
 import sys
-from .models import Business, Appointment, Employee, Address
+from .models import Business, Appointment, Employee, Address, Service
 import datetime
 from .utility import date_manager, encryption, authentication
 
@@ -210,6 +210,7 @@ def get_employee_timeslots(request):
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+
 ############################################################################################
 #  _____   ____   _____ _______   _    _          _   _ _____  _      ______ _____   _____
 # |  __ \ / __ \ / ____|__   __| | |  | |   /\   | \ | |  __ \| |    |  ____|  __ \ / ____|
@@ -353,6 +354,59 @@ def make_appointment(request):
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
+
+def api_services(request, business_id):
+
+    # Create response for all requests
+    response = dict()
+    response['valid'] = False
+
+    # If provided businessId is invalid, return invalid object
+    try:
+        business = Business.objects.get(id=business_id)
+    except django.db.models.ObjectDoesNotExist:
+        return HttpResponse(json.dumps(response), content_type="application/json")
+
+    response['valid'] = True
+
+    # For POST, server expects:
+    # List of changes done in the client
+    # If the action is add, we add to database, else remove
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        # Parse through request data
+        changes = body['changeLog']
+        for change in changes:
+
+            service_id = change['id']
+            service_action = change['action']
+            service_name = change['name']
+            service_price = change['price']
+            service_category = change['category']
+
+            if service_action == 'add':
+                service = Service(name=service_name, price=service_price, category=service_category, provider_id=business)
+                service.save()
+            else:
+                Service.objects.filter(id=service_id).delete()
+
+
+    # Include all the services related to the business_id to the response
+    services = []
+
+    for service in Service.objects.filter(provider_id=business):
+        service_object = service_to_object(service)
+        services.append(service_object)
+
+    response['services'] = services
+
+    # Response
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+
 ##########################################################################################
 #  _____  ____    _                _     _           _
 # |  __ \|  _ \  | |              | |   (_)         | |
@@ -386,6 +440,12 @@ def business_to_object(business=None):
         address_string = address_to_string(address)
         addresses.append(address_string)
 
+    services = []
+    for service in Service.objects.filter(provider_id=business):
+        service_object = service_to_object(service)
+        services.append(service_object)
+
+    business_obj['services'] = services
     business_obj['addresses'] = addresses
 
     return business_obj
@@ -427,6 +487,22 @@ def employee_to_object(employee=None):
     employee_obj['phone'] = employee.phone
 
     return employee_obj
+
+
+def service_to_object(service=None):
+    service_obj = dict()
+    service_obj['valid'] = False
+
+    if service is None:
+        return service_obj
+
+    service_obj['valid'] = True
+    service_obj['id'] = service.id
+    service_obj['name'] = service.name
+    service_obj['price'] = service.price
+    service_obj['category'] = service.category
+
+    return service_obj
 
 #################################
 # BUSINESS RELATED GET REQUESTS#

@@ -13,8 +13,7 @@ class Service (models.Model):
     name = models.CharField(max_length=100)
     price = models.CharField(max_length=50)
     category = models.CharField(max_length=50)
-
-
+    provider_id = models.ForeignKey(Business, on_delete=models.CASCADE)
 
 
 class Employee(models.Model):
