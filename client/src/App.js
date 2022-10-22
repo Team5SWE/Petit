@@ -9,6 +9,7 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 
 import About from "./pages/About";
+import BusinessSite from "./pages/BusinessSite";
 import SalonSite from "./pages/SalonSite";
 import Employees from "./pages/Employees";
 import Services from "./pages/Services";
@@ -29,6 +30,7 @@ class App extends Component {
             <Route path="sign-up" element={<SignUp/>} />
             <Route path="login" element={<Login/>} />
 
+            <Route path="business" element={<BusinessSite/>}></Route>
             <Route path="salon" element={<SalonSite/>}></Route>
             <Route path="services" element={<Services/>}></Route>
             <Route path="employees" element={<Employees/>}></Route>
