@@ -67,7 +67,7 @@ background-color: darkcyan;
     border-radius: 100px;
 
 }
-table {
+.services-table table {
   font-family: arial, sans-serif;
   table-layout: auto;
   border-collapse: collapse;
@@ -75,7 +75,7 @@ table {
   width: 100%;
 }
 
-td {
+.services-table td {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 10px;
@@ -83,11 +83,11 @@ td {
   width: 100%
 }
 
-tr:nth-child(even) {
+.services-table tr:nth-child(even) {
   background-color: #dddddd;
 }
 
-ul {
+.services-table ul {
   list-style-type: none;
 }
 header {
@@ -112,6 +112,7 @@ header {
     background-position: 200%;
   }
 }
+
 
 
 
