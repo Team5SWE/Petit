@@ -243,7 +243,6 @@ def login(request):
         except django.db.models.ObjectDoesNotExist:
             email_exist = None
 
-
         if email_exist is None:
             print('Authentication failed: email doesnt exist')
             return HttpResponse(json.dumps("Email doesnt exist."), content_type="application/json")

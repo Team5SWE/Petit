@@ -7,7 +7,13 @@ class Business(models.Model):
     password = models.CharField(max_length=64)
     phone = models.CharField(max_length=16)
     description = models.TextField()
-    services = models.TextField()
+
+class Service (models.Model):
+    name = models.CharField(max_length=100)
+    price = models.CharField(max_length=50)
+    category = models.CharField(max_length=50)
+    businessID = models.ForeignKey(Business, on_delete=models.CASCADE)
+
 
 
 class Employee(models.Model):
