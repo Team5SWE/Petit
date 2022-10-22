@@ -102,7 +102,7 @@ export default class SignUp extends Component {
           </div>
           <div>
             {/* <span>I'm already a member! <a href="/login">Sign In</a></span> */}
-            <span>I'm already a member! <a href="/salon">Sign In</a></span>
+            <span>I'm already a member! <a href="/business">Sign In</a></span>
           </div>
         </div>
       </div>

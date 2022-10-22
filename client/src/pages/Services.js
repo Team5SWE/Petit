@@ -168,7 +168,7 @@ class Services extends Component {
       <div>
         <h1 className="app-title">Manage Services</h1>
         <div class="topnav">
-          <a href="./salon">Go Back</a>
+          <a href="./business">Go Back</a>
           <a href="./appointment">Appointment</a>
           <a href="./contact">Contact Us</a>
           <a href="/">Sign Out</a>

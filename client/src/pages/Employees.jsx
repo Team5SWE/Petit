@@ -19,8 +19,8 @@ class Employees extends Component {
           <a class="active" href="/">Petit</a>
           <a href="./appointment">Appointment</a>
           <a href="./contact">Contact Us</a>
-          <a href="./salon">My Salon Profile</a>
-          <a href="./appointment">Services</a>
+          <a href="./business">My Salon Profile</a>
+          <a href="./services">Services</a>
           <a href="/">Sign Out</a>
         </div>
     
@@ -29,7 +29,7 @@ class Employees extends Component {
     <div className="card">
       <img src={male} alt="Employee 1" />
       <div className="container">
-        <h2>Employee 1</h2>
+        <h3>Employee 1</h3>
         <p className="title">Master Stylist</p>
         <p>Phone Number</p>
         <p>Email</p>
@@ -44,7 +44,7 @@ class Employees extends Component {
     <div class="card">
       <img src={female} alt="Employee 2"/>
       <div class="container">
-        <h2>Employee 2</h2>
+        <h3>Employee 2</h3>
         <p class="title">Junior Stylist</p>
         <p>Phone Number</p>
         <p>Email</p>
