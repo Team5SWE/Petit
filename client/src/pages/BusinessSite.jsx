@@ -65,14 +65,15 @@ class BusinessSite extends Component {
 
             <div class="content">
               <img class="col-img" src={settings} alt="edit information" />
-              <div class="dropdown">
+              <Link to="/settings"><button class="btn2" >Edit Profile</button></Link>
+              {/* <div class="dropdown">
             <button class="btn2">Edit Profile</button>
             <div class="dropdown-content">
               <a href="/employees">Employees</a>
               <a href="/services">Services</a>
               <a href="./Home">Sign Out</a>
             </div>
-          </div>
+          </div> */}
             </div>
           </div>
 
