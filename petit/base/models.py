@@ -8,11 +8,12 @@ class Business(models.Model):
     phone = models.CharField(max_length=16)
     description = models.TextField()
 
+
 class Service (models.Model):
     name = models.CharField(max_length=100)
     price = models.CharField(max_length=50)
     category = models.CharField(max_length=50)
-    businessID = models.ForeignKey(Business, on_delete=models.CASCADE)
+
 
 
 
