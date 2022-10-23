@@ -37,11 +37,9 @@ export default class SignUp extends Component {
   handleSubmit(){
 
     let data = {
-      username: this.state.fullName,
+      user_name: this.state.fullName,
       password: this.state.password,
-      passwordTwo: this.state.passwordTwo,
-      email: this.state.email,
-      phone: this.state.phone
+      email: this.state.email
     }
 
     fetch('http://127.0.0.1:8000/api/signup/', {
@@ -67,7 +65,7 @@ export default class SignUp extends Component {
           <div>
 
             <div className="form-container">
-              <label className="form-label" htmlFor="fullName">Business Name</label>
+              <label className="form-label" htmlFor="fullName">Username</label>
               <input id="bussName" className="form-input" type="text" name="fullName"
               value={this.fullName} onChange={this.handleChange}/>
             </div>

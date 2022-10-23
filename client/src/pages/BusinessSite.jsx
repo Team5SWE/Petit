@@ -20,7 +20,7 @@ class BusinessSite extends Component {
   }
 
   callApi() {
-    fetch("http://127.0.0.1:8000/api/salon/2/")
+    fetch("http://127.0.0.1:8000/api/auth/")
       .then(res => res.json())
       .then(res => this.setState({ apiResponse: res }))
   }
