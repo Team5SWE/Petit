@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import json
 import sys
-from .models import Business, Appointment, Employee, Address
+from .models import Business, Appointment, Employee, Address, Service
 import datetime
 from .utility import date_manager, encryption, authentication
 
@@ -210,6 +210,7 @@ def get_employee_timeslots(request):
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+
 ############################################################################################
 #  _____   ____   _____ _______   _    _          _   _ _____  _      ______ _____   _____
 # |  __ \ / __ \ / ____|__   __| | |  | |   /\   | \ | |  __ \| |    |  ____|  __ \ / ____|
@@ -286,7 +287,7 @@ def signup(request):
             print('Email already exist')
             return HttpResponse(json.dumps("Email already exist. Please choose another."), content_type="application/json")
 
-        bs = Business(name=username, email=email, password=encrypted_password, phone=phone,description="",services="")
+        bs = Business(name=username, email=email, password=encrypted_password, phone=phone,description="")
         bs.save()
 
         authentication.send_email(email)
@@ -297,14 +298,14 @@ def signup(request):
         #response.set_cookie('id', request.GET())
     return HttpResponse("This is a test of our first view")
 
-
- # _               _
- #| |             (_)
- #| |__  _   _ ___ _ _ __   ___  ___ ___
- #| '_ \| | | / __| | '_ \ / _ \/ __/ __|
- #| |_) | |_| \__ \ | | | |  __/\__ \__ \
- #|_.__/ \__,_|___/_|_| |_|\___||___/___/
+ #  _               _
+ # | |             (_)
+ # | |__  _   _ ___ _ _ __   ___  ___ ___
+ # | '_ \| | | / __| | '_ \ / _ \/ __/ __|
+ # | |_) | |_| \__ \ | | | |  __/\__ \__ \
+ # |_.__/ \__,_|___/_|_| |_|\___||___/___/
  #########################################
+
 
 def make_appointment(request):
 
@@ -349,7 +350,61 @@ def make_appointment(request):
         response_data['url'] = encryption.generate_random_token()
 
 
+
         return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+
+def api_services(request, business_id):
+
+    # Create response for all requests
+    response = dict()
+    response['valid'] = False
+
+    # If provided businessId is invalid, return invalid object
+    try:
+        business = Business.objects.get(id=business_id)
+    except django.db.models.ObjectDoesNotExist:
+        return HttpResponse(json.dumps(response), content_type="application/json")
+
+    response['valid'] = True
+
+    # For POST, server expects:
+    # List of changes done in the client
+    # If the action is add, we add to database, else remove
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        # Parse through request data
+        changes = body['changeLog']
+        for change in changes:
+
+            service_id = change['id']
+            service_action = change['action']
+            service_name = change['name']
+            service_price = change['price']
+            service_category = change['category']
+
+            if service_action == 'add':
+                service = Service(name=service_name, price=service_price, category=service_category, provider_id=business)
+                service.save()
+            else:
+                Service.objects.filter(id=service_id).delete()
+
+
+    # Include all the services related to the business_id to the response
+    services = []
+
+    for service in Service.objects.filter(provider_id=business):
+        service_object = service_to_object(service)
+        services.append(service_object)
+
+    response['services'] = services
+
+    # Response
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
 
 
 ##########################################################################################
@@ -379,13 +434,18 @@ def business_to_object(business=None):
     business_obj['email'] = business.email
     business_obj['phone'] = business.phone
     business_obj['description'] = business.description
-    business_obj['services'] = business.services.split(',')
 
     addresses = []
     for address in Address.objects.filter(business_id=business):
         address_string = address_to_string(address)
         addresses.append(address_string)
 
+    services = []
+    for service in Service.objects.filter(provider_id=business):
+        service_object = service_to_object(service)
+        services.append(service_object)
+
+    business_obj['services'] = services
     business_obj['addresses'] = addresses
 
     return business_obj
@@ -427,6 +487,22 @@ def employee_to_object(employee=None):
     employee_obj['phone'] = employee.phone
 
     return employee_obj
+
+
+def service_to_object(service=None):
+    service_obj = dict()
+    service_obj['valid'] = False
+
+    if service is None:
+        return service_obj
+
+    service_obj['valid'] = True
+    service_obj['id'] = service.id
+    service_obj['name'] = service.name
+    service_obj['price'] = service.price
+    service_obj['category'] = service.category
+
+    return service_obj
 
 #################################
 # BUSINESS RELATED GET REQUESTS#

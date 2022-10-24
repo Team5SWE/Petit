@@ -163,7 +163,7 @@ class Appointment extends Component {
                 label="Date"
                 openTo="year"
                 views={['year', 'month', 'day']}
-                value={new Date().toLocaleDateString()}
+                value={this.state.date}
                 onChange={this.handleChange}
                 renderInput={(params) => <TextField {...params} />}
               />

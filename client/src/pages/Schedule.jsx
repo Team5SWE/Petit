@@ -1,10 +1,12 @@
 import React from 'react';
+import Calendar from '../components/calendar/calendar'
 
-function Employees() {
+function Schedule() {
   return (
     <div>
-      <h1>View all  Appointments</h1>  
+      <h1>View all  Appointments</h1>
+      <Calendar />
     </div>
   );
 }
-export default Employees;
+export default Schedule;

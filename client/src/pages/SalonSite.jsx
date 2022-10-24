@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import "../css/dropdown.css";
-import appt from "../assets/apptimg.jpg";
-import list from "../assets/apptlistimg.jpg";
-import employee from "../assets/employeeimg.jpg";
-import services from "../assets/servicesimg.jpg";
-import settings from "../assets/settingsimg.png";
+import male from "../assets/male.jpeg";
+import female from "../assets/female.jpeg";
+import "../css/Contact.css";
 import { Link } from 'react-router-dom'
+import "../css/dropdown.css";
 
 
 class SalonSite extends Component {
@@ -31,72 +29,66 @@ class SalonSite extends Component {
 
     return (
       <div>
-        <h1>{this.state.apiResponse.name} Name of Business</h1>
-        <h4> {this.state.apiResponse.email} Email</h4>
+        <h1>{this.state.apiResponse.name} Name of Salon</h1>
+        <p class="phone">Email: {this.state.apiResponse.email}<br />Address: {this.state.apiResponse.address}<br />Phone: {this.state.apiResponse.phone} </p>
         <p>{this.state.apiResponse.description} Description</p>
 
 
         <div class="topnav">
           <a class="active" href="/">Petit</a>
           <a href="./appointment">Appointment</a>
-          <a href="./contact">Contact Us</a>
-          <a href="./appointment">Services</a>
-          <a href="/">Sign Out</a>
+          <a href="#Services">Services</a>
+          <a href="#Employees">Employees</a>
         </div>
-        
 
-        <div class="row">
-
-          <div class="column cards">
-            <div class="content">
-              <img class="col-img" src={services} alt="services" />
-              <Link to="/services"><button class="btn2" >Manage Services</button></Link>
-            </div>
-          </div>
-          <div class="column cards">
-            <div class="content">
-              <img class="col-img" src={employee} alt="employees" />
-              <Link to="/employees"><button class="btn2" >Manage Employees</button></Link>
-            </div>
-          </div>
-          <div class="column cards">
-
-            <div class="content">
-              <img class="col-img" src={settings} alt="edit information" />
-              <div class="dropdown">
-            <button class="btn2">Edit Profile</button>
-            <div class="dropdown-content">
-              <a href="/employees">Employees</a>
-              <a href="/services">Services</a>
-              <a href="./Home">Sign Out</a>
-            </div>
-          </div>
-            </div>
-          </div>
-
-          <div class="column cards">
-
-            <div class="content">
-              <img class="col-img" src={appt} alt="appt" />
-              <Link to="/appointment"><button class="btn2" >Make Appointments</button></Link>
-            </div>
-
-          </div>
-          <div class="column cards">
-
-            <div class="content">
-              <img class="col-img" src={list} alt="view all appointments" />
-              <Link to="/schedule"><button class="btn2" >View Appointments</button></Link>
-            </div>
-
-          </div>
-  
-
+        <div id="Appointment">
+          <br />
+          <h3><Link to="/appointment"><button class="btn2">Make an Appointment</button></Link></h3>
+          <br />
         </div>
+
+        <div id="Services">
+          <h2>Our Services</h2>
+          <p>{this.state.apiResponse.services} List of Services
+            <ul>
+            <table><tr><td>
+              <li>Hair Styling</li></td></tr>
+              <tr><td><li>facials</li></td></tr>
+              <tr><td><li>Manicure and Pedicure</li></td></tr>
+              <tr><td><li>Makeup</li></td></tr></table>
+            </ul>
+          </p>
+        </div>
+
+        <div id="Employees">
+          <h2>Our Team</h2>
+          <div className="row">
+            <div className="column">
+              <div className="card">
+                <img src={male} alt="Employee 1" />
+                <div className="container">
+                  <h3>Employee 1</h3>
+                </div>
+              </div>
+            </div>
+
+            <div class="column">
+              <div class="card">
+                <img src={female} alt="Employee 2" />
+                <div class="container">
+                  <h3>Employee 2</h3>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+
 
 
       </div>
-
 
 
     )

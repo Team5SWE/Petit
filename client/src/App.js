@@ -9,9 +9,11 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 
 import About from "./pages/About";
+import BusinessSite from "./pages/BusinessSite";
 import SalonSite from "./pages/SalonSite";
 import Employees from "./pages/Employees";
 import Services from "./pages/Services";
+import Settings from "./pages/Settings";
 import Schedule from "./pages/Schedule";
 import Cancel from "./pages/Cancel";
 import Confirm from "./pages/confirm";
@@ -29,8 +31,10 @@ class App extends Component {
             <Route path="sign-up" element={<SignUp/>} />
             <Route path="login" element={<Login/>} />
 
+            <Route path="business" element={<BusinessSite/>}></Route>
             <Route path="salon" element={<SalonSite/>}></Route>
             <Route path="services" element={<Services/>}></Route>
+            <Route path="settings" element={<Settings/>}></Route>
             <Route path="employees" element={<Employees/>}></Route>
             <Route path="schedule" element={<Schedule/>}></Route>
             <Route path="about" element={<About/>} />

@@ -37,13 +37,14 @@ export default class Login extends Component {
       password: this.state.password
     }
 
-    fetch('http://127.0.0.1:8000/api/login/', {
+    fetch('http://127.0.0.1:8000/api/token/', {
       method: 'POST',
       mode: 'cors',
       credentials: 'include',
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(data)
-    });
+    }).then(res => res.json())
+    .then(res => console.log(res))
 
   }
 
