@@ -1,5 +1,6 @@
 import { Component } from "react";
-import "../components/form-input/form-input"; 
+import {Navigate} from "react-router-dom";
+import "../components/form-input/form-input";
 import "../css/SignUp.css";
 import "../App.css";
 
@@ -12,6 +13,7 @@ export default class Login extends Component {
                   passwordTwo: "",
                   email: "",
                   phone: "",
+                  authenticated: false,
                   userData: null,
                   };
 
@@ -44,46 +46,66 @@ export default class Login extends Component {
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(data)
     }).then(res => res.json())
-    .then(res => console.log(res))
+    .then(res => {
+      if(res.access !== undefined && res.refresh !== undefined){
+        console.log('authenticated')
+        localStorage.setItem('access', res.access);
+        localStorage.setItem('refresh', res.refresh);
+        this.setState({...this.state, authenticated: true})
+    } else {
+      //Do something
+    }});
 
   }
 
   render() {
-    return (
-      <div className="signin-container">
-        <h1>Petit</h1>
-        <div className="form-list">
-          <div>
-            <h4>Sign in</h4>
-          </div>
 
-          <div>
+    if(!this.state.authenticated){
 
-            <div className="form-container">
-              <label className="form-label" htmlFor="email" >Email Address</label>
-              <input id="email" className="form-input" type="text" name="email"
-              value={this.email} onChange={this.handleChange}/>
+      return (
+        <div className="signin-container">
+          <h1>Petit</h1>
+          <div className="form-list">
+            <div>
+              <h4>Sign in</h4>
             </div>
 
-            <div className="form-container">
-              <label className="form-label" htmlFor="password">Password</label>
-              <input id="password" className="form-input" type="password" name="password"
-              value={this.password} onChange={this.handleChange}/>
+            <div>
+
+              <div className="form-container">
+                <label className="form-label" htmlFor="email" >Email Address</label>
+                <input id="email" className="form-input" type="text" name="email"
+                value={this.email} onChange={this.handleChange}/>
+              </div>
+
+              <div className="form-container">
+                <label className="form-label" htmlFor="password">Password</label>
+                <input id="password" className="form-input" type="password" name="password"
+                value={this.password} onChange={this.handleChange}/>
+              </div>
+
             </div>
 
-          </div>
+            <div>
 
-          <div>
+              <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Sign In</button>
 
-            <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Sign In</button>
+            </div>
 
-          </div>
-          
-          <div className="sign-up">
-           <p>Dont have an account? <a href="/sign-up">Sign Up</a></p>
+            <div className="sign-up">
+             <p>Dont have an account? <a href="/sign-up">Sign Up</a></p>
+            </div>
           </div>
         </div>
-      </div>
-    );
+      )
+
+    } else {
+
+      return(
+        <Navigate to="/business" />
+      );
+
+    }
+
   }
 }
