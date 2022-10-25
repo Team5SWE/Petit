@@ -24,5 +24,6 @@ urlpatterns = [
     path("appointment/<int:id>", views.get_appointment, name="Appointments"),
 
     path("signup/", views.signup, name="create_user"),
-    path("login/", views.login, name="Login")
+    path("login/", views.login, name="Login"),
+    path('auth/', views.header_decoder, name="Decoder")
 ]

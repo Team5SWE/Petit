@@ -4,7 +4,7 @@ from django.http import HttpResponse
 import json
 import sys
 import jwt
-from .models import Business, Appointment, Employee, Address, Service
+from .models import Business, Appointment, Employee, Address, Service, newUser
 import datetime
 from .utility import date_manager, encryption, authentication
 
@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from .serializers import RegisterUserSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
+from django.conf import settings
 
 
 class CustomUserCreate(APIView):
@@ -290,20 +291,38 @@ def header_decoder (request):
     response_data = dict()
     response_data['valid'] = False
 
-    header = request.headers['Authorization']
+    if request.method == "POST":
 
-    header_dict = json.loads(header)
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
 
-    #Decodes Given JWT to a header string
-    decoded_data = jwt.decode(header_dict, "secret", algorithms=["HS256"])
+        access = body['access']
+        if access is None:
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-    #If header is returning a null value, then return False
-    if header is None:
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+        user = None
+        business = None
 
-    if request.method == "GET":
-        #converts header
-        pass
+        try:
+            decoded_data = jwt.decode(access, settings.SECRET_KEY, algorithms="HS256")
+            user_id = decoded_data['user_id']
+
+            try:
+                user = newUser.objects.get(id=user_id)
+                business = Business.objects.get(owner=user)
+            except django.db.models.ObjectDoesNotExist:
+                return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        except jwt.exceptions.ExpiredSignatureError:
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        response_data['valid'] = True
+        response_data['user'] = user_id
+        response_data['business'] = business_to_object(business)
+
+
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
+
 
 
 

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Navigate} from "react-router-dom";
 import "../css/dropdown.css";
 import appt from "../assets/apptimg.jpg";
 import list from "../assets/apptlistimg.jpg";
@@ -12,7 +13,8 @@ class BusinessSite extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { apiResponse: "", authenticated: false }
+    this.state = { apiResponse: "", authenticated: false, loaded: false }
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   componentDidMount() {
@@ -21,28 +23,42 @@ class BusinessSite extends Component {
 
   callApi() {
 
-    fetch('http://127.0.0.1:8000/api/auth', {
-      headers: {
-      'Content-Type': 'application/json'
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-      }
+    let storedData = {
+      access: localStorage.getItem('access')
+    }
+
+    fetch('http://127.0.0.1:8000/api/auth/', {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
+      body: JSON.stringify(storedData)
+    })
+    .then(res => res.json())
+    .then(res => {
+      this.setState({authenticated: res.valid, apiResponse: res, loaded: true})
     })
 
 
   }
 
+  handleLogout(){
+
+    localStorage.removeItem('access')
+    localStorage.removeItem('refresh')
+    this.setState({...this.state, authenticated: false})
+
+  }
+
   render() {
 
-    console.log(this.state.apiResponse)
-
-    if(!this.state.authenticated){
+    if(this.state.authenticated){
 
       return (
         <div>
-          <h1>{this.state.apiResponse.name} Name of Business</h1>
-          <h4> {this.state.apiResponse.email} Email</h4>
-          <p class="phone">Address: {this.state.apiResponse.address}<br/>Phone: {this.state.apiResponse.phone} </p>
-          <p>{this.state.apiResponse.description} Description</p>
+          <h1>{this.state.apiResponse.business.name}</h1>
+          <h4> {this.state.apiResponse.business.email}</h4>
+          <p class="phone">Address: {this.state.apiResponse.business.address}<br/>Phone: {this.state.apiResponse.business.phone} </p>
+          <p>{this.state.apiResponse.business.description} Description</p>
 
 
           <div class="topnav">
@@ -51,7 +67,7 @@ class BusinessSite extends Component {
             <a href="./services">Services</a>
             <a href="./employees">Employees</a>
             <a href="./contact">Contact Us</a>
-            <a href="/">Sign Out</a>
+            <a href="/" onClick={this.handleLogout}>Sign Out</a>
           </div>
 
 
@@ -112,9 +128,11 @@ class BusinessSite extends Component {
 
       )
 
-    } else {
+    } else if(this.state.loaded) {
 
-
+      return(
+        <Navigate to="/login" />
+      )
 
     }
 
