@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97f573a7-d941-4a73-a44f-a25ae78b3ebf" name="변경" comment="modified models">
+    <list default="true" id="97f573a7-d941-4a73-a44f-a25ae78b3ebf" name="변경" comment="pulling from git">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/petit/base/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/petit/base/views.py" afterDir="false" />
     </list>
     <list id="0e570c63-53fb-406e-b15f-eef5ccc9a6f7" name="14707 님이 변경한 내용" comment="Files G has altered" />
     <list id="a9ff2d1e-6edb-48db-92b2-d9187933a49e" name="Changes by 14707" comment="Changes by 14707" />
@@ -141,6 +142,8 @@
       <workItem from="1666219900051" duration="1819000" />
       <workItem from="1666408103822" duration="7226000" />
       <workItem from="1666415531287" duration="322000" />
+      <workItem from="1666639136695" duration="707000" />
+      <workItem from="1666652489206" duration="4604000" />
     </task>
     <task id="LOCAL-00001" summary="This is a test">
       <created>1663294922396</created>
@@ -282,7 +285,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666411745861</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="pulling from git">
+      <created>1666639469535</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1666639469535</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -340,7 +350,8 @@
     <MESSAGE value="Authentication added signup and login semi-work now" />
     <MESSAGE value="Changes by 14707" />
     <MESSAGE value="modified models" />
-    <option name="LAST_COMMIT_MESSAGE" value="modified models" />
+    <MESSAGE value="pulling from git" />
+    <option name="LAST_COMMIT_MESSAGE" value="pulling from git" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Petit$models.coverage" NAME="models 커버리지 결과" MODIFIED="1663899162563" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/petit" />

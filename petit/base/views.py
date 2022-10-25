@@ -3,9 +3,12 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import json
 import sys
+import jwt
 from .models import Business, Appointment, Employee, Address, Service
 import datetime
 from .utility import date_manager, encryption, authentication
+
+
 
 
 
@@ -258,6 +261,33 @@ def login(request):
         print(email_exist)
 
     return HttpResponse(json.dumps("Login."), content_type="application/json")
+
+
+#request api / authentication => get request include token in the header. with that data in the header, get it inside the views
+#JWT decode method. Using That if null return response of
+# Try to get bussiness id and check if it exist
+# if not return response
+# if it is not null store bussnus object in fild called bussiness.
+def header_decoder (request):
+
+    response_data = dict()
+    response_data['valid'] = False
+
+    header = request.headers['Authorization']
+
+    header_dict = json.loads(header)
+
+    #Decodes Given JWT to a header string
+    decoded_data = jwt.decode(header_dict, "secret", algorithms=["HS256"])
+
+    #If header is returning a null value, then return False
+    if header is None:
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+    if request.method == "GET":
+        #converts header
+        pass
+
 
 
 def signup(request):
