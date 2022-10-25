@@ -3,9 +3,28 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import json
 import sys
-from .models import Business, Appointment, Employee, Address, Service
+from .models import Business, Appointment, Employee, Address, Service, newUser
 import datetime
 from .utility import date_manager, encryption, authentication
+
+from rest_framework import status
+from rest_framework.response import Response
+from .serializers import RegisterUserSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView
+
+
+class CustomUserCreate(APIView):
+    permission_classes = [AllowAny]
+
+
+    def post(self, request):
+        reg_serializer = RegisterUserSerializer(data=request.data)
+        if reg_serializer.is_valid():
+            newUser = reg_serializer.save()
+            if newUser:
+                return Response(status=status.HTTP_201_CREATED)
+        return Response(reg_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -261,42 +280,25 @@ def login(request):
 
 
 def signup(request):
+
+    response = dict()
+    response['valid'] = False
+
     if request.method == "POST":
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
 
-        username = body['username']
         email = body['email']
-        password = body['password']
-        password_two = body['passwordTwo']
-        phone = body['phone']
 
-        try:
-            email_exist = Business.objects.get(email=email)
-        except django.db.models.ObjectDoesNotExist:
-            email_exist = None
+        reg_serializer = RegisterUserSerializer(data=body)
+        if reg_serializer.is_valid():
+            created_user = reg_serializer.save()
+            if created_user:
+                response['valid'] = True
+                authentication.send_email(email)
+                print('New account was created with email: ' + email)
 
-        if password != password_two:
-            print('Passwords do not match')
-            return HttpResponse(json.dumps("Passwords do not match. Please re-enter."), content_type="application/json")
-
-        encrypted_password = encryption.encrypt_password(password)
-        print(encrypted_password)
-
-        if email_exist is not None:
-            print('Email already exist')
-            return HttpResponse(json.dumps("Email already exist. Please choose another."), content_type="application/json")
-
-        bs = Business(name=username, email=email, password=encrypted_password, phone=phone,description="")
-        bs.save()
-
-        authentication.send_email(email)
-        print('New account was created with email: ' + email)
-
-        #username = request.POST.get('email')
-        #password = request.POST.get('password')
-        #response.set_cookie('id', request.GET())
-    return HttpResponse("This is a test of our first view")
+    return HttpResponse(json.dumps(response), content_type="application/json")
 
  #  _               _
  # | |             (_)

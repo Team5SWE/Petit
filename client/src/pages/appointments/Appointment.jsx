@@ -85,7 +85,7 @@ class Appointment extends Component {
   callApi(){
 
     // Get basic business data
-    fetch('http://127.0.0.1:8000/api/salon/2/')
+    fetch('http://127.0.0.1:8000/api/salon/1/')
     .then(res => res.json())
     .then(res => {
       this.setState({...this.state, businessData: res })
@@ -95,7 +95,7 @@ class Appointment extends Component {
       console.log(this.state.servicesList)
     })
 
-    fetch('http://127.0.0.1:8000/api/salon/2/employees/')
+    fetch('http://127.0.0.1:8000/api/salon/1/employees/')
     .then(res => res.json())
     .then(res => {
 
@@ -137,8 +137,8 @@ class Appointment extends Component {
               id="input-label"
               name="service"
               onChange={this.handleChange}>
-              {this.state.servicesList.map((service, index) =>
-                <MenuItem key={index} value={index}>{service}</MenuItem>
+              {this.state.servicesList.map((service) =>
+                <MenuItem key={service.id} value={service.id}>{service.name} ${service.price}</MenuItem>
               )}
             </Select>
           </FormControl>
