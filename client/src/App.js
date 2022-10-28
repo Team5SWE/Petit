@@ -32,7 +32,7 @@ class App extends Component {
             <Route path="login" element={<Login/>} />
 
             <Route path="business" element={<BusinessSite/>}></Route>
-            <Route path="salon" element={<SalonSite/>}></Route>
+            <Route path="salon/:id" element={<SalonSite/>}></Route>
             <Route path="services" element={<Services/>}></Route>
             <Route path="settings" element={<Settings/>}></Route>
             <Route path="employees" element={<Employees/>}></Route>

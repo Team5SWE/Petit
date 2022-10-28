@@ -139,18 +139,32 @@ def get_business_employees(request, business_id):
     if business is None:
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-    response_data['valid'] = True
+    if request.method == 'GET':
+        response_data['valid'] = True
+        response_data['business'] = business.name
 
-    employee_objects = []
+        employee_objects = []
+        employees = Employee.objects.filter(works_at=business_id)
+        for employee in employees:
+            employee_obj = employee_to_object(employee)
+            employee_objects.append(employee_obj)
 
-    employees = Employee.objects.filter(works_at=business_id)
-    for employee in employees:
-        employee_obj = employee_to_object(employee)
-        employee_objects.append(employee_obj)
+        response_data['employees'] = employee_objects
 
-    response_data['employees'] = employee_objects
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
+    elif request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        access = body.get('access')
+
+        requesting_business = get_business_from_token(access)
+
+        if requesting_business != business:
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        pass
+
 
 
 def get_business_appointments(request, business_id):
@@ -296,33 +310,30 @@ def header_decoder (request):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
 
-        access = body['access']
-        if access is None:
+        # Find business from provided token
+        access = body.get('access')
+        business = get_business_from_token(access)
+        if business is None:
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-        user = None
-        business = None
-
-        try:
-            decoded_data = jwt.decode(access, settings.SECRET_KEY, algorithms="HS256")
-            user_id = decoded_data['user_id']
-
-            try:
-                user = newUser.objects.get(id=user_id)
-                business = Business.objects.get(owner=user)
-            except django.db.models.ObjectDoesNotExist:
-                return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-        except jwt.exceptions.ExpiredSignatureError:
-            return HttpResponse(json.dumps(response_data), content_type="application/json")
 
         response_data['valid'] = True
-        response_data['user'] = user_id
         response_data['business'] = business_to_object(business)
+
+        includeEmployees = request.POST.get('employees', None)
+        if includeEmployees is not None:
+
+            employee_objects = []
+            employees = Employee.objects.filter(works_at=business_id)
+            for employee in employees:
+                employee_obj = employee_to_object(employee)
+                employee_objects.append(employee_obj)
+
+            response_data['employees'] = employee_objects
+
 
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
-
 
 
 
@@ -427,6 +438,14 @@ def api_services(request, business_id):
 
         # Parse through request data
         changes = body['changeLog']
+
+        # Evaluate if requester is authenticated and owns business
+        access = body.get('access')
+        req_business = get_business_from_token(access)
+        if req_business != business:
+            response['valid'] = False
+            return HttpResponse(json.dumps(response), content_type="application/json")
+
         for change in changes:
 
             service_id = change['id']
@@ -590,6 +609,32 @@ def get_businesses_by_address(address_state=None, address_city=None, address_zip
         businesses.add(address.business_id)
 
     return list(businesses)
+
+
+def get_business_from_token(token):
+
+    # Check if input token exists
+    business = None
+    if token is None:
+        return business
+
+    try:
+
+        # Decodes the data from the JWT token
+        decoded_data = jwt.decode(token, settings.SECRET_KEY, algorithms="HS256")
+        user_id = decoded_data['user_id']
+
+        # Try to find a business associated with that id
+        try:
+            user = newUser.objects.get(id=user_id)
+            business = Business.objects.get(owner=user)
+        except django.db.models.ObjectDoesNotExist:
+            pass
+
+    except jwt.exceptions.ExpiredSignatureError:
+        pass
+
+    return business
 
 
 def get_available_slots_per_employee(appointment_date, employee=None):

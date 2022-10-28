@@ -4,11 +4,16 @@ class Services extends Component {
   constructor(props) {
     super(props);
     this.state = {
+
       newItem: "",
       newPrice: "",
       newCategory: "",
       list: [],
-      changes: []
+      changes: [],
+      authenticated: false,
+      loaded: false,
+      apiResponse: ""
+
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -17,7 +22,6 @@ class Services extends Component {
 
   //incorporating local storage
   componentDidMount() {
-    this.hydrateStateWithLocalStorage();
 
     this.callApi();
 
@@ -30,33 +34,39 @@ class Services extends Component {
   }
 
   callApi() {
-    fetch("http://127.0.0.1:8000/api/salon/7/")
-      .then(res => res.json())
-      .then(res => {
-        if(res.valid)
-            this.updateInput('list', res.services)
-      })
-  }
 
-  componentWillUnmount() {
-    window.removeEventListener(
-      "beforeunload",
-      this.saveStateToLocalStorage.bind(this)
-    );
+    ////////////AUTHENTICATION////////////////
+    let storedData = {
+      access: localStorage.getItem('access')
+    }
 
-    // saves if component has a chance to unmount
-    this.saveStateToLocalStorage();
+    fetch('http://127.0.0.1:8000/api/auth/', {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
+      body: JSON.stringify(storedData)
+    })
+    .then(res => res.json())
+    .then(res => {
+
+      //Save authentication data to states
+      this.setState({...this.state, authenticated: res.valid, apiResponse: res, loaded: true})
+
+    })
+    /////////////////////////////////////////
+
   }
 
 
   handleSubmit(){
 
     let data = {
-      changeLog: this.state.changes
+      changeLog: this.state.changes,
+      access: localStorage.getItem('access')
     }
 
 
-    let apiUrl = 'http://127.0.0.1:8000/api/salon/'+7+'/services/'
+    let apiUrl = 'http://127.0.0.1:8000/api/salon/'+this.state.apiResponse.business.id+'/services/'
 
     fetch(apiUrl, {
       method: 'POST',
@@ -70,39 +80,14 @@ class Services extends Component {
       if(res.valid){
           this.updateInput('list', res.services)
           this.updateInput('changes', [])
+      } else {
+        this.setState({...this.state, authenticated: false, loaded: true})
       }
 
     })
 
   }
 
-  hydrateStateWithLocalStorage() {
-    // for all items in state
-    for (let key in this.state) {
-      // if the key exists in localStorage
-      if (localStorage.hasOwnProperty(key)) {
-        // get the key's value from localStorage
-        let value = localStorage.getItem(key);
-
-        // parse the localStorage string and setState
-        try {
-          value = JSON.parse(value);
-          this.setState({ [key]: value });
-        } catch (e) {
-          // handle empty string
-          this.setState({ [key]: value });
-        }
-      }
-    }
-  }
-
-  saveStateToLocalStorage() {
-    // for every item in React state
-    for (let key in this.state) {
-      // save to localStorage
-      localStorage.setItem(key, JSON.stringify(this.state[key]));
-    }
-  }
 
   updateInput(key, value){
     // update react state
