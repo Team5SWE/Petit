@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Navigate} from "react-router-dom";
 
 class Services extends Component {
   constructor(props) {
@@ -25,12 +26,6 @@ class Services extends Component {
 
     this.callApi();
 
-    // add event listener to save state to localStorage
-    // when user leaves/refreshes the page
-    window.addEventListener(
-      "beforeunload",
-      this.saveStateToLocalStorage.bind(this)
-    );
   }
 
   callApi() {
@@ -50,7 +45,11 @@ class Services extends Component {
     .then(res => {
 
       //Save authentication data to states
-      this.setState({...this.state, authenticated: res.valid, apiResponse: res, loaded: true})
+      if(res.valid){
+        this.setState({...this.state, authenticated: res.valid, apiResponse: res, loaded: true, list: res.business.services})
+      } else {
+        this.setState({...this.state, authenticated: res.valid, apiResponse: res, loaded: true})
+      }
 
     })
     /////////////////////////////////////////
@@ -149,84 +148,92 @@ class Services extends Component {
   }
 
   render() {
-    return (
-      <div>
-        <h1 className="app-title">Manage Services</h1>
-        <div class="topnav">
-          <a href="./business">Go Back</a>
-          <a href="./appointment">Appointment</a>
-          <a href="./contact">Contact Us</a>
-          <a href="/">Sign Out</a>
-        </div>
-        <br />
-        <br />
-        <div className="container">
-          <div
-            style={{
-              padding: 50,
-              maxWidth: 900,
-              margin: "left"
-
-            }}
-          >
-            <br />
-            <input
-              style={{ maxWidth: 500 }}
-              type="text"
-              placeholder="Type a service name here..."
-              value={this.state.newItem}
-              onChange={e => this.updateInput("newItem", e.target.value)}
-            />
-
-            <input
-              style={{ maxWidth: 500 }}
-              type="text"
-              placeholder="Type a category..."
-              value={this.state.newCategory}
-              onChange={e => this.updateInput("newCategory", e.target.value)}
-            />
-
-            <input
-              style={{ maxWidth: 100 }}
-              type="text"
-              placeholder="Enter price"
-              value={this.state.newPrice}
-              onChange={e => this.updateInput("newPrice", e.target.value)}
-            />
-
-            <button className="addbtn btn-floating" onClick={() => this.addItem()}
-            disabled={!this.state.newItem.length}>ADD</button>
-            <br />
-            <br />
-
-            <ul>
-              {this.state.list.map((service) => {
-                return (
-
-                  <li key={service.id}>
-                    <table><tr><td>
-                    {service.name}</td><td>
-                    <button className="removebtn" onClick={() => this.deleteItem(service.id)}>
-                      Remove
-                    </button>
-                    </td><br /></tr></table>
-
-                  </li>
-                );
-              })}
-            </ul>
-
+    if(this.state.authenticated){
+      return (
+        <div>
+          <h1 className="app-title">Manage Services</h1>
+          <div class="topnav">
+            <a href="./business">Go Back</a>
+            <a href="./appointment">Appointment</a>
+            <a href="./contact">Contact Us</a>
+            <a href="/">Sign Out</a>
           </div>
-        </div>
-        <button
-              className="subbtn btn-floating"
-              onClick={this.handleSubmit}
-              disabled={!this.state.changes.length}
+          <br />
+          <br />
+          <div className="container">
+            <div
+              style={{
+                padding: 50,
+                maxWidth: 900,
+                margin: "left"
+
+              }}
             >
-              SUBMIT Changes
-            </button>
-      </div>
-    );
+              <br />
+              <input
+                style={{ maxWidth: 500 }}
+                type="text"
+                placeholder="Type a service name here..."
+                value={this.state.newItem}
+                onChange={e => this.updateInput("newItem", e.target.value)}
+              />
+
+              <input
+                style={{ maxWidth: 500 }}
+                type="text"
+                placeholder="Type a category..."
+                value={this.state.newCategory}
+                onChange={e => this.updateInput("newCategory", e.target.value)}
+              />
+
+              <input
+                style={{ maxWidth: 100 }}
+                type="text"
+                placeholder="Enter price"
+                value={this.state.newPrice}
+                onChange={e => this.updateInput("newPrice", e.target.value)}
+              />
+
+              <button className="addbtn btn-floating" onClick={() => this.addItem()}
+              disabled={!this.state.newItem.length}>ADD</button>
+              <br />
+              <br />
+
+              <ul>
+                {this.state.list.map((service) => {
+                  return (
+
+                    <li key={service.id}>
+                      <table><tr><td>
+                      {service.name}</td><td>
+                      <button className="removebtn" onClick={() => this.deleteItem(service.id)}>
+                        Remove
+                      </button>
+                      </td><br /></tr></table>
+
+                    </li>
+                  );
+                })}
+              </ul>
+
+            </div>
+          </div>
+          <button
+                className="subbtn btn-floating"
+                onClick={this.handleSubmit}
+                disabled={!this.state.changes.length}
+              >
+                SUBMIT Changes
+              </button>
+        </div>
+      );
+    } else if(this.state.loaded) {
+
+      return(
+        <Navigate to="/login" />
+      );
+
+    }
   }
 }
 
