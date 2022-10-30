@@ -1,11 +1,12 @@
 import { Component } from "react";
 import logo from "../../assets/logos/petit_white.png";
+import "../../css/concept.css"
 
-export default class Navbar extends Component {
+export default class CustomNav extends Component {
     render() {
         return <div class="navbar">
             <div class="logo-container">
-              <img src={logo} alt="logo"/>
+              <img class="logo-nav" src={logo} alt="logo"/>
             </div>
 
             <div class="links">

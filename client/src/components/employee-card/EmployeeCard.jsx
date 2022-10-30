@@ -13,6 +13,11 @@ export class EmployeeCard extends Component {
             <p>
               <button className="button">Working Hours</button>
             </p>
+            <p>
+              <button className="button" onClick={this.props.removeAction}>
+                Remove
+              </button>
+            </p>
           </div>
         </div>
     }
