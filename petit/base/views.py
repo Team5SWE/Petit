@@ -82,7 +82,7 @@ def get_appointment(request, appointment_token):
 ###############################
 
 
-def get_business(response, business_id):
+def get_business(request, business_id):
 
     # Check if business with provided id exists
     try:
@@ -92,6 +92,48 @@ def get_business(response, business_id):
 
     # Transform Django model query to dictionary
     response_data = business_to_object(business)
+
+    # Handle update request from authenticated user
+    if request.method == 'PUT':
+
+        put_response = dict()
+        put_response['valid'] = False
+
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        access = body.get('access')
+        changes = body.get('changes')
+
+        requester_business = get_business_from_token(access)
+        if business != requester_business:
+            return HttpResponse(json.dumps(put_response), content_type="application/json")
+
+        put_response['valid'] = True
+        business.name = changes.get('name')
+        business.phone = changes.get('phone')
+        business.email = changes.get('email')
+        business.description = changes.get('description')
+        business.save()
+
+        street = changes.get('street').strip()
+        city = changes.get('city').strip()
+        state = changes.get('state').strip()
+        zip = changes.get('zip').strip()
+
+        try:
+            address = Address.objects.get(business_id=business)
+            address.street = street
+            address.city = city
+            address.state = state
+            address.zip = zip[:5]
+        except django.db.models.ObjectDoesNotExist:
+            address = Address(street=street, city=city, state=state, zip=zip[:5], business_id=business)
+
+        address.save()
+
+        put_response['business'] = business_to_object(business)
+        return HttpResponse(json.dumps(put_response), content_type="application/json")
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 

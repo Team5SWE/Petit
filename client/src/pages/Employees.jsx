@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import "../css/aboutpage.css";
-import male from "../assets/male.jpeg";
-import female from "../assets/female.jpeg";
 import EmployeeCard from "../components/employee-card/EmployeeCard.jsx";
 import {Navigate} from "react-router-dom";
 
@@ -75,6 +73,11 @@ class Employees extends Component {
         email={employee.email} key={employee.id}/>
       )}
         </div>
+
+        <div>
+
+        </div>
+
 
     </div>
     )

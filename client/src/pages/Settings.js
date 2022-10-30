@@ -1,26 +1,30 @@
 import React from 'react';
 
 function Settings() {
-    
+
     const [data, setData] = React.useState({
         name: 'Bumble Beauty',
         email: 'abc@yahoo.com',
         phone: 1023456789,
         address: "abc st, Atlanta",
+        street: "",
+        city: "",
+        state: "",
+        zip: "",
         description: "Welcome to our salon"
       });
-    
+
       // handle on change according to input name and setState
       const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
       };
-    
+
       const handleSubmit = (e) => {
         e.preventDefault()
         // take data to submit
       };
       return (
-        
+
         <div>
             <h1 className="app-title">Business Profile</h1>
         <div class="topnav">

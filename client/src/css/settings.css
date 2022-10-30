@@ -1,0 +1,23 @@
+.main-container{
+  padding-left: 3rem;
+  padding-right: 3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.general-info{
+  display: flex;
+  justify-content: space-between;
+}
+
+.contact-info{
+  display: flex;
+  flex-direction: column;
+  flex-basis: 60%;
+  gap: 15px;
+}
+
+.input-box{
+  display: flex;
+  flex-direction: column;
+}

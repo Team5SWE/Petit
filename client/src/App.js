@@ -13,7 +13,7 @@ import BusinessSite from "./pages/BusinessSite";
 import SalonSite from "./pages/SalonSite";
 import Employees from "./pages/Employees";
 import Services from "./pages/Services";
-import Settings from "./pages/Settings";
+import Settings from "./pages/Settings.jsx";
 import Schedule from "./pages/Schedule";
 import Cancel from "./pages/Cancel";
 import Confirm from "./pages/confirm";
