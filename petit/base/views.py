@@ -592,12 +592,12 @@ def api_employees(request, business_id):
                 employee = Employee(name=employee_name, email=employee_email, phone=employee_phone)
                 employee.save()
             else:
-                Service.objects.filter(id=employee_id).delete()
+                Employee.objects.filter(id=employee_id).delete()
 
     # Include all the employees related to the business_id to the response
     employees = []
 
-    for service in Employees.objects.filter(provider_id=business):
+    for employee in Employee.objects.filter(provider_id=business):
         employee_object = employee_to_object(service)
         employees.append(employee_object)
 
