@@ -419,6 +419,7 @@ def make_appointment(request):
         response_data['valid'] = False
         response_data['errorMessage'] = ''
 
+        client_name = body['clientName']
         business_id = body['businessId']
         client_email = body['clientEmail']
         client_phone = body['clientPhone']
@@ -427,6 +428,7 @@ def make_appointment(request):
         start_time = body['startTime']
         end_time = body['endTime']
         service = body['service']
+        address_id = body['addressId']
 
         try:
             business = Business.objects.get(id=business_id)
@@ -436,6 +438,12 @@ def make_appointment(request):
 
         try:
             employee = Employee.objects.get(id=employee_id)
+        except django.db.models.ObjectDoesNotExist:
+            response_data['errorMessage'] = 'The employee doesnt exist!'
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        try:
+            employee = Business.objects.get(address=address_id)
         except django.db.models.ObjectDoesNotExist:
             response_data['errorMessage'] = 'The employee doesnt exist!'
             return HttpResponse(json.dumps(response_data), content_type="application/json")
@@ -547,8 +555,8 @@ def business_to_object(business=None):
 
     addresses = []
     for address in Address.objects.filter(business_id=business):
-        address_string = address_to_string(address)
-        addresses.append(address_string)
+        address_object = address_to_object(address)
+        addresses.append(address_object)
 
     services = []
     for service in Service.objects.filter(provider_id=business):
@@ -613,6 +621,25 @@ def service_to_object(service=None):
     service_obj['category'] = service.category
 
     return service_obj
+
+def address_to_object(address=None):
+
+    response_data = dict()
+    response_data['valid'] = False
+
+    if address is None:
+        return response_data
+
+    response_data['valid'] = True
+    response_data['id'] = address.id
+    response_data['street'] = address.street
+    response_data['city'] = address.city
+    response_data['state'] = address.state
+    response_data['zip'] = address.zip
+    response_data['toString'] = address.street + ', ' + address.city + ', ' + address.state + ' ' + address.zip
+
+
+    return response_data
 
 #################################
 # BUSINESS RELATED GET REQUESTS#
