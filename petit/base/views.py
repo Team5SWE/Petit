@@ -377,8 +377,6 @@ def header_decoder (request):
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-
-
 def signup(request):
 
     response = dict()
@@ -443,9 +441,9 @@ def make_appointment(request):
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
         try:
-            employee = Business.objects.get(address=address_id)
+            employee = Address.objects.get(id=address_id)
         except django.db.models.ObjectDoesNotExist:
-            response_data['errorMessage'] = 'The employee doesnt exist!'
+            response_data['errorMessage'] = 'This address doesnt exist!'
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
         # Last check if someone else made an appointment just before this request
@@ -463,7 +461,26 @@ def make_appointment(request):
 
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+def delete_appointment(request, appointment_id):
 
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        response_data = dict()
+        response_data['valid'] = False
+
+        # If provided appointmentId is invalid, return invalid object
+        try:
+            appointment = Appointment.objects.get(id=appointment_id)
+        except django.db.models.ObjectDoesNotExist:
+            return HttpResponse(json.dumps(response), content_type="application/json")
+
+        response_data['valid'] = True
+
+        Appointment.objects.filter(id=appointment_id).delete()
+
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def api_services(request, business_id):
 
@@ -523,7 +540,7 @@ def api_services(request, business_id):
     # Response
     return HttpResponse(json.dumps(response), content_type="application/json")
 
-
+\
 
 ##########################################################################################
 #  _____  ____    _                _     _           _
@@ -568,7 +585,6 @@ def business_to_object(business=None):
 
     return business_obj
 
-
 def appointment_to_object(appointment=None):
 
     response_data = dict()
@@ -595,7 +611,6 @@ def appointment_to_object(appointment=None):
 
     return response_data
 
-
 def employee_to_object(employee=None):
     employee_obj = dict()
 
@@ -605,7 +620,6 @@ def employee_to_object(employee=None):
     employee_obj['phone'] = employee.phone
 
     return employee_obj
-
 
 def service_to_object(service=None):
     service_obj = dict()

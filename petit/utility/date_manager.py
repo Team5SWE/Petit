@@ -1,6 +1,5 @@
 import datetime
 
-
 def has_expired(date_string, time_string):
     """
     date in format (month/day/year)
