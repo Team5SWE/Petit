@@ -387,13 +387,16 @@ def signup(request):
         body = json.loads(body_unicode)
 
         email = body['email']
+        name = body['user_name']
 
         reg_serializer = RegisterUserSerializer(data=body)
         if reg_serializer.is_valid():
             created_user = reg_serializer.save()
             if created_user:
                 response['valid'] = True
-                authentication.send_email(email)
+                subject = "Welcome to Petit " + name
+                content = "Welcome to Petit, your email has been verified"
+                authentication.send_email(email, subject, content)
                 print('New account was created with email: ' + email)
 
     return HttpResponse(json.dumps(response), content_type="application/json")
@@ -405,7 +408,6 @@ def signup(request):
  # | |_) | |_| \__ \ | | | |  __/\__ \__ \
  # |_.__/ \__,_|___/_|_| |_|\___||___/___/
  #########################################
-
 
 def make_appointment(request):
 
@@ -427,6 +429,10 @@ def make_appointment(request):
         end_time = body['endTime']
         service = body['service']
         address_id = body['addressId']
+
+        business = Business.objects.get(id=business_id)
+        bussiness_email = business.email
+        bussiness_name = bussiness.name
 
         try:
             business = Business.objects.get(id=business_id)
@@ -457,7 +463,19 @@ def make_appointment(request):
         response_data['valid'] = True
         response_data['url'] = encryption.generate_random_token()
 
+        full_url_path = "" + response_data['url']
 
+        #appointment confermation email to client
+        content_client = "Appontment confirmation with Petit"
+        subject_client = "Your appointment was created successfully: " + full_url_path
+        authentication.send_email(client_email, subject_client, content_client)
+
+        #appointment confermation email to
+        content_business = "Appointment with your client " + client_name + " was made successfully"
+        subject_business = "Your appointment with " + client_name + " has been created: " + full_url_path
+        authentication.send_email(bussiness_email, subject_business, content_business)
+
+        print('New appointment was created with email: ' + client_name)
 
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
@@ -539,8 +557,6 @@ def api_services(request, business_id):
 
     # Response
     return HttpResponse(json.dumps(response), content_type="application/json")
-
-\
 
 ##########################################################################################
 #  _____  ____    _                _     _           _

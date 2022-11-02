@@ -1,7 +1,7 @@
 import smtplib, ssl
 from email.message import EmailMessage
 
-def send_email(email):
+def send_email(email, subject, content):
 
     password = "gB7W65@j^$Q!"
     sender = "petit2022nreply@outlook.com"
@@ -12,7 +12,7 @@ def send_email(email):
     context = ssl.create_default_context()
     msg  = EmailMessage()
     msg.set_content("Welcome to Petit, your email has been verified")
-    msg["Subject"]  = "Welcome to Petit"
+    msg["Subject"]  = subject
     msg["From"] = sender
     msg["To"] = email
     try:
