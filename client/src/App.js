@@ -39,7 +39,7 @@ class App extends Component {
             <Route path="schedule" element={<Schedule/>}></Route>
             <Route path="about" element={<About/>} />
             <Route path="cancel" element={<Cancel/>} />
-            <Route path="confirm" element={<Confirm/>} />
+            <Route path="confirm/:id" element={<Confirm/>} />
             <Route path="appointment" element={<Appointment/>}>
 
               {/* <Route path=":appointmentId" element={<Appointment/>} /> */}

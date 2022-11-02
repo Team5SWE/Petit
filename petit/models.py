@@ -30,6 +30,7 @@ class Address(models.Model):
 class Appointment(models.Model):
     business_id = models.ForeignKey(Business, on_delete=models.CASCADE)
     client_email = models.CharField(max_length=50)
+    client_name = models.CharField(max_length=50)
     client_phone = models.CharField(max_length=16)
     provider_id = models.ForeignKey(Employee, on_delete=models.CASCADE)
     date = models.CharField(max_length=15)

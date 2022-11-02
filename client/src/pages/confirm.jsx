@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import "../css/confirm.css";
 import confirmicon from "../assets/confirm.jpg";
 
@@ -7,8 +7,24 @@ import confirmicon from "../assets/confirm.jpg";
 class Cancel extends Component {
   constructor(props) {
     super(props);
-    this.state = { apiResponse: "" };
+    this.state = { apiResponse: "", token: "" };
   }
+
+  componentDidMount(){
+
+    this.callApi()
+
+  }
+
+  callApi(){
+
+    const {id} = this.props.params;
+
+    console.log(id)
+
+
+  }
+
 
   render() {
     return (
@@ -55,4 +71,7 @@ class Cancel extends Component {
   }
 }
 
-export default Cancel;
+export default (props) => ( <Cancel
+        {...props}
+        params={useParams()}
+    />);

@@ -76,6 +76,7 @@ class Address(models.Model):
 class Appointment(models.Model):
     business_id = models.ForeignKey(Business, on_delete=models.CASCADE, default=None)
     client_email = models.CharField(max_length=50, default=None)
+    client_name = models.CharField(max_length=50, default=None)
     client_phone = models.CharField(max_length=16, default=None)
     provider_id = models.ForeignKey(Employee, on_delete=models.CASCADE, default=None)
     date = models.CharField(max_length=15, default=None)

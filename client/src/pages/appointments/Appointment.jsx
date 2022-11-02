@@ -24,7 +24,10 @@ class Appointment extends Component {
       service: '',
       employee: '',
       date: new Date(),
-      businessData: null
+      businessData: null,
+      clientName: '',
+      clientEmail: '',
+      clientPhone: ''
     }
     this.handleSearchClick = this.handleSearchClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -182,6 +185,17 @@ class Appointment extends Component {
                 <Button variant="outlined">{availTime}</Button>)
           }
         </div>}
+
+
+        <div>
+          <input type="text" name="clientName" value={this.state.clientName} onChange={this.handleChange}
+           placeholder="Your Name:"/>
+          <input type="text" name="clientEmail" value={this.state.clientEmail} onChange={this.handleChange}
+           placeholder="Your Email:"/>
+          <input type="text" name="clientPhone" value={this.state.clientPhone} onChange={this.handleChange}
+          placeholder="Your Phone:"/>
+        </div>
+
       </div>
     )
   }
