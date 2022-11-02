@@ -21,6 +21,8 @@ urlpatterns = [
 
     path("slots/", views.get_employee_timeslots, name="Slots"),
 
+    path("make_appointment/", views.make_appointment, name="Make Appoinment"),
+
     path("appointment/<int:id>", views.get_appointment, name="Appointments"),
 
     path("signup/", views.signup, name="create_user"),
