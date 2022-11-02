@@ -19,7 +19,6 @@ from django.conf import settings
 class CustomUserCreate(APIView):
     permission_classes = [AllowAny]
 
-
     def post(self, request):
         reg_serializer = RegisterUserSerializer(data=request.data)
         if reg_serializer.is_valid():
@@ -27,8 +26,6 @@ class CustomUserCreate(APIView):
             if newUser:
                 return Response(status=status.HTTP_201_CREATED)
         return Response(reg_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 # Create your views here.
 #####################################################################
@@ -59,7 +56,6 @@ def view1(response, id):
 #  \_____|______|  |_|    |_|  |_/_/    \_\_| \_|_____/|______|______|_|  \_\_____/
 #####################################################################################
 
-
 def get_appointment(request, appointment_token):
     """
     View that handles API get request from an appointment
@@ -80,7 +76,6 @@ def get_appointment(request, appointment_token):
 #################################
 # BUSINESS GET REQUESTS        #
 ###############################
-
 
 def get_business(request, business_id):
 
@@ -136,7 +131,6 @@ def get_business(request, business_id):
         return HttpResponse(json.dumps(put_response), content_type="application/json")
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
-
 
 def get_businesses(request):
     """
@@ -207,8 +201,6 @@ def get_business_employees(request, business_id):
 
         pass
 
-
-
 def get_business_appointments(request, business_id):
 
     response_data = dict()
@@ -234,8 +226,6 @@ def get_business_appointments(request, business_id):
     response_data['appointments'] = appointment_objects
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-
 
 def get_employee_timeslots(request):
     """
@@ -335,7 +325,6 @@ def login(request):
         print(email_exist)
 
     return HttpResponse(json.dumps("Login."), content_type="application/json")
-
 
 #request api / authentication => get request include token in the header. with that data in the header, get it inside the views
 #JWT decode method. Using That if null return response of
@@ -463,7 +452,11 @@ def make_appointment(request):
         response_data['valid'] = True
         response_data['url'] = encryption.generate_random_token()
 
-        full_url_path = "" + response_data['url']
+        new_appointment = Appoinment(business_id=business_id, client_email=client_email,
+        client_name=client_name, client_phone=client_phone, provider_id=provider_id, date=app_date,
+        start=start_time, end=end_time, service=service, address_id=address_id, token=response_data["url"])
+
+        full_url_path = "localhost:3000/appointments/" + response_data['url']
 
         #appointment confermation email to client
         content_client = "Appontment confirmation with Petit"
@@ -558,6 +551,61 @@ def api_services(request, business_id):
     # Response
     return HttpResponse(json.dumps(response), content_type="application/json")
 
+def api_employees(request, business_id):
+
+    # Create response for all requests
+    response = dict()
+    response['valid'] = False
+
+    # If provided businessId is invalid, return invalid object
+    try:
+        business = Business.objects.get(id=business_id)
+    except django.db.models.ObjectDoesNotExist:
+        return HttpResponse(json.dumps(response), content_type="application/json")
+
+    response['valid'] = True
+
+    #Authentication needed => send access token
+
+    if request.method == 'PUT':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        # Parse through request data
+        changes = body['changeLog']
+
+        # Evaluate if requester is authenticated and owns business
+        access = body.get('access')
+        req_business = get_business_from_token(access)
+        if req_business != business:
+            response['valid'] = False
+            return HttpResponse(json.dumps(response), content_type="application/json")
+
+        for change in changes:
+
+            employee_id = change['id']
+            employee_name = change['name']
+            employee_email = change['email']
+            employee_phone = change['phone']
+
+            if employee_action == 'add':
+                employee = Employee(name=employee_name, email=employee_email, phone=employee_phone)
+                employee.save()
+            else:
+                Service.objects.filter(id=employee_id).delete()
+
+    # Include all the employees related to the business_id to the response
+    employees = []
+
+    for service in Employees.objects.filter(provider_id=business):
+        employee_object = employee_to_object(service)
+        employees.append(employee_object)
+
+    response['employees'] = employees
+
+    # Response
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
 ##########################################################################################
 #  _____  ____    _                _     _           _
 # |  __ \|  _ \  | |              | |   (_)         | |
@@ -568,7 +616,6 @@ def api_services(request, business_id):
 #                                      _/ |
 #                                     |__/
 #########################################################################################
-
 
 def business_to_object(business=None):
 
@@ -675,10 +722,6 @@ def address_to_object(address=None):
 # BUSINESS RELATED GET REQUESTS#
 ################################
 
-
-
-
-
 ###################################################################
 #  _    _ _   _ _ _ _   _
 # | |  | | | (_) (_) | (_)
@@ -687,7 +730,6 @@ def address_to_object(address=None):
 # | |__| | |_| | | | |_| |  __/\__ \
 #  \____/ \__|_|_|_|\__|_|\___||___/
 ###################################################################
-
 
 def address_to_string(address):
     return address.street + ', ' + address.city + ', ' + address.state + ' ' + address.zip
