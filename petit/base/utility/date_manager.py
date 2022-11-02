@@ -16,4 +16,4 @@ def has_expired(date_string, time_string):
 
     today = datetime.datetime.today()
 
-    return today > date_to_check
+    return today > date_to_check    

@@ -57,7 +57,11 @@ class BusinessSite extends Component {
         <div>
           <h1>{this.state.apiResponse.business.name}</h1>
           <h4> {this.state.apiResponse.business.email}</h4>
-          <p class="phone">Address: {this.state.apiResponse.business.addresses}<br/>Phone: {this.state.apiResponse.business.phone} </p>
+          <p class="phone">Phone: {this.state.apiResponse.business.phone} </p>
+          {this.state.apiResponse.business.addresses.map(address =>
+            <p class="phone">{address.toString}</p>
+          )}
+
           <p>{this.state.apiResponse.business.description}</p>
 
 

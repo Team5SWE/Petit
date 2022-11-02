@@ -7,7 +7,7 @@ import confirmicon from "../assets/confirm.jpg";
 class Cancel extends Component {
   constructor(props) {
     super(props);
-    this.state = { apiResponse: "", token: "" };
+    this.state = { apiResponse: "", appToken: '', valid: false, loaded: false };
   }
 
   componentDidMount(){
@@ -16,11 +16,26 @@ class Cancel extends Component {
 
   }
 
+
+  handleCancel(){
+
+  }
+
   callApi(){
 
     const {id} = this.props.params;
 
-    console.log(id)
+    this.setState({...this.state, appToken: id})
+
+    fetch("http://127.0.0.1:8000/api/appointment/"+id)
+    .then(res => res.json())
+    .then(res => {
+      if(res.valid){
+        this.setState({...this.state, apiResponse: res, valid: true, loaded: true})
+      } else {
+        this.setState({...this.state, loaded: true})
+      }
+    })
 
 
   }
@@ -40,25 +55,25 @@ class Cancel extends Component {
 
         <div class="appoinmentbox">
         <img src={confirmicon}/>
-        <h2>Your appointment is confirmed</h2>
+        <h2>Your appointment with {this.state.apiResponse.business} is confirmed</h2>
         <p> View your appointment below</p>
         <hr></hr>
         <table>
             <tr>
                 <td class="space"><h2>What:</h2> </td>
-                <td> Hair appointment</td>
+                <td> {this.state.apiResponse.service}</td>
             </tr>
             <tr>
                 <td><h2>When:</h2> </td>
-                <td> Friday, October 14th 2022</td>
+                <td> {this.state.apiResponse.date} at {this.state.apiResponse.start}</td>
             </tr>
             <tr>
                 <td><h2>Who:</h2> </td>
-                <td> Tara (master stylist)</td>
+                <td> {this.state.apiResponse.provider} (master stylist)</td>
             </tr>
             <tr>
                 <td><h2>Where:</h2> </td>
-                <td> Bela Hair</td>
+                <td> {this.state.apiResponse.address}</td>
             </tr>
         </table>
         <hr></hr>

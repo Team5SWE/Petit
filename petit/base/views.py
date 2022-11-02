@@ -56,7 +56,7 @@ def view1(response, id):
 #  \_____|______|  |_|    |_|  |_/_/    \_\_| \_|_____/|______|______|_|  \_\_____/
 #####################################################################################
 
-def get_appointment(request, appointment_token):
+def get_appointment(request, id):
     """
     View that handles API get request from an appointment
 
@@ -65,7 +65,7 @@ def get_appointment(request, appointment_token):
     """
 
     try:
-        appointment = Appointment.objects.get(token=appointment_token)
+        appointment = Appointment.objects.get(token=id)
     except django.db.models.ObjectDoesNotExist:
         appointment = None
 
@@ -416,15 +416,15 @@ def make_appointment(request):
         app_date = body['date']
         start_time = body['startTime']
         end_time = body['endTime']
-        service = body['service']
+        service_id = body['service']
         address_id = body['addressId']
 
         business = Business.objects.get(id=business_id)
-        bussiness_email = business.email
-        bussiness_name = bussiness.name
+        bussiness_email = ''
 
         try:
             business = Business.objects.get(id=business_id)
+            bussiness_email = business.email
         except django.db.models.ObjectDoesNotExist:
             response_data['errorMessage'] = 'That business doesnt exist!'
             return HttpResponse(json.dumps(response_data), content_type="application/json")
@@ -436,9 +436,15 @@ def make_appointment(request):
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
         try:
-            employee = Address.objects.get(id=address_id)
+            address = Address.objects.get(id=address_id)
         except django.db.models.ObjectDoesNotExist:
             response_data['errorMessage'] = 'This address doesnt exist!'
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        try:
+            service = Service.objects.get(id=service_id)
+        except django.db.models.ObjectDoesNotExist:
+            response_data['errorMessage'] = 'This service is no longer offered'
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
         # Last check if someone else made an appointment just before this request
@@ -452,9 +458,10 @@ def make_appointment(request):
         response_data['valid'] = True
         response_data['url'] = encryption.generate_random_token()
 
-        new_appointment = Appoinment(business_id=business_id, client_email=client_email,
-        client_name=client_name, client_phone=client_phone, provider_id=provider_id, date=app_date,
-        start=start_time, end=end_time, service=service, address_id=address_id, token=response_data["url"])
+        new_appointment = Appointment(business_id=business, client_email=client_email,
+        client_name=client_name, client_phone=client_phone, provider_id=employee, date=app_date,
+        start=start_time, end=end_time, service=service.name, address_id=address, token=response_data["url"])
+        new_appointment.save()
 
         full_url_path = "localhost:3000/appointments/" + response_data['url']
 
@@ -791,7 +798,9 @@ def get_available_slots_per_employee(appointment_date, employee=None):
     for appointment in current_appointments:
         busy_times.add(appointment.start)
 
-    available_slots = list(possible_times.difference(current_appointments))
+    print(busy_times)
+
+    available_slots = list(possible_times.difference(busy_times))
     available_slots.sort()
     available_slots = filter(lambda time: date_manager.has_expired(appointment_date, time) == False, available_slots)
 

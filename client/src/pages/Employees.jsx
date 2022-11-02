@@ -64,6 +64,37 @@ class Employees extends Component {
     });
   }
 
+
+  handleSubmit(){
+
+    let url = 'http://127.0.0.1:8000/api/'+this.state.apiResponse.business.id+'/employees/'
+
+    let data = {
+      access: localStorage.getItem('access'),
+      changeLog: this.state.changes
+    }
+
+    fetch(url, {
+      method: 'PUT',
+      mode: 'cors',
+      credentials: 'include',
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => {
+
+      if(res.valid){
+        this.setState({...this.state, employees: res.employees})
+      } else {
+        this.setState({...this.state, authenticated: false })
+      }
+
+    })
+
+  }
+
+
+
   deleteItem(id){
 
     console.log('Removing '+id)
@@ -119,7 +150,6 @@ class Employees extends Component {
       email: ''
     });
 
-    console.log('ADded')
 
   }
 
