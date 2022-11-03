@@ -479,26 +479,29 @@ def make_appointment(request):
 
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-def delete_appointment(request, appointment_id):
+def delete_appointment(request):
+
+    response_data = dict()
+    response_data['valid'] = False
 
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
+        appointment_id = body['token']
 
-        response_data = dict()
-        response_data['valid'] = False
+
 
         # If provided appointmentId is invalid, return invalid object
         try:
-            appointment = Appointment.objects.get(id=appointment_id)
+            appointment = Appointment.objects.get(token=appointment_id)
         except django.db.models.ObjectDoesNotExist:
             return HttpResponse(json.dumps(response), content_type="application/json")
 
         response_data['valid'] = True
 
-        Appointment.objects.filter(id=appointment_id).delete()
+        Appointment.objects.filter(token=appointment_id).delete()
 
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def api_services(request, business_id):
 
@@ -591,12 +594,15 @@ def api_employees(request, business_id):
         for change in changes:
 
             employee_id = change['id']
-            employee_name = change['name']
+            employee_first = change['first']
+            employee_last = change['last']
             employee_email = change['email']
             employee_phone = change['phone']
+            employee_action = change['action']
 
             if employee_action == 'add':
-                employee = Employee(name=employee_name, email=employee_email, phone=employee_phone)
+                employee = Employee(first=employee_first, last=employee_last,
+                email=employee_email, phone=employee_phone, works_at=business)
                 employee.save()
             else:
                 Employee.objects.filter(id=employee_id).delete()
@@ -604,8 +610,8 @@ def api_employees(request, business_id):
     # Include all the employees related to the business_id to the response
     employees = []
 
-    for employee in Employee.objects.filter(provider_id=business):
-        employee_object = employee_to_object(service)
+    for employee in Employee.objects.filter(works_at=business):
+        employee_object = employee_to_object(employee)
         employees.append(employee_object)
 
     response['employees'] = employees

@@ -14,7 +14,8 @@ class Employees extends Component {
       employees: [],
       changes: [],
 
-      name: '',
+      first: '',
+      last: '',
       phone: '',
       email: ''
      };
@@ -22,6 +23,7 @@ class Employees extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.addItem = this.addItem.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
 
@@ -67,7 +69,7 @@ class Employees extends Component {
 
   handleSubmit(){
 
-    let url = 'http://127.0.0.1:8000/api/'+this.state.apiResponse.business.id+'/employees/'
+    let url = 'http://127.0.0.1:8000/api/salon/'+this.state.apiResponse.business.id+'/employees/'
 
     let data = {
       access: localStorage.getItem('access'),
@@ -129,7 +131,9 @@ class Employees extends Component {
 
     const newEmployee = {
       id: 1 + Math.random(),
-      name: this.state.name,
+      name: this.state.first+' '+this.state.last,
+      first: this.state.first,
+      last: this.state.last,
       phone: this.state.phone,
       email: this.state.email,
       action: 'add'
@@ -145,7 +149,8 @@ class Employees extends Component {
       ...this.state,
       employees: list,
       changes: changesList,
-      name: '',
+      first: '',
+      last: '',
       phone: '',
       email: ''
     });
@@ -193,8 +198,13 @@ class Employees extends Component {
         <div>
 
           <div class="input-box">
-            Name:
-            <input type="text" name="name" value={this.state.name} onChange={this.handleChange}/>
+            First:
+            <input type="text" name="first" value={this.state.first} onChange={this.handleChange}/>
+          </div>
+
+          <div class="input-box">
+            Last:
+            <input type="text" name="last" value={this.state.last} onChange={this.handleChange}/>
           </div>
 
           <div class="input-box">
@@ -209,6 +219,10 @@ class Employees extends Component {
 
           <button className="subbtn btn-floating" onClick={this.addItem}>
             ADD
+          </button>
+
+          <button className="subbtn btn-floating" onClick={this.handleSubmit}>
+            SAVE CHANGES
           </button>
 
         </div>
