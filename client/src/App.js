@@ -8,6 +8,8 @@ import ContactUs from "./pages/ContactUs";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 
+import InitialRecover from "./pages/recovery/initialRecover";
+
 import About from "./pages/About";
 import BusinessSite from "./pages/BusinessSite";
 import SalonSite from "./pages/SalonSite";
@@ -40,10 +42,8 @@ class App extends Component {
             <Route path="about" element={<About/>} />
             <Route path="cancel" element={<Cancel/>} />
             <Route path="confirm/:id" element={<Confirm/>} />
-            <Route path="appointment" element={<Appointment/>}>
-
-              {/* <Route path=":appointmentId" element={<Appointment/>} /> */}
-            </Route>
+            <Route path="appointment" element={<Appointment/>} />
+            <Route path="recovery" element={<InitialRecover/>} />
 
             <Route path="contact" element={<ContactUs/>} />
             <Route path="*" element={<NotFound/>} />

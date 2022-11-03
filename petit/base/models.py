@@ -85,3 +85,7 @@ class Appointment(models.Model):
     service = models.CharField(max_length=100, default=None)
     address_id = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)
     token = models.CharField(max_length=22, default=None)
+
+class Recovery(models.Model):
+    owner_id = models.ForeignKey(newUser, on_delete=models.CASCADE, default=None)
+    code = models.CharField(max_length=6, default=None)

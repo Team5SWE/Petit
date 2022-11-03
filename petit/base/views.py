@@ -4,7 +4,7 @@ from django.http import HttpResponse
 import json
 import sys
 import jwt
-from .models import Business, Appointment, Employee, Address, Service, newUser
+from .models import Business, Appointment, Employee, Address, Service, newUser, Recovery
 import datetime
 from .utility import date_manager, encryption, authentication
 
@@ -378,15 +378,35 @@ def signup(request):
         email = body['email']
         name = body['user_name']
 
+        business_data = body['businessData']
+
         reg_serializer = RegisterUserSerializer(data=body)
         if reg_serializer.is_valid():
             created_user = reg_serializer.save()
             if created_user:
+
+                # Handle business creation
+                ####################################################
+                business_name = business_data.get('name')
+                business_email = business_data.get('email')
+                business_phone = business_data.get('phone')
+                business_description = business_data.get('description')
+
+                business = Business(name=business_name, email=business_email,
+                phone=business_phone, description=business_description,
+                owner=created_user)
+                business.save()
+                ####################################################
+
                 response['valid'] = True
+
+                # Handle Email notification
+                #####################################################
                 subject = "Welcome to Petit " + name
                 content = "Welcome to Petit, your email has been verified"
                 authentication.send_email(email, subject, content)
                 print('New account was created with email: ' + email)
+                #######################################################
 
     return HttpResponse(json.dumps(response), content_type="application/json")
 
@@ -731,9 +751,71 @@ def address_to_object(address=None):
 
     return response_data
 
-#################################
-# BUSINESS RELATED GET REQUESTS#
-################################
+######################################################################
+#  _____
+# |  __ \
+# | |__) |___  ___ _____   _____ _ __ _   _
+# |  _  // _ \/ __/ _ \ \ / / _ \ '__| | | |
+# | | \ \  __/ (_| (_) \ V /  __/ |  | |_| |
+# |_|  \_\___|\___\___/ \_/ \___|_|   \__, |
+#                                      __/ |
+#                                     |___/
+#####################################################################
+
+def recovery_check_email(request):
+
+    response = dict()
+    response['valid'] = False
+
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        email = body.get('email')
+
+        try:
+            user = newUser.objects.get(email=email)
+        except django.db.models.ObjectDoesNotExist:
+            response['error'] = 'Account with this email doesnt exist!'
+            return HttpResponse(json.dumps(response), content_type="application/json")
+
+        response['valid'] = True
+
+        code = encryption.generate_random_code(6)
+
+        # Handle data in table
+        try:
+            recovery = Recovery.objects.get(owner_id=user)
+            recovery.code = code
+        except django.db.models.ObjectDoesNotExist:
+            recovery = Recovery(owner_id=user, code=code)
+
+        recovery.save()
+
+        content_client = "Account password reset request"
+        subject_client = "Your recovery code: " + code
+        authentication.send_email(email, subject_client, content_client)
+
+
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+def recovery_check_code(request):
+
+    response = dict()
+    response['valid'] = False
+
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        email = body.get('email')
+        code = body.get('code')
+
+        
+
+
 
 ###################################################################
 #  _    _ _   _ _ _ _   _

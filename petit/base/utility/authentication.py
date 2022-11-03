@@ -11,7 +11,7 @@ def send_email(email, subject, content):
 
     context = ssl.create_default_context()
     msg  = EmailMessage()
-    msg.set_content("Welcome to Petit, your email has been verified")
+    msg.set_content(content)
     msg["Subject"]  = subject
     msg["From"] = sender
     msg["To"] = email

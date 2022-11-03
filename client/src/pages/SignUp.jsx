@@ -12,6 +12,12 @@ export default class SignUp extends Component {
                   passwordTwo: "",
                   email: "",
                   phone: "",
+
+                  busName: "",
+                  busEmail: "",
+                  busPhone: "",
+                  busDescription: "",
+
                   userData: null,
                   };
 
@@ -29,17 +35,23 @@ export default class SignUp extends Component {
       [field]: event.target.value
     })
 
-
-    console.log(this.state)
-
   }
 
   handleSubmit(){
 
     let data = {
+
       user_name: this.state.fullName,
       password: this.state.password,
-      email: this.state.email
+      email: this.state.email,
+
+      businessData: {
+        name: this.state.busName,
+        email: this.state.busEmail,
+        phone: this.state.busPhone,
+        description: this.state.busDescription
+      }
+
     }
 
     fetch('http://127.0.0.1:8000/api/signup/', {
@@ -58,9 +70,10 @@ export default class SignUp extends Component {
     return (
       <div className="signin-container">
         <h1>Petit</h1>
+        <div className="form-lists">
         <div className="form-list">
           <div>
-            <h4>Create Your Account</h4>
+            <h4>Enter your account information</h4>
           </div>
           <div>
 
@@ -100,9 +113,48 @@ export default class SignUp extends Component {
           </div>
           <div>
             {/* <span>I'm already a member! <a href="/login">Sign In</a></span> */}
-            <span>I'm already a member! <a href="/business">Sign In</a></span>
+            <span>I'm already a member! <a href="/login">Sign In</a></span>
           </div>
         </div>
+
+        <div className="form-list">
+          <div>
+            <h4>Enter your business information</h4>
+          </div>
+          <div>
+
+            <div className="form-container">
+              <label className="form-label" htmlFor="fullName">Name</label>
+              <input id="bussName" className="form-input" type="text" name="busName"
+              value={this.busName} onChange={this.handleChange}/>
+            </div>
+
+            <div className="form-container">
+              <label className="form-label" htmlFor="email" >Email Address</label>
+              <input id="email" className="form-input" type="text" name="busEmail"
+              value={this.busEmail} onChange={this.handleChange}/>
+            </div>
+
+            <div className="form-container">
+              <label className="form-label" htmlFor="phone">Phone</label>
+              <input id="phone" className="form-input" type="text" name="busPhone"
+              value={this.busPhone} onChange={this.handleChange}/>
+            </div>
+
+            <div className="form-container">
+              <label className="form-label" htmlFor="description">Description</label>
+              <input id="description" className="form-input" type="text" name="busDescription"
+              value={this.busDescription} onChange={this.handleChange}/>
+            </div>
+
+          </div>
+
+        </div>
+
+        </div>
+
+
+
       </div>
     );
   }

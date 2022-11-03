@@ -7,7 +7,7 @@ import {Navigate} from "react-router-dom";
 class Cancel extends Component {
   constructor(props) {
     super(props);
-    this.state = { apiResponse: "", appToken: '', valid: false, loaded: false, cancelled: false };
+    this.state = { apiResponse: "", appToken: '', valid: false, loaded: false, cancelled: false, expired: false };
     this.handleCancel = this.handleCancel.bind(this);
   }
 
@@ -54,7 +54,7 @@ class Cancel extends Component {
     .then(res => res.json())
     .then(res => {
       if(res.valid){
-        this.setState({...this.state, apiResponse: res, valid: true, loaded: true})
+        this.setState({...this.state, apiResponse: res, valid: true, loaded: true, expired: res.finish})
       } else {
         this.setState({...this.state, loaded: true})
       }
@@ -66,6 +66,10 @@ class Cancel extends Component {
 
   render() {
     if(this.state.loaded && this.state.valid && !this.state.cancelled){
+
+      const finished = this.state.expired
+      console.log(finished)
+
       return (
         <div>
 
@@ -101,7 +105,13 @@ class Cancel extends Component {
               </tr>
           </table>
           <hr></hr>
-          <p> This time no longer good?</p> <button onClick={this.handleCancel}>Cancel</button>
+          {!finished
+            ? <div>
+            <p> This time no longer good?</p> <button onClick={this.handleCancel}>Cancel</button>
+              </div>
+            :
+            <div></div>
+          }
       </div>
 
         </div>

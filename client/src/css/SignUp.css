@@ -2,14 +2,13 @@
     background-color: #ffce6466;
     background-image: url('../assets/appt4.png');
     height: 100vh;
-    overflow: hidden;
     display: flex;
     text-align: center;
     justify-content: center;
     flex-direction: column;
     background-size: cover;
-    
-   
+
+
 }
 
 .signin-container .form-list {
@@ -25,4 +24,8 @@
 
 .form-list > div {
     margin: 1rem;
+}
+
+.form-lists{
+  display: flex;
 }
