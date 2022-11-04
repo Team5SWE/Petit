@@ -27,7 +27,9 @@ urlpatterns = [
     path("delete_appointment/", views.delete_appointment, name="Delete Appointment"),
 
     path("recovery/request", views.recovery_check_email, name="Request recovery"),
-    
+    path("recovery/check", views.recovery_check_email, name="Check recovery"),
+    path("recovery/change", views.recovery_check_email, name="Check recovery"),
+
     path("signup/", views.signup, name="create_user"),
     path("login/", views.login, name="Login"),
     path('auth/', views.header_decoder, name="Decoder")

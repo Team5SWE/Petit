@@ -813,8 +813,41 @@ def recovery_check_code(request):
         email = body.get('email')
         code = body.get('code')
 
-        
 
+        try:
+            recovery = Recovery.objects.get(owner_id=user, code=code)
+        except django.db.models.ObjectDoesNotExist:
+            response['error'] = 'Incorrect recovery code'
+            return HttpResponse(json.dumps(response), content_type="application/json")
+
+        response['valid'] = True
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+def recovery_update_password(request):
+
+    response = dict()
+    response['valid'] = False
+
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        password = body.get('password')
+        email = body.get('email')
+
+        try:
+            user = newUser.objects.get(email=email)
+            user.set_password(password)
+            user.save()
+        except django.db.models.ObjectDoesNotExist:
+            response['error'] = 'Account with this email doesnt exist!'
+            return HttpResponse(json.dumps(response), content_type="application/json")
+
+        response['valid'] = True
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
 
 
 ###################################################################
