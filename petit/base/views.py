@@ -813,7 +813,11 @@ def recovery_check_code(request):
         email = body.get('email')
         code = body.get('code')
 
-
+        try:
+            user = newUser.objects.get(email=email)
+        except django.db.models.ObjectDoesNotExist:
+            response['error'] = 'Account with this email doesnt exist!'
+            return HttpResponse(json.dumps(response), content_type="application/json")
         try:
             recovery = Recovery.objects.get(owner_id=user, code=code)
         except django.db.models.ObjectDoesNotExist:

@@ -1,11 +1,26 @@
 import React, {Component} from "react";
+import {Navigate} from "react-router-dom";
 
 class InitialRecover extends Component {
   constructor(props) {
     super(props);
-    this.state = { email: '', sent: false, errorMsg: '', code: '', verified: false };
+
+    this.state = {
+
+      email: '',
+      errorMsg: '',
+      code: '',
+
+      step: 'request',
+
+      newPassword: '',
+      newPassword2: ''
+    };
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCodeSubmit = this.handleCodeSubmit.bind(this);
+    this.handlePasswordSubmit = this.handlePasswordSubmit.bind(this);
   }
 
   handleChange(event){
@@ -32,7 +47,7 @@ class InitialRecover extends Component {
     .then(res => res.json())
     .then(res => {
       if(res.valid){
-        this.setState({...this.state, sent: true, errorMsg: ''})
+        this.setState({...this.state, step: 'check', errorMsg: ''})
       } else {
         this.setState({...this.state, errorMsg: res.error})
       }
@@ -47,7 +62,7 @@ class InitialRecover extends Component {
       code: this.state.code
     }
 
-    fetch('http://127.0.0.1:8000/api/recovery/request', {
+    fetch('http://127.0.0.1:8000/api/recovery/check', {
       method: 'POST',
       mode: 'cors',
       credentials: 'include',
@@ -58,17 +73,49 @@ class InitialRecover extends Component {
     .then(res => {
 
       if(res.valid){
-        this.setState({...this.state, verified: true})
+        this.setState({...this.state, step: 'change', errorMsg: ''})
+      } else {
+        this.setState({...this.state, errorMsg: res.error})
       }
 
+    });
 
+  }
 
+  handlePasswordSubmit(){
+    let password1 = this.state.newPassword.replace(' ', '')
+    let password2 = this.state.newPassword2.replace(' ', '')
 
+    if(password1 === '' && password2 === '')
+        return
 
+    if(password1 !== password2){
+      this.setState({...this.state, errorMsg: 'Passwords dont match'})
+      return
+    }
+
+    let data = {
+      email: this.state.email,
+      password: this.state.newPassword
+    }
+
+    fetch('http://127.0.0.1:8000/api/recovery/change', {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => {
+
+      if(res.valid){
+        this.setState({...this.state, step: 'success'})
+      } else {
+        this.setState({...this.state, errorMsg: res.error})
+      }
 
     })
-
-
 
   }
 
@@ -78,39 +125,63 @@ class InitialRecover extends Component {
 
     const hasError = this.state.errorMsg !== ''
 
-    if(!this.state.sent){
+    switch(this.state.step){
 
-
-      return(
-        <div>
-        <h1> Enter your accounts email </h1>
-        <input name="email" value={this.state.email} onChange={this.handleChange}/>
-        <button onClick={this.handleSubmit}>Request password reset</button>
-        {
-          hasError ?
-            <p>{this.state.errorMsg} </p>
-            :
-            <div>
-            </div>
-        }
-        </div>
-      )
-    } else  {
-
-      <div>
-      <h1> Enter the recovery code </h1>
-      <input name="code" value={this.state.code} onChange={this.handleChange}/>
-      <button onClick={this.handleSubmit}>Request password reset</button>
-      {
-        hasError ?
-          <p>{this.state.errorMsg} </p>
-          :
+      case "request":
+        return(
           <div>
+            <h1> Enter your accounts email </h1>
+            <input name="email" value={this.state.email} onChange={this.handleChange}/>
+            <button onClick={this.handleSubmit}>Request password reset</button>
+            {
+              hasError ?
+              <p>{this.state.errorMsg} </p>
+              :
+              <div></div>
+            }
           </div>
-      }
-      </div>
+      );
+
+      case "check":
+        return(
+          <div>
+            <h1> Enter the recovery code </h1>
+            <input name="code" value={this.state.code} onChange={this.handleChange}/>
+            <button onClick={this.handleCodeSubmit}>Request password reset</button>
+            {
+              hasError ?
+              <p>{this.state.errorMsg} </p>
+              :
+              <div></div>
+            }
+          </div>
+        );
+
+      case "change":
+        return(
+          <div>
+            <p> Enter new password </p>
+            <input name="newPassword" value={this.state.newPassword} onChange={this.handleChange}/>
+            <p> Repeat new password </p>
+            <input name="newPassword2" value={this.state.newPassword2} onChange={this.handleChange}/>
+            <button onClick={this.handlePasswordSubmit}>Request password reset</button>
+            {
+              hasError ?
+              <p>{this.state.errorMsg} </p>
+              :
+              <div></div>
+            }
+          </div>
+        );
+
+      default:
+        return(
+          <Navigate to="/login"/>
+        );
+
 
     }
+
 
   }
 
