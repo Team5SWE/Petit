@@ -10,7 +10,7 @@ class Settings extends Component{
       name: '',
       email: '',
       phone: '',
-      address: "abc st, Atlanta",
+
       street: "",
       city: "",
       state: "",
@@ -18,19 +18,25 @@ class Settings extends Component{
       description: "",
       authenticated: false,
       loaded: false,
-      apiResponse: ""
+      apiResponse: "",
+
+      addresses: [],
+      changes: []
     }
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.fetchInputData = this.fetchInputData.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
+    this.addItem = this.addItem.bind(this);
+    this.handleAddressChange = this.handleAddressChange.bind(this);
   }
 
   componentDidMount(){
     this.callApi();
   }
 
-
+///////////////////////////////////////////////////////
   callApi(){
 
     let storedData = {
@@ -47,28 +53,107 @@ class Settings extends Component{
     .then(res => {
       this.fetchInputData(res);
     });
-
   }
+  //////////////////////////////////////////////////////
 
   handleChange(e){
     this.setState({ ...this.state, [e.target.name]: e.target.value });
   }
 
+///////////////////////////////////////////////////////////////////////////////
+// ADDRESS OPERATIONS
+///////////////////////////////////////////////////////////////////////////////
+  deleteItem(id){
+    let list = [...this.state.addresses]
+
+    let addressToDelete = list.find(item => item.id === id)
+
+    addressToDelete.action = 'remove'
+
+    // Remove from array if it was locally added
+    if(addressToDelete.local){
+      list = list.filter(item => item.id !== id)
+    }
+
+    this.setState({...this.state, addresses: list})
+  }
+
+  addItem(){
+
+    if(this.state.street === '' || this.state.city === '' || this.state.state === ''
+      || this.state.zip === '')
+      {
+        console.log('Empty inputs. Ignoring')
+        return;
+      }
+
+
+    const newAddress = {
+      id: 1 + Math.random(),
+      street: this.state.street,
+      city: this.state.city,
+      state: this.state.state,
+      zip: this.state.zip,
+
+      action: 'add',
+      local: true
+    };
+
+    const list = [...this.state.addresses]
+
+
+    list.push(newAddress);
+
+
+    this.setState({
+      ...this.state,
+      addresses: list,
+      street: '',
+      city: '',
+      state: '',
+      zip: ''
+    });
+
+  }
+
+  handleAddressChange(e){
+
+    const addressList = [...this.state.addresses]
+    let names = e.target.name.split(':')
+
+    let id = Number(names[0])
+    let fieldName = names[1]
+
+
+    let address = addressList.find(item => item.id === id)
+
+    address[fieldName] = e.target.value;
+    if(address.action !== 'add'){
+      address.action = 'set';
+    }
+
+    this.setState({...this.state, addresses: addressList})
+
+  }
+  //////////////////////////////////////////////////////////////////////////////
+
+
   handleSubmit(){
+
+
 
     let data = {
       changes : {
         name: this.state.name,
         email: this.state.email,
         phone: this.state.phone,
-        street: this.state.street,
-        city: this.state.city,
-        state: this.state.state,
-        zip: this.state.zip,
-        description: this.state.description
+        description: this.state.description,
+
+        addresses: this.state.addresses
       },
       access: localStorage.getItem('access')
     }
+
 
     let apiUrl = 'http://127.0.0.1:8000/api/salon/'+this.state.apiResponse.business.id+'/'
     fetch(apiUrl, {
@@ -92,20 +177,6 @@ class Settings extends Component{
 
 
     if(res.valid){
-      let street = ''
-      let city = ''
-      let state = ''
-      let zip = ''
-      if(res.business.addresses.length >0){
-        let address_components = res.business.addresses[0].split(',')
-        if(address_components.length === 3){
-          street = address_components[0]
-          city = address_components[1]
-          let state_zip = address_components[2].split(' ')
-          state = state_zip[1]
-          zip = state_zip[2]
-        }
-      }
 
       this.setState({
         ...this.state,
@@ -113,10 +184,9 @@ class Settings extends Component{
         email: res.business.email,
         description: res.business.description,
         phone: res.business.phone,
-        street: street,
-        city: city,
-        state: state,
-        zip: zip,
+
+        addresses: res.business.addresses,
+
         apiResponse: res,
         authenticated: res.valid,
         loaded: true
@@ -197,11 +267,27 @@ class Settings extends Component{
 
 
             <div>
-            Address:
-            <input type="text" name="street" value={this.state.street} onChange={this.handleChange}/>
-            <input type="text" name="city" value={this.state.city} onChange={this.handleChange}/>
-            <input type="text" name="state" value={this.state.state} onChange={this.handleChange}/>
-            <input type="text" name="zip" value={this.state.zip} onChange={this.handleChange}/>
+            Addresses:
+            {this.state.addresses?.filter(add => add.action !== 'remove').map(address =>
+              <div key={address.id}>
+              <input type="text"  name={address.id+':street'} value={address.street} onChange={this.handleAddressChange}/>
+              <input type="text" name={address.id+':city'} value={address.city} onChange={this.handleAddressChange}/>
+              <input type="text" name={address.id+':state'} value={address.state} onChange={this.handleAddressChange}/>
+              <input type="text" name={address.id+':zip'} value={address.zip} onChange={this.handleAddressChange}/>
+              <button onClick={() => this.deleteItem(address.id)}>
+                REMOVE
+              </button>
+              </div>
+            )}
+             <div>
+             <input type="text" name="street" value={this.state.street} onChange={this.handleChange} />
+             <input type="text" name="city" value={this.state.city} onChange={this.handleChange}/>
+             <input type="text" name="state" value={this.state.state} onChange={this.handleChange}/>
+             <input type="text" name="zip" value={this.state.zip} onChange={this.handleChange}/>
+             <button onClick={this.addItem}>
+               ADD
+             </button>
+             </div>
 
             </div>
 

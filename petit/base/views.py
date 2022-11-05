@@ -111,21 +111,42 @@ def get_business(request, business_id):
         business.description = changes.get('description')
         business.save()
 
-        street = changes.get('street').strip()
-        city = changes.get('city').strip()
-        state = changes.get('state').strip()
-        zip = changes.get('zip').strip()
+        addresses = changes.get('addresses')
 
-        try:
-            address = Address.objects.get(business_id=business)
-            address.street = street
-            address.city = city
-            address.state = state
-            address.zip = zip[:5]
-        except django.db.models.ObjectDoesNotExist:
-            address = Address(street=street, city=city, state=state, zip=zip[:5], business_id=business)
+        ##############################################
+        # Handle address changes
+        ##############################################
+        for address in addresses:
+            action = address.get('action')
+            id = address.get('id')
 
-        address.save()
+            if action is None:
+                continue
+
+            if action == 'remove':
+                Address.objects.filter(id=id).delete()
+            else:
+                street = address.get('street')
+                city = address.get('city')
+                state = address.get('state')
+                zip = address.get('zip')
+
+                if action == 'add':
+                    addressObj = Address(street=street, city=city, state=state,
+                    zip=zip, business_id=business)
+                elif action == 'set':
+                    try:
+                        addressObj = Address.objects.get(id=id)
+                        addressObj.street = street
+                        addressObj.city = city
+                        addressObj.state = state
+                        addressObj.zip = zip
+                    except django.db.models.ObjectDoesNotExist:
+                        addressObj = Address(street=street, city=city, state=state,
+                        zip=zip, business_id=business)
+                addressObj.save()
+        #################################################
+
 
         put_response['business'] = business_to_object(business)
         return HttpResponse(json.dumps(put_response), content_type="application/json")
