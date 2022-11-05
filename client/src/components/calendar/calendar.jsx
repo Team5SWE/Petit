@@ -75,9 +75,9 @@ class Calendar extends Component {
       },
       {
         id: 4,
-        text: "Event 4",
+        text: "Service: Haircut Customer: Guillermo Employee: Kostas",
         start: "2023-03-06T11:30:00",
-        end: "2023-03-06T14:30:00",
+        end: "2023-03-06T12:30:00",
         backColor: "#cc4125"
       },
     ];

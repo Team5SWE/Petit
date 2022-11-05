@@ -407,6 +407,8 @@ def signup(request):
                 authentication.send_email(email, subject, content)
                 print('New account was created with email: ' + email)
                 #######################################################
+        else:
+            response['error'] = 'An account with this email already exists!'
 
     return HttpResponse(json.dumps(response), content_type="application/json")
 

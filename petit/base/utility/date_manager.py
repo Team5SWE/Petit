@@ -16,4 +16,11 @@ def has_expired(date_string, time_string):
 
     today = datetime.datetime.today()
 
-    return today > date_to_check    
+    return today > date_to_check
+
+
+def slash_to_dash(date_string):
+
+    month, day, year = date_string.split('/')
+
+    return year+'-'+month+'-'+day
