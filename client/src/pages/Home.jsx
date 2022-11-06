@@ -14,27 +14,62 @@ import envymasssage from "../assets/envymasssage.jpg";
 import Relaxtime from "../assets/Relaxtime.jpg";
 import Pe from "../assets/Pe.png";
 
+import SalonCard from "../components/salon-card/salon-card.jsx"
+
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem';
+
 
 
 class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = { apiResponse: "" }
+    this.state = { searchValue: '', findBy: '', salons: [],
+     finders: ['name', 'address', 'city', 'state', 'zip']}
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   componentDidMount() {
     this.callApi();
   }
 
+  handleChange(e){
+    this.setState({ ...this.state, [e.target.name]: e.target.value });
+  }
+
+  handleSearch(e){
+    let url = 'http://127.0.0.1:8000/api/salon/?'
+
+    let value = this.state.searchValue.replace(' ', '+')
+    let finder = this.state.findBy
+
+    if(finder === '' || value === '')
+      url = 'http://127.0.0.1:8000/api/salon/'
+    else
+      url += finder+'='+value
+
+    console.log(url)
+
+    fetch(url)
+    .then(res => res.json())
+    .then(res => this.setState({...this.state, salons: res.businesses}))
+
+  }
+
+
+
+
   callApi() {
-    fetch("http://127.0.0.1:8000/api/salon/2/")
+    fetch("http://127.0.0.1:8000/api/salon/")
       .then(res => res.json())
-      .then(res => this.setState({ apiResponse: res }))
+      .then(res => this.setState({...this.state, salons: res.businesses }))
   }
 
   render() {
 
-    console.log(this.state.apiResponse)
     return (
       <div>
 
@@ -53,113 +88,35 @@ class Home extends Component {
           <a href="/salon">Appointment</a>
         </div>
 
-        <h2>LIST OF SALONS IN ATLANTA</h2>
+        <h2>SEARCH YOUR SHOP</h2>
         <div id="myBtnContainer">
-          <button class="btn" onclick="filterSelection('all')"> Show all</button>
-          <button class="btn" onclick="filterSelection('hair')"> Hairs</button>
-          <button class="btn" onclick="filterSelection('nails')"> Nails</button>
-          <button class="btn" onclick="filterSelection('lash')"> Lashes</button>
-          <button class="btn" onclick="filterSelection('massage')"> Massage</button>
-          <Link to="/salon"><button class="btn"> Appointment</button></Link>
+          <input name="searchValue" placeholder="Search values: " value={this.state.searchValue} onChange={this.handleChange} />
+
+          <FormControl sx={{ m: 1, minWidth: 120 }} >
+            <InputLabel id="input-label">Search by</InputLabel>
+            <Select
+              labelId="input-label"
+              label="Find by"
+              id="input-label"
+              name="findBy"
+              onChange={this.handleChange}>
+              {this.state.finders.map((finder, index) =>
+                <MenuItem key={index} value={finder}>{finder}</MenuItem>
+              )}
+            </Select>
+          </FormControl>
+
+          <button onClick={this.handleSearch}> Search </button>
+
         </div>
 
-        <div class="row">
+        <div class="salon-cards">
 
-          <div class="column hair">
+        {this.state.salons.map(salon => (
+          <SalonCard name={salon.name} address={salon.email} id={salon.id}/>
+        ))}
 
-            <div class="content">
-              <img class="col-img" src={belahair} alt="Belahair"/>
-              
-              <h4>Bela Hair</h4>
-              <p class="phone">Phone:{this.state.apiResponse.phone} </p>
-              <Link to="/salon"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
-            </div>
 
-          </div>
-
-          <div class="column hair">
-            <div class="content">
-              <img class="col-img" src={ATLHair} alt="ATLHair"/>
-              <h4>ATL Hair</h4>
-              <p class="phone">Phone:{this.state.apiResponse.phone} </p>
-              <Link to="/salon"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
-            </div>
-          </div>
-          <div class="column hair">
-            <div class="content">
-              <img class="col-img" src={JamesHair} alt="JamesHair"/>
-              <h4>James Hair</h4>
-              <p class="phone">Phone:{this.state.apiResponse.phone} </p>
-              <Link to="/salon"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
-            </div>
-          </div>
-
-          <div class="column nails">
-            <div class="content">
-              <img class="col-img" src={LushNail}alt="LushNail"/>
-              <h4>Lush Nails</h4>
-              <p class="phone">Phone:{this.state.apiResponse.phone} </p>
-              <Link to="/salon"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
-            </div>
-          </div>
-          <div class="column nails">
-            <div class="content">
-              <img src={Happynail} alt="Happynail" class="col-img"/>
-              <h4>Happy Nails</h4>
-              <p class="phone">Phone:{this.state.apiResponse.phone}</p>
-              <Link to="/salon"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
-            </div>
-          </div>
-          <div class="column nails">
-            <div class="content">
-              <img src={LoveNail} alt="LoveNail" class="col-img"/>
-              <h4>Love Nail</h4>
-              <p class="phone">Phone:{this.state.apiResponse.phone} </p>
-              <Link to="/salon"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
-            </div>
-          </div>
-
-          <div class="column lash">
-            <div class="content">
-              <img class="col-img" src={Lashbar} alt="Lashbar" />
-              <h4>Lash Bar</h4>
-              <p class="phone">Phone:{this.state.apiResponse.phone} </p>
-              <Link to="/salon"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
-            </div>
-          </div>
-          <div class="column lash">
-            <div class="content">
-              <img src={Dekalash} alt="Dekalash" class="col-img"/>
-              <h4>Deka Lash</h4>
-              <p class="phone">Phone:{this.state.apiResponse.phone} </p>
-              <Link to="/salon"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
-            </div>
-          </div>
-          <div class="column lash">
-            <div class="content">
-              <img src={thelashlounge} alt="thelashlounge" class="col-img"/>
-              <h4>The Lash Lounge</h4>
-              <p class="phone">Phone:{this.state.apiResponse.phone} </p>
-              <Link to="/salon"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
-            </div>
-          </div>
-
-          <div class="column massage">
-            <div class="content">
-              <img src={envymasssage} alt="envymasssage" class="col-img"/>
-              <h4>Envy Massage</h4>
-              <p class="phone">Phone:{this.state.apiResponse.phone} </p>
-              <Link to="/salon"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
-            </div>
-          </div>
-          <div class="column massage">
-            <div class="content">
-              <img src={Relaxtime} alt="Relaxtime" class="col-img"/>
-              <h4>Relax Time</h4>
-              <p class="phone">Phone:{this.state.apiResponse.phone}</p>
-              <Link to="/salon"><button class="btn2" onclick="window.location.href= 'Belahair.html';">Book Now</button></Link>
-            </div>
-          </div>
 
         </div>
 

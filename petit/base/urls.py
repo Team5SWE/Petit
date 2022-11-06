@@ -24,6 +24,7 @@ urlpatterns = [
     path("make_appointment/", views.make_appointment, name="Make Appoinment"),
 
     path("appointment/<str:id>", views.get_appointment, name="Appointments"),
+    path("schedule/", views.get_business_schedule, name="Business Schedule"),
     path("delete_appointment/", views.delete_appointment, name="Delete Appointment"),
 
     path("recovery/request", views.recovery_check_email, name="Request recovery"),

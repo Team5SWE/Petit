@@ -22,28 +22,8 @@ class Calendar extends Component {
     this.state = {
       viewType: "Week",
       durationBarVisible: false,
-      timeRangeSelectedHandling: "Enabled",
-      onTimeRangeSelected: async args => {
-        const dp = this.calendar;
-        const modal = await DayPilot.Modal.prompt("Create a new event:", "Event 1");
-        dp.clearSelection();
-        if (!modal.result) { return; }
-        dp.events.add({
-          start: args.start,
-          end: args.end,
-          id: DayPilot.guid(),
-          text: modal.result
-        });
-      },
-      eventDeleteHandling: "Update",
-      onEventClick: async args => {
-        const dp = this.calendar;
-        const modal = await DayPilot.Modal.prompt("Update event text:", args.e.text());
-        if (!modal.result) { return; }
-        const e = args.e;
-        e.data.text = modal.result;
-        dp.events.update(e);
-      },
+
+
     };
   }
 
@@ -51,38 +31,8 @@ class Calendar extends Component {
     return this.calendarRef.current.control;
   }
   componentDidMount() {
-
-    const events = [
-      {
-        id: 1,
-        text: "Event 1",
-        start: "2023-03-07T10:30:00",
-        end: "2023-03-07T13:00:00"
-      },
-      {
-        id: 2,
-        text: "Event 2",
-        start: "2023-03-08T09:30:00",
-        end: "2023-03-08T11:30:00",
-        backColor: "#6aa84f"
-      },
-      {
-        id: 3,
-        text: "Event 3",
-        start: "2023-03-08T12:00:00",
-        end: "2023-03-08T15:00:00",
-        backColor: "#f1c232"
-      },
-      {
-        id: 4,
-        text: "Service: Haircut Customer: Guillermo Employee: Kostas",
-        start: "2023-03-06T11:30:00",
-        end: "2023-03-06T12:30:00",
-        backColor: "#cc4125"
-      },
-    ];
-
-    const startDate = "2023-03-07";
+    const startDate = this.props.startDate;
+    const events = this.props.schedules
 
     this.calendar.update({startDate, events});
 
@@ -95,8 +45,8 @@ class Calendar extends Component {
             selectMode={"week"}
             showMonths={3}
             skipMonths={3}
-            startDate={"2023-03-07"}
-            selectionDay={"2023-03-07"}
+            startDate={this.props.startDate}
+            selectionDay={this.props.startDate}
             onTimeRangeSelected={ args => {
               this.calendar.update({
                 startDate: args.day

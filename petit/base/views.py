@@ -164,8 +164,15 @@ def get_businesses(request):
     state_name = request.GET.get('state', None)
     city_name = request.GET.get('city', None)
     zip_code = request.GET.get('zip', None)
+    name = request.GET.get('name', None)
 
-    business_list = get_businesses_by_address(state_name, city_name, zip_code)
+    if name is None:
+        business_list = get_businesses_by_address(state_name, city_name, zip_code)
+    else:
+        try:
+            business_list = Business.objects.filter(name__contains=name)
+        except django.db.models.ObjectDoesNotExist:
+            business_list = []
 
     response_data = dict()
 
@@ -247,6 +254,46 @@ def get_business_appointments(request, business_id):
     response_data['appointments'] = appointment_objects
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+def get_business_schedule(request):
+
+    response = dict()
+    response['valid'] = False
+
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        access = body.get('access')
+
+        business = get_business_from_token(access)
+
+
+        if business is None:
+            return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+        current_day = datetime.date.today()
+        date = datetime.date.strftime(current_day, "%Y-%m-%d")
+        response['valid'] = True
+        response['currentDate'] = date
+
+        schedules = []
+        try:
+            appointments = Appointment.objects.filter(business_id=business)
+            for appointment in appointments:
+                schedule_object = appointment_to_schedule_object(appointment)
+                schedules.append(schedule_object)
+
+        except django.db.models.ObjectDoesNotExist:
+            pass
+
+        response['schedules'] = schedules
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+
 
 def get_employee_timeslots(request):
     """
@@ -662,6 +709,32 @@ def api_employees(request, business_id):
     # Response
     return HttpResponse(json.dumps(response), content_type="application/json")
 
+
+def contact_business(request, business_id):
+    response = dict()
+    response['valid'] = False
+
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        name = body.get('name')
+        email = body.get('email')
+        message = body.get('message')
+
+        try:
+            business = Business.objects.get(id=business_id)
+        except django.db.models.ObjectDoesNotExist:
+            return HttpResponse(json.dumps(response), content_type="application/json")
+
+        # Send message to business email
+        subject_client = "New message from "+name
+        content_client = 'Sender: '+name+'\nEmail: '+email+'\nMessage: '+message
+        authentication.send_email(business.email, subject_client, content_client)
+
+        response['valid'] = True
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
 ##########################################################################################
 #  _____  ____    _                _     _           _
 # |  __ \|  _ \  | |              | |   (_)         | |
@@ -729,6 +802,35 @@ def appointment_to_object(appointment=None):
     response_data['address'] = address_to_string(appointment.address_id)
 
     return response_data
+
+
+def appointment_to_schedule_object(appointment=None):
+    response_data = dict()
+
+    if appointment is None:
+        return response_data
+
+    appointment_text = 'Service: '+appointment.service+' Client: '+appointment.client_name+' Emp: '+appointment.provider_id.first
+    date = date_manager.slash_to_dash(appointment.date)
+
+    response_data['id'] = appointment.id
+    response_data['text'] = appointment_text
+    response_data['start'] = date+'T'+appointment.start+':00'
+    response_data['end'] = date+'T'+appointment.end+':00'
+    response_data['moveVDisabled'] = True
+    response_data['moveHDisabled'] = True
+
+    # Default color, green = available, yellow = ongoing, red= expired
+    color = "#6aa84f"
+
+    if date_manager.has_expired(appointment.date,appointment.start):
+        color = "#f1c232"
+        if date_manager.has_expired(appointment.date,appointment.end):
+            color = "#cc4125"
+
+    response_data['backColor'] = color
+    return response_data
+
 
 def employee_to_object(employee=None):
     employee_obj = dict()
@@ -890,13 +992,13 @@ def address_to_string(address):
     return address.street + ', ' + address.city + ', ' + address.state + ' ' + address.zip
 
 
-def get_businesses_by_address(address_state=None, address_city=None, address_zip=None):
+def get_businesses_by_address(address_state=None, address_city=None, address_zip=None, name=None):
 
     addresses = Address.objects.all()
     if address_state is not None:
-        addresses = addresses.filter(state=address_state)
+        addresses = addresses.filter(state__contains=address_state)
     if address_city is not None:
-        addresses = addresses.filter(city=address_city)
+        addresses = addresses.filter(city__contains=address_city)
     if address_zip is not None:
         addresses = addresses.filter(zip=address_zip)
 
