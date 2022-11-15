@@ -1,0 +1,171 @@
+.search-div{
+  display: flex;
+
+  gap: 25px;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+
+  box-sizing: border-box;
+}
+
+.search-bar{
+  background-color: white;
+  padding: 1.2rem;
+  border-radius: 15px;
+  display: flex;
+  font-size: 1.5rem;
+  align-items: center;
+  gap: 1rem;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.search-bar input{
+  font-size: 1.5rem;
+  flex-grow: 5;
+}
+
+.search-by{
+  width: 200px;
+  border-radius: 15px;
+  font-size: 1.5rem;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.search-btn{
+  width: 200px;
+  border-radius: 15px;
+  font-size: 1.5rem;
+  box-sizing: border-box;
+  padding: 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bolder;
+}
+
+.search-option{
+  font-size: 1.5rem;
+}
+
+.salon-list{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 350px));
+  justify-content: space-between;
+  gap: 25px;
+  padding: 3rem 0;
+
+}
+
+.salon-card{
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 2rem;
+  border-radius: 15px;
+  gap: 1rem;
+
+}
+
+.salon-card-iconbox{
+  width: 150px;
+  height: 150px;
+}
+
+.salon-card-info{
+  text-align: center;
+
+}
+
+.salon-card-info h4{
+  font-size: 2rem;
+}
+
+.salon-card-buttons{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  flex-grow: 5;
+}
+
+.salon-card-btn{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.8rem;
+}
+
+.s1{
+  z-index: 5;
+}
+
+.s2{
+  z-index: 3;
+}
+
+.divided-container{
+  display: flex;
+  justify-content: space-between;
+
+  background-color: white;
+  border-radius: 15px;
+  padding: 0 2rem;
+  width: 70%;
+  margin: auto;
+  padding-top: 2rem;
+}
+
+.about-info{
+  text-align: left !important;
+  flex-basis: 40%;
+  color: black;
+}
+
+.about-desc{
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.about-image-container{
+  flex-shrink: 2;
+  align-self: baseline;
+
+}
+
+.about-image{
+  max-width: 100%;
+}
+
+@media screen and (max-width: 900px){
+  .divided-container{
+    flex-wrap: wrap;
+  }
+
+  .salon-list{
+    justify-content: center;
+  }
+
+  .about-info{
+    flex-grow: 5;
+  }
+}
+
+@media screen and (max-width: 700px){
+  .salon-list{
+    grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
+  }
+
+  .search-div{
+    flex-direction: column;
+  }
+
+  .search-by, .search-bar, .search-btn{
+    width: 100%;
+
+  }
+
+
+}

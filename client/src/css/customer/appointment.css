@@ -1,0 +1,88 @@
+.appointment-selectors{
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 50%;
+  margin: auto;
+}
+
+.appointment-selector{
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 3px;
+}
+
+.make-appointment-container{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.make-appointment-title{
+  font-size: 1.8rem;
+}
+
+.time-slots-container, .client-credentials-container{
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 25px;
+}
+
+.time-slots{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(85px, 95px));
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.time-slot{
+  padding: 0.2rem 0.8rem;
+  cursor: pointer;
+  border-radius: 15px;
+  font-size: 1.5rem;
+  text-align: center;
+
+}
+
+.selected-slot, .selected-slot:hover{
+  background-color: #AEAEAE;
+  color: white;
+}
+
+.client-credentials-container{
+  border-left: solid 3px;
+}
+
+.client-credentials-inputs{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 15px;
+  flex-grow: 5;
+}
+
+.client-credential-input{
+  padding: 0.8rem;
+  font-size: 1.2rem;
+}
+
+.app-error{
+  color: red;
+  text-align: center;
+}
+
+
+@media screen and (max-width: 700px){
+  .client-credentials-container{
+    border-left: unset;
+    border-top: solid 3px;
+    border-bottom: solid 3px;
+  }
+
+  .appointment-selectors{
+    width: 75%;
+  }
+
+}

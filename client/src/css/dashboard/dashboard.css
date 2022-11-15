@@ -1,0 +1,77 @@
+.stats-widgets{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 250px));
+  justify-content: space-between;
+  gap: 25px;
+  padding: 3rem 0;
+
+}
+
+.stats-widget{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 2rem;
+  border-radius: 20px;
+}
+
+.stats-widget-icon{
+  font-size: 4em;
+}
+
+.stats-widget-value{
+  font-weight: bolder;
+  font-size: 2.4rem;
+}
+
+.stats-widget-title{
+  color: #6B6B6B;
+  font-weight: normal;
+  font-size: 1.7rem;
+}
+
+.appointments-list{
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.appointment-stripe{
+  display: flex;
+  background-color: white;
+  color: black;
+  padding: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-radius: 15px;
+  gap: 15px;
+}
+
+.app-stripe-img{
+  width: 75px;
+}
+
+
+
+@media screen and (max-width: 700px){
+  .stats-widgets{
+    grid-template-columns: repeat(auto-fit, minmax(200px, 210px));
+    justify-content: center;
+  }
+
+
+
+  .stats-widget-icon{
+    font-size: 3em;
+  }
+
+  .app-stripe-text{
+    font-size: 0.8rem;
+  }
+
+  .app-stripe-img{
+    width: 50px;
+  }
+
+}

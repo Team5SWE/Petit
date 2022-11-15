@@ -1,0 +1,130 @@
+.auth-div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding-top: 2rem;
+
+
+  z-index: 1;
+  position: relative;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow-x: hidden;
+
+}
+
+.auth-main-logo{
+  max-width: 140px;
+}
+
+.auth-form-div{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  background-color: white;
+  color: black;
+  width: 25%;
+  min-width: min(16rem, 25rem);
+  padding: 4rem 4rem 5rem 4rem;
+  border-radius: 20px;
+}
+
+.auth-form-title h4{
+  font-size: 2rem;
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+.auth-input-box{
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-input-box p{
+  font-size: 1.2rem;
+  font-weight: bolder;
+}
+
+.auth-input{
+  padding: 0.8rem;
+  background-color: #D9D9D9;
+  border-radius: 10px;
+  width: 100%;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.auth-form-inputs-column{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 1rem 1rem;
+  flex-grow: 5;
+}
+
+
+.auth-submit-btn{
+  font-size: 1.1rem;
+  padding: 0.8rem 5rem;
+  width: 25%;
+  text-align: center;
+  margin: auto;
+  border-radius: 10px;
+}
+
+.auth-form-submit{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+}
+
+.auth-disclaimer-div{
+  color: white;
+}
+
+.auth-form-div-divided{
+  width: 40%;
+  min-width: min(16rem, 25rem);
+  padding: 1rem 1rem 3rem 2rem;
+}
+
+.auth-form-div-divided .auth-form-inputs-column{
+  padding-top: 1rem;
+}
+
+.auth-form-div-divided h4{
+  font-size: 1.3rem;
+}
+
+.password-label{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.auth-divided-div{
+  display: flex;
+  flex-direction: row !important;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.forgot-password{
+  color: black;
+  font-weight: bolder;
+}
+
+@media screen and (max-width: 700px){
+  .auth-form-div{
+    padding: 2rem 2rem 3rem 2rem;
+  }
+
+  .right-inputs-column{
+    border-top: solid 2px;
+  }
+
+}

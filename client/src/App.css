@@ -1,19 +1,310 @@
-html, body {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+:root{
+  --mobileTitle: 1.8rem;
+  --webTitle: 2.5rem;
+  --webSubTitle: 1.8rem;
+  --webLinks: 1.5rem;
+  --mobileLinks: 1.2rem;
+  --webService: 1.5rem;
+  --mobileService: 0.9rem;
 }
-h1 {
-  font-family: 'Dancing Script', cursive;
-  font-size: 50px;
+
+html{
+  scroll-behavior: smooth;
 }
-.btn {
-  height: 3rem;
-  width: 300px;
-  border-radius: 2rem;
+
+body{
+  margin: 0;
+  background-color: #FAC213;
+  font-family: 'League Spartan';
 }
-.btn.btn-primary {
-  font-weight: 600;
-  font-size: 20px;
-  color: white;
-  background-color: #eccfcb;
+
+.pointer{
+  cursor: pointer;
+}
+
+.ignore{
+  display: none;
+}
+
+section{
+  padding: 2rem 5rem;
+}
+
+h1{
+  margin: 0;
+}
+
+select, select:focus{
+  outline: none;
   border: none;
+}
+
+textarea::-webkit-scrollbar {
+   display: none;
+ }
+
+textarea, textarea:focus{
+  resize: none;
+  outline: none;
+  border: none;
+}
+
+.page-title{
+  font-size: var(--webTitle);
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.page-subtitle{
+  font-size: var(--webSubTitle);
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.extended-title-div{
+
+}
+
+.black-script{
+  color: black !important;
+}
+
+.yellow-btn{
+  background-color: #FAC213;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.yellow-btn:hover{
+  background-color: #E2AC04;
+}
+
+.green-btn{
+  background-color: #0FAA50;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.green-btn:hover{
+  background-color: #049738;
+  color: white;
+}
+
+.dark-btn{
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+.red-btn{
+  background-color: #AF0707;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.red-btn:hover{
+  background-color: #950707;
+}
+
+.dark{
+  background-color: black;
+  color: white;
+}
+
+.white{
+  background-color: white;
+  color: black;
+}
+
+.side-submit-btn{
+  width: 30%;
+  box-sizing: border-box;
+  padding: 1rem;
+  text-align: center;
+}
+
+.full-btn{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1rem;
+  text-align: center;
+}
+
+.round-btn{
+  border-radius: 15px;
+}
+
+.error-txt{
+  color: red;
+  text-align: center;
+}
+
+
+.circled-icon{
+  max-height: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  min-width: 100%;
+
+  overflow: hidden;
+  border-radius: 80%;
+}
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #000000;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+.loader-section{
+  display: flex;
+  justify-content: center;
+}
+
+.center-screen{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+}
+
+.loading-logo{
+  max-width: 20%;
+}
+
+/* Support for Safari*/
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+@keyframes fadeInFromLeft {
+  from{
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+
+  to{
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInFromRight {
+  from{
+    opacity: 0;
+    transform: translateX(50px);
+  }
+
+  to{
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from{
+    opacity: 0;
+  }
+
+  to{
+    opacity: 1;
+  }
+}
+
+.slide-element-left{
+  animation: fadeInFromLeft 4s;
+}
+
+.slide-element-right{
+  animation: fadeInFromRight 4s;
+}
+
+.fadein-element{
+  animation: fadeIn 5s;
+}
+
+.bottom-wave{
+  position: absolute;
+  bottom: 0;
+
+  z-index: -1;
+  align-self: baseline;
+}
+
+.bottom-wave-div{
+
+  width: 100%;
+  position: relative;
+  flex-grow: 5;
+}
+
+.black-href{
+  color: black;
+}
+
+.superior-border{
+  border-top: solid 2px;
+}
+
+.growable-input-box{
+  flex-grow: 5;
+
+}
+
+.growable-input-box input, .growable-input-box textarea{
+  flex-grow: 5;
+}
+
+
+
+
+
+
+
+
+
+@media screen and (max-width: 700px){
+  .page-title{
+    font-size: var(--mobileTitle);
+    padding: 2.5rem 0;
+  }
+
+  .title-container{
+    padding: 2rem 0;
+  }
+
+  .side-submit-btn{
+    width: 100%;
+  }
+
+  .extended-title-div{
+    text-align: center;
+  }
+
+  .bottom-wave{
+    height: 32rem;
+  }
+
+  .loading-logo{
+    max-width: 60%;
+  }
+
 }

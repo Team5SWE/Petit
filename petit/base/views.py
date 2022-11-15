@@ -4,6 +4,7 @@ from django.http import HttpResponse
 import json
 import sys
 import jwt
+import math
 from .models import Business, Appointment, Employee, Address, Service, newUser, Recovery
 import datetime
 from .utility import date_manager, encryption, authentication
@@ -15,6 +16,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from django.conf import settings
 
+import os
 
 class CustomUserCreate(APIView):
     permission_classes = [AllowAny]
@@ -152,6 +154,49 @@ def get_business(request, business_id):
         return HttpResponse(json.dumps(put_response), content_type="application/json")
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+def get_business_stats(request, business_id):
+
+    response = dict()
+    response['valid'] = False
+
+    try:
+        business = Business.objects.get(id=business_id)
+    except django.db.models.ObjectDoesNotExist:
+        business = None
+
+    if business is None:
+        return HttpResponse(json.dumps(response), content_type="application/json")
+
+    response['valid'] = True
+    response['employees'] = len(Employee.objects.filter(works_at=business))
+    response['appointments'] = len(Appointment.objects.filter(business_id=business))
+    response['views'] = business.views
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+def get_complete_business(request, business_id):
+    """
+    Returns an object with all data of a particular business
+    This endpoint is inteded to be called when the client accesses the
+    business site. Unlike get_business, this method will add a 'visit' value to the
+    business table.
+    """
+
+    # Check if business with provided id exists
+    try:
+        business = Business.objects.get(id=business_id)
+    except django.db.models.ObjectDoesNotExist:
+        business = None
+
+    if business is not None:
+        business.views = business.views + 1
+        business.save()
+
+    response_data = business_to_object(business)
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
+
 
 def get_businesses(request):
     """
@@ -398,7 +443,7 @@ def login(request):
 #JWT decode method. Using That if null return response of
 # Try to get bussiness id and check if it exist
 # if not return response
-# if it is not null store bussnus object in fild called bussiness.
+# if it is not null store Business object in fild called bussiness.
 def header_decoder (request):
 
     response_data = dict()
@@ -413,6 +458,7 @@ def header_decoder (request):
         access = body.get('access')
         business = get_business_from_token(access)
         if business is None:
+            response_data['error'] = "Incorrect credentials"
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
@@ -585,7 +631,7 @@ def delete_appointment(request):
         try:
             appointment = Appointment.objects.get(token=appointment_id)
         except django.db.models.ObjectDoesNotExist:
-            return HttpResponse(json.dumps(response), content_type="application/json")
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
 
         response_data['valid'] = True
 
@@ -690,10 +736,13 @@ def api_employees(request, business_id):
             employee_phone = change['phone']
             employee_action = change['action']
 
+
             if employee_action == 'add':
+
                 employee = Employee(first=employee_first, last=employee_last,
                 email=employee_email, phone=employee_phone, works_at=business)
                 employee.save()
+
             else:
                 Employee.objects.filter(id=employee_id).delete()
 
@@ -772,8 +821,15 @@ def business_to_object(business=None):
         service_object = service_to_object(service)
         services.append(service_object)
 
+    employees = []
+    for employee in Employee.objects.filter(works_at=business):
+        employee_object = employee_to_object(employee)
+        employees.append(employee_object)
+
+
     business_obj['services'] = services
     business_obj['addresses'] = addresses
+    business_obj['employees'] = employees
 
     return business_obj
 
@@ -791,6 +847,7 @@ def appointment_to_object(appointment=None):
     response_data['business'] = appointment.business_id.name
     response_data['businessEmail'] = appointment.business_id.email
 
+    response_data['clientName'] = appointment.client_name
     response_data['clientEmail'] = appointment.client_email
     response_data['clientPhone'] = appointment.client_phone
 
@@ -837,6 +894,8 @@ def employee_to_object(employee=None):
 
     employee_obj['id'] = employee.id
     employee_obj['name'] = employee.first + " " + employee.last
+    employee_obj['first'] = employee.first
+    employee_obj['last'] = employee.last
     employee_obj['email'] = employee.email
     employee_obj['phone'] = employee.phone
 

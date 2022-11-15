@@ -1,0 +1,93 @@
+.services-div{
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap-reverse;
+  align-items: stretch;
+  padding-bottom: 4rem;
+}
+
+.services{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  flex-basis: 50%;
+  flex-grow: 5;
+}
+
+.service{
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  font-size: 1.7rem;
+  align-items: center;
+}
+
+input, input:focus{
+  border: none;
+  outline: none;
+}
+
+.services-adder{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  flex-basis: 40%;
+  flex-grow: 1;
+}
+
+
+.services-adder input, .adder-btn{
+  font-size: 1.5rem;
+  padding: 1rem 1rem;
+}
+
+.adder-btn{
+  flex-basis: 40%;
+  text-align: center;
+}
+
+.adder-item{
+  box-sizing:border-box;
+  width: 100%;
+}
+
+.remove-icon{
+  display: none;
+}
+
+.service:hover > .remove-icon{
+  display: block;
+}
+
+.remove-icon:hover{
+  color: #B43E8F;
+}
+
+
+
+@media screen and (max-width: 700px){
+  .services-div{
+    flex-direction: column-reverse;
+    padding-bottom: 2rem;
+  }
+
+  .service, .services-adder input, .adder-btn{
+    font-size: var(--mobileService);
+
+  }
+
+  section{
+    padding: 1rem 2rem;
+  }
+
+  .submit-btn{
+    width: 100%;
+  }
+
+  .page-title{
+    padding: 0
+  }
+
+}

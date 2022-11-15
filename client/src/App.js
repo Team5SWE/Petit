@@ -1,25 +1,24 @@
-import React, {Component} from "react";
-import {BrowserRouter, Routes, Route} from "react-router-dom";
 import './App.css';
-import Home from "./pages/Home";
-import NotFound from "./pages/NotFound";
-import ContactUs from "./pages/ContactUs";
+import {React, Component} from "react";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 
-import SignUp from "./pages/SignUp";
-import Login from "./pages/Login";
+//Business side pages
+import Home from './pages/Home.jsx';
+import Services from "./pages/dashboard/Services.jsx";
+import Employees from "./pages/dashboard/Employees.jsx";
+import Settings from "./pages/dashboard/Settings.jsx";
+import BusinessDashboard from "./pages/dashboard/BusinessDashboard.jsx";
+import Schedule from "./pages/dashboard/Schedule.jsx";
 
-import InitialRecover from "./pages/recovery/initialRecover";
+import Login from "./pages/auth/Login.jsx";
+import Recovery from "./pages/auth/Recovery.jsx";
+import Signup from "./pages/auth/Signup.jsx";
 
-import About from "./pages/About";
-import BusinessSite from "./pages/BusinessSite";
-import SalonSite from "./pages/SalonSite";
-import Employees from "./pages/Employees";
-import Services from "./pages/Services";
-import Settings from "./pages/Settings.jsx";
-import Schedule from "./pages/Schedule";
-import Cancel from "./pages/Cancel";
-import Confirm from "./pages/confirm";
-import Appointment from "./pages/appointments/Appointment";
+//Customer side pages
+import Confirm from "./pages/customer/Confirm.jsx";
+import Appointment from "./pages/customer/Appointment.jsx";
+import SalonSite from "./pages/customer/SalonSite.jsx";
+import Cancel from "./pages/customer/Cancel.jsx";
 
 class App extends Component {
 
@@ -29,24 +28,23 @@ class App extends Component {
         <Routes>
           <Route path="/">
             <Route index element={<Home/>} />
-
-            <Route path="sign-up" element={<SignUp/>} />
-            <Route path="login" element={<Login/>} />
-
-            <Route path="business" element={<BusinessSite/>}></Route>
-            <Route path="salon/:id" element={<SalonSite/>}></Route>
             <Route path="services" element={<Services/>}></Route>
-            <Route path="settings" element={<Settings/>}></Route>
             <Route path="employees" element={<Employees/>}></Route>
-            <Route path="schedule" element={<Schedule/>}></Route>
-            <Route path="about" element={<About/>} />
-            <Route path="cancel" element={<Cancel/>} />
-            <Route path="confirm/:id" element={<Confirm/>} />
-            <Route path="appointment" element={<Appointment/>} />
-            <Route path="recovery" element={<InitialRecover/>} />
+            <Route path="confirmation/:id" element={<Confirm/>}/>
+            <Route path="settings" element={<Settings/>}/>
+            <Route path="appointments" element={<Schedule/>}/>
+            <Route path="business" element={<BusinessDashboard/>}/>
 
-            <Route path="contact" element={<ContactUs/>} />
-            <Route path="*" element={<NotFound/>} />
+
+            <Route path="login" element={<Login/>}/>
+            <Route path="recovery" element={<Recovery/>}/>
+            <Route path="signup" element={<Signup/>}/>
+
+            <Route path="appointment/:id" element={<Appointment/>}/>
+            <Route path="salon/:id" element={<SalonSite/>}/>
+            <Route path="cancel" element={<Cancel/>}/>
+
+
           </Route>
         </Routes>
       </BrowserRouter>
