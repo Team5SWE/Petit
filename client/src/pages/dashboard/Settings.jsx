@@ -364,7 +364,7 @@ fetchInputData(res){
             </div>
 
             <div class="settings-submit">
-              <div class="side-submit-btn green-btn" onClick={this.handleSubmit}>SAVE SERVICES</div>
+              <div class="side-submit-btn green-btn" onClick={this.handleSubmit}>SAVE CHANGES</div>
             </div>
 
           </section>
