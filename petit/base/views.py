@@ -7,7 +7,10 @@ import jwt
 import math
 from .models import Business, Appointment, Employee, Address, Service, newUser, Recovery
 import datetime
+import time
 from .utility import date_manager, encryption, authentication
+
+from django.core.paginator import Paginator
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -67,7 +70,7 @@ def get_appointment(request, id):
     """
 
     try:
-        appointment = Appointment.objects.get(token=id)
+        appointment = Appointment.objects.select_related('business_id','provider_id','address_id').get(token=id)
     except django.db.models.ObjectDoesNotExist:
         appointment = None
 
@@ -203,13 +206,20 @@ def get_businesses(request):
     Returns an object with the list business based on query parameters
     ex: state, city, zip
     If none provide, returns all businesses
+    Unlike the other endpoints, this only extracts minimal amount of data to make
+    the request more optimized
     """
 
+    init_time = time.time()
+
     # URL Query parameters
+    page = request.GET.get('page', 1)
+
     state_name = request.GET.get('state', None)
     city_name = request.GET.get('city', None)
     zip_code = request.GET.get('zip', None)
     name = request.GET.get('name', None)
+    sort_by = request.GET.get('sort', None)
 
     if name is None:
         business_list = get_businesses_by_address(state_name, city_name, zip_code)
@@ -221,12 +231,24 @@ def get_businesses(request):
 
     response_data = dict()
 
+    # Sort if query parameter included
+    if sort_by is not None:
+
+        if sort_by == "Name (A-Z)":
+            business_list = sorted(business_list, key=lambda x : x.name)
+
     # Convert all businesses to dictionaries
     businesses = []
     for business in business_list:
-        businesses.append(business_to_object(business))
+        businesses.append(enhanced_business_to_object(business))
 
-    response_data['businesses'] = businesses
+    p = Paginator(businesses, 3)
+
+    selected_page = p.page(page)
+
+    response_data['pagesAmount'] = p.num_pages
+    response_data['businesses'] = selected_page.object_list
+    response_data['time'] = time.time() -init_time
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
@@ -237,28 +259,28 @@ def get_businesses(request):
 
 def get_business_employees(request, business_id):
 
-    try:
-        business = Business.objects.get(id=business_id)
-    except django.db.models.ObjectDoesNotExist:
-        business = None
+    init_time = time.time()
+
+    employees = Employee.objects.select_related('works_at').filter(works_at=business_id)
 
     response_data = dict()
     response_data['valid'] = False
 
-    if business is None:
+    if len(employees) < 1:
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
     if request.method == 'GET':
         response_data['valid'] = True
-        response_data['business'] = business.name
+        response_data['business'] = employees[0].works_at.name
 
         employee_objects = []
-        employees = Employee.objects.filter(works_at=business_id)
         for employee in employees:
             employee_obj = employee_to_object(employee)
             employee_objects.append(employee_obj)
 
         response_data['employees'] = employee_objects
+
+        response_data['time'] = time.time() -init_time
 
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
@@ -699,6 +721,8 @@ def api_services(request, business_id):
 
 def api_employees(request, business_id):
 
+    init_time = time.time()
+
     # Create response for all requests
     response = dict()
     response['valid'] = False
@@ -755,6 +779,9 @@ def api_employees(request, business_id):
 
     response['employees'] = employees
 
+    response['time'] = time.time() -init_time
+
+
     # Response
     return HttpResponse(json.dumps(response), content_type="application/json")
 
@@ -794,6 +821,26 @@ def contact_business(request, business_id):
 #                                      _/ |
 #                                     |__/
 #########################################################################################
+
+def enhanced_business_to_object(business):
+
+    business_obj = dict()
+    business_obj['valid'] = False
+
+    if business is not None:
+        business_obj['valid'] = True
+    else:
+        return business_obj
+
+
+
+    business_obj['id'] = business.id
+    business_obj['name'] = business.name
+    business_obj['email'] = business.email
+
+    return business_obj
+
+
 
 def business_to_object(business=None):
 
@@ -1053,7 +1100,7 @@ def address_to_string(address):
 
 def get_businesses_by_address(address_state=None, address_city=None, address_zip=None, name=None):
 
-    addresses = Address.objects.all()
+    addresses = Address.objects.select_related('business_id').all()
     if address_state is not None:
         addresses = addresses.filter(state__contains=address_state)
     if address_city is not None:

@@ -4,6 +4,8 @@ import SalonCard from "../components/salon/SalonCard.jsx";
 import Dropdown from "../components/inputs/Dropdown.jsx";
 import SectionLoader from "../components/navbar/SectionLoader.jsx";
 
+import Pagination from '@mui/material/Pagination';
+
 import woman from "../assets/petitwoman.png";
 
 import "../css/customer/home.css";
@@ -15,10 +17,12 @@ export default class Home extends Component{
 
     this.state= {searchOps: ['name', 'address', 'city', 'state', 'zip'],
     searchValue: '',  findBy: '', salons: [], sortBy: '',
-    sortOps: ['Name (A-Z)', 'Name(Z-A)', 'Popularity'], searching: false}
+    sortOps: ['Name (A-Z)', 'Name (Z-A)', 'Popularity'], searching: false,
+    pages: 0, selectedPage: 1}
     this.handleChange = this.handleChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleDropdownChange = this.handleDropdownChange.bind(this);
+    this.handlePaginationChange = this.handlePaginationChange.bind(this);
   }
 
 
@@ -31,7 +35,7 @@ export default class Home extends Component{
     console.log(name+' '+value)
   }
 
-  handleSearch(e){
+  handleSearch(){
     let url = 'http://127.0.0.1:8000/api/salon/?'
 
     this.setState({...this.state, searching: true})
@@ -39,16 +43,24 @@ export default class Home extends Component{
     let value = this.state.searchValue.replace(' ', '+')
     let finder = this.state.findBy
 
-    if(finder === '' || value === '')
-      url = 'http://127.0.0.1:8000/api/salon/'
-    else
+    if(finder !== '' || value !== '')
       url += finder+'='+value
+
+    if(this.state.sortBy !== ''){
+      if(finder !== '' && value !== ''){
+        url += '&sort='+this.state.sortBy.replace(' ', '+')
+      } else {
+        url+='sort='+this.state.sortBy.replace(' ', '+');
+      }
+    }
+
+    url+= '&page='+this.state.selectedPage
 
     console.log(url)
 
     fetch(url)
     .then(res => res.json())
-    .then(res => this.setState({...this.state, salons: res.businesses, searching: false}))
+    .then(res => this.setState({...this.state, salons: res.businesses, searching: false, pages: res.pagesAmount}))
   }
 
   callApi() {
@@ -57,9 +69,17 @@ export default class Home extends Component{
       .then(res => this.setState({...this.state, salons: res.businesses, searching: false }))
   }
 
+   async handlePaginationChange(e, value){
+    await this.setState({...this.state, selectedPage: value})
+    this.handleSearch();
+  }
+
 
 
   render(){
+
+    const hasResults = this.state.salons.length > 0;
+
     return(
       <div>
         <Navbar/>
@@ -94,11 +114,20 @@ export default class Home extends Component{
             SEARCH
           </div>
 
+          {
+            hasResults ?
+            <div class="pagination-div">
+            <Pagination count={this.state.pages}
+            page={this.state.selectedPage} onChange={this.handlePaginationChange}
+             /> </div> : <div class="ignore"/>
+          }
+
+
         </div>
         </section>
 
         <section class="services-container">
-          <div class="salon-list">
+          <div class={!this.state.searching ? "salon-list" : "loader-div"}>
             {
               !this.state.searching ? this.state.salons?.map(salon => (
                 <SalonCard key={salon.id} name={salon.name} location={salon.email}

@@ -122,7 +122,7 @@ export default class BusinessDashboard extends Component{
             <div class="extended-title-div">
               <h1 class="page-title page-title-left">HISTORY</h1>
               <p>Appointments in the last 15 days</p>
-              <div class="side-submit-btn yellow-btn">VIEW ALL</div>
+              <a class="side-submit-btn yellow-btn" href="/appointments">VIEW ALL</a>
             </div>
           </section>
 

@@ -170,6 +170,12 @@ textarea, textarea:focus{
   justify-content: center;
 }
 
+.loader-div{
+  width: 100%;
+  padding: 1rem 0;
+  text-align: center;
+}
+
 .center-screen{
   display: flex;
   flex-direction: column;
@@ -181,6 +187,12 @@ textarea, textarea:focus{
 
 .loading-logo{
   max-width: 20%;
+}
+
+.pagination-div{
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 /* Support for Safari*/

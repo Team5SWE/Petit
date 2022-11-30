@@ -30,6 +30,12 @@
   font-size: 1.7rem;
 }
 
+.extended-title-div{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
 .appointments-list{
   display: flex;
   flex-direction: column;
@@ -51,6 +57,8 @@
 .app-stripe-img{
   width: 75px;
 }
+
+
 
 
 
