@@ -18,6 +18,7 @@ import Signup from "./pages/auth/Signup.jsx";
 import Confirm from "./pages/customer/Confirm.jsx";
 import Appointment from "./pages/customer/Appointment.jsx";
 import SalonSite from "./pages/customer/SalonSite.jsx";
+import ContactUs from "./pages/customer/ContactUs.jsx";
 import Cancel from "./pages/customer/Cancel.jsx";
 
 class App extends Component {
@@ -33,6 +34,7 @@ class App extends Component {
             <Route path="confirmation/:id" element={<Confirm/>}/>
             <Route path="settings" element={<Settings/>}/>
             <Route path="appointments" element={<Schedule/>}/>
+            <Route path="contact" element={<ContactUs/>}/>
             <Route path="business" element={<BusinessDashboard/>}/>
 
 

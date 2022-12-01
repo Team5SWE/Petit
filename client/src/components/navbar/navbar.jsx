@@ -32,8 +32,7 @@ export default class Navbar extends Component{
 
         <div class="nav-links">
           <a class="nav-link" href="/#about">About Us</a>
-          <a class="nav-link" href="/appointments">Contact Us</a>
-          <a class="nav-link" href="/services">Services</a>
+          <a class="nav-link" href="/contact">Contact Us</a>
           <a class="nav-link exit-link" href="/business#stats">Business Portal</a>
         </div>
 

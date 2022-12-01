@@ -164,14 +164,13 @@ export default class Home extends Component{
               <p class="about-desc">
                <ul> Since our inception, we've focused on 
                 providing affordable, intuitive, and user-friendly solutions that 
-                make it easier for your business to grow. 
-                Book salon appointments with the click of a button
-                Petit is a web app that lets you make salon appointments in just a few seconds.
+                make it easier for salon businesses to grow.
+                Their clients can explore their details and book appointments with them with the click of a button.
                 </ul>
                 <ul>Businesses as well as customers benefit from Petit! 
-                  The app helps business owners update their available 
-                  appointments instantly and avoid long wait times for customers who 
-                  want to book appointments over the phone or online.
+                  Our website helps business owners list all serivces they offer, manage their employees' information, and 
+                  keep track of their appointments. It also helps customers to explore different salons and make appointments in just a few seconds, 
+                  thus avoiding long wait times for customers who want to book appointments over the phone or online.
                 </ul>
               </p>
             </div>            
@@ -207,7 +206,7 @@ export default class Home extends Component{
             
             </div>
             <br /><br /><br /><br />
-            <a href="../../customer/ContactUs.jsx" class="ContactPetit">
+            <a href="contact" class="ContactPetit">
             Let's contact us here!
           </a>
           <br /><br /><br />
