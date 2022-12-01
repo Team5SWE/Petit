@@ -120,7 +120,7 @@
 
 .about-info{
   text-align: left !important;
-  flex-basis: 40%;
+  flex-basis: 65%;
   color: black;
 }
 
@@ -136,7 +136,10 @@
 }
 
 .about-image{
-  max-width: 100%;
+  
+  width: 100%;
+  max-width: 600px;
+  height: auto;
 }
 
 @media screen and (max-width: 900px){
@@ -168,4 +171,35 @@
   }
 
 
+}
+.title-about {
+  text-align: center;
+  margin: auto;
+  width: 75%;
+  padding: 10px;
+}
+.button-contact {
+  border: none;
+  outline: 1;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+}
+a.ContactPetit {
+  width: 200px;
+  border-radius: 15px;
+  font-size: 1.5rem;
+  box-sizing: border-box;
+  padding: 1.2rem;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bolder;
+  justify-content: center;
+  left: 50%;
+  position: relative;
+  background-color: #fac213;
 }
