@@ -17,7 +17,8 @@ export default class BusinessDashboard extends Component{
     stage: 'waiting',
     totalAppointments: 0,
     totalEmployees: 0,
-    views: 0
+    views: 0,
+    recentAppointments: []
    }
     this.handleLogout = this.handleLogout.bind(this);
   }
@@ -47,7 +48,8 @@ export default class BusinessDashboard extends Component{
         .then(res => {
           if(res.valid){
             this.setState({...this.state, totalEmployees: res.employees,
-            totalAppointments: res.appointments, views: res.views, stage: 'loaded' })
+            totalAppointments: res.appointments, views: res.views, stage: 'loaded',
+            recentAppointments: res.recentAppointments})
           }
         })
 
@@ -103,7 +105,7 @@ export default class BusinessDashboard extends Component{
 
               <div class="stats-widget white slide-element-left">
                 <i class="fa-regular fa-eye fa-5x stats-widget-icon"></i>
-                <h4 class="stats-widget-title">Salon site views (Last 30 days)</h4>
+                <h4 class="stats-widget-title">Salon site views</h4>
                 <p class="stats-widget-value">{this.state.views}</p>
               </div>
 
@@ -130,32 +132,19 @@ export default class BusinessDashboard extends Component{
 
           <div class="appointments-list">
 
-            <div class="appointment-stripe fadein-element">
-              <img class="app-stripe-img" src={profile} alt="empProfile"/>
-              <p class="app-stripe-text">Employee: John Doe</p>
-              <p class="app-stripe-text">Haircut Men</p>
-              <p class="app-stripe-text">04/10/2022</p>
-              <p class="app-stripe-text">08:00</p>
-              <p class="app-stripe-text">Client: Client Name</p>
-            </div>
 
-            <div class="appointment-stripe fadein-element">
-              <img class="app-stripe-img" src={profile} alt="empProfile"/>
-              <p class="app-stripe-text">Employee: John Doe</p>
-              <p class="app-stripe-text">Haircut Men</p>
-              <p class="app-stripe-text">04/10/2022</p>
-              <p class="app-stripe-text">08:00</p>
-              <p class="app-stripe-text">Client: Client Name</p>
-            </div>
+            {this.state.recentAppointments.map(appointment =>
 
-            <div class="appointment-stripe fadein-element">
-              <img class="app-stripe-img" src={profile} alt="empProfile"/>
-              <p class="app-stripe-text">Employee: John Doe</p>
-              <p class="app-stripe-text">Haircut Men</p>
-              <p class="app-stripe-text">04/10/2022</p>
-              <p class="app-stripe-text">08:00</p>
-              <p class="app-stripe-text">Client: Guillermo Clara</p>
-            </div>
+              <div class="appointment-stripe fadein-element" key={appointment}>
+                <img class="app-stripe-img" src={profile} alt="empProfile"/>
+                <p class="app-stripe-text">Employee: {appointment.provider}</p>
+                <p class="app-stripe-text">{appointment.service}</p>
+                <p class="app-stripe-text">{appointment.date}</p>
+                <p class="app-stripe-text">{appointment.start}</p>
+                <p class="app-stripe-text">Client: {appointment.clientName}</p>
+              </div>
+            )
+          }
 
           </div>
 

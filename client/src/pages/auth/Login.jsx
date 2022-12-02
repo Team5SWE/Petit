@@ -84,7 +84,6 @@ callApi() {
 
 
   handleSubmit(){
-
     //Block if waiting for response
     if(this.state.waiting)
       return;
@@ -125,7 +124,7 @@ callApi() {
         this.setState({...this.state, stage: 'success'});
 
     } else {
-        this.setState({...this.state, waiting: false, errorMsg: res.error});
+        this.setState({...this.state, waiting: false, errorMsg: 'No user was found with such credentials!'});
     }
 
   });

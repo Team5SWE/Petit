@@ -8,12 +8,21 @@ import PageLoader from "../../components/navbar/PageLoader.jsx";
 class Confirm extends Component{
   constructor(props) {
     super(props);
-    this.state = { apiResponse: "", appToken: '', valid: false, loaded: false, cancelled: false, expired: false, stage: 'waiting' };
+    this.state = { apiResponse: "", appToken: '', valid: false, loaded: false, cancelled: false,
+     expired: false,
+      stage: 'waiting', message: '', sent: false };
+
     this.handleCancel = this.handleCancel.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount(){
     this.callApi();
+  }
+
+  handleChange(event){
+    this.setState({...this.state, [event.target.name] : event.target.value})
   }
 
   handleCancel(){
@@ -56,6 +65,37 @@ class Confirm extends Component{
       } else {
         this.setState({...this.state, stage: 'failed'})
       }
+    })
+  }
+
+
+  sendMessage(){
+
+    if(this.state.sent)
+      return;
+
+    let name = this.state.apiResponse.clientName;
+    let email = this.state.apiResponse.clientEmail;
+    let message = this.state.message.trim();
+
+    if(message === '')
+      return;
+
+    let data = {
+      name: name,
+      email: email,
+      message: message
+    }
+
+    this.setState({...this.state, sent: true});
+
+    fetch('http://127.0.0.1:8000/api/salon/'+this.state.apiResponse.businessId+'/contact/',
+    {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
     })
   }
 
@@ -143,12 +183,12 @@ class Confirm extends Component{
 
                 <div class="info-box">
                   <h4 class="info-box-title">Business Phone:</h4>
-                  <p>+1 404 744 1733</p>
+                  <p>{this.state.apiResponse.providerPhone}</p>
                 </div>
 
                 <div class="info-box">
                   <h4 class="info-box-title">Employee Email:</h4>
-                  <p>jdoe@gmail.com</p>
+                  <p>{this.state.apiResponse.providerEmail}</p>
                 </div>
 
                 {!this.state.expired ? <div class="cancel-box">
@@ -177,19 +217,25 @@ class Confirm extends Component{
             <p>Your appointment with {this.state.apiResponse.business} has been succesfully canceled</p>
           </div>
 
-          <div class="cancel-contact">
-            <h4>LET {this.state.apiResponse.business.toUpperCase()} KNOW WHAT WENT WRONG </h4>
-            <textarea name="description" rows="8" cols="80"
-             resizable=""/>
+          {
+            !this.state.sent ?
 
-             <div class="side-submit-btn dark-btn send-salon-msg-btn round-btn">
-               SEND
-             </div>
-          </div>
+            <div class="cancel-contact">
+              <h4>LET {this.state.apiResponse.business.toUpperCase()} KNOW WHAT WENT WRONG </h4>
+              <textarea name="message" rows="8" cols="80" value={this.state.message}
+               resizable="" onChange={this.handleChange}/>
+
+               <div class="side-submit-btn dark-btn send-salon-msg-btn round-btn"
+               onClick={this.sendMessage}>
+                 SEND
+               </div>
+            </div> : null
+          }
 
           <div class="cancel-buttons">
 
-            <a href="/appointment" class="full-btn green-btn round-btn">
+            <a href={"/appointment/"+this.state.apiResponse.businessId}
+            class="full-btn green-btn round-btn">
               MAKE APPOINTMENT
             </a>
 

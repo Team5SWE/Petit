@@ -47,8 +47,7 @@ export default class Navbar extends Component{
       {clicked ?
         <div class="vertical-nav-links">
           <a class="nav-link" href="/#aboutus">About Us</a>
-          <a class="nav-link" href="/appointments">Contact Us</a>
-          <a class="nav-link" href="/services">Services</a>
+          <a class="nav-link" href="/contact">Contact Us</a>
           <a class="nav-link exit-link" href="/business#stats">Business Portal</a>
         </div>
         :

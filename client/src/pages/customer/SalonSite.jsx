@@ -14,7 +14,12 @@ class SalonSite extends Component{
   constructor(props){
     super(props);
     const {id} = props.params;
-    this.state = {businessData: null, stage: 'waiting', busId: id}
+    this.state = {businessData: null,
+    stage: 'waiting', busId: id, name: '', email: '', message: '', sending: false}
+
+    this.handleChange = this.handleChange.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
+
   }
 
   componentDidMount() {
@@ -32,6 +37,45 @@ class SalonSite extends Component{
         }
       });
   }
+
+  handleChange(event){
+    this.setState({...this.state, [event.target.name] : event.target.value})
+  }
+
+
+
+  sendMessage(){
+
+    if(this.state.sending)
+      return;
+
+    let name = this.state.name.trim();
+    let email = this.state.email.trim();
+    let message = this.state.message.trim();
+
+    if(name === '' || email === '' || message === '')
+      return;
+
+    let data = {
+      name: name,
+      email: email,
+      message: message
+    }
+
+    this.setState({...this.state, sending: true});
+
+    fetch('http://127.0.0.1:8000/api/salon/'+this.state.busId+'/contact/',
+    {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    }).then(this.setState({...this.state,
+      sending: false, name: '', email: '', message: ''}));
+
+  }
+
 
 
   render(){
@@ -133,21 +177,25 @@ class SalonSite extends Component{
 
                 <div class="salon-contact-upper">
                   <div class="salon-contact-inputbox">
-                    <input type="text" class="salon-contact-input" placeholder="Name:"/>
+                    <input type="text" class="salon-contact-input" placeholder="Name:"
+                    name="name" value={this.state.name} onChange={this.handleChange}/>
                   </div>
 
                   <div class="salon-contact-inputbox">
-                    <input type="text" class="salon-contact-input" placeholder="Email:"/>
+                    <input type="text" class="salon-contact-input" placeholder="Email:"
+                    name="email" value={this.state.email} onChange={this.handleChange}/>
                   </div>
 
                 </div>
 
                 <div class="salon-contact-lower">
-                  <textarea class="salon-contact-input" name="description" rows="8" cols="80"
-                  resizable="" placeholder="Your message:"/>
+                  <textarea class="salon-contact-input" name="message" rows="8" cols="80"
+                  resizable="" value={this.state.message} placeholder="Your message:"
+                  onChange={this.handleChange}/>
                 </div>
 
-                <div class="side-submit-btn yellow-btn send-salon-msg-btn">
+                <div class="side-submit-btn yellow-btn send-salon-msg-btn"
+                onClick={this.sendMessage}>
                   SEND
                 </div>
 

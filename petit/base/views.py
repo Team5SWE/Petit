@@ -21,6 +21,76 @@ from django.conf import settings
 
 import os
 
+################################################################################
+# This file contains all endpoints of our API. In addition, it contains related
+# methods used to manipulate data
+#
+# Section index:
+# 1. Authentication Endpoints: Line
+# 2.Recovery Endpoints: Line
+# 3.Business Endpoints: Line
+# 4.Django Models to JSON: Line
+# 5.Utilities methods: Line
+################################################################################
+
+
+################################################################################
+#              _   _                _   _           _   _
+#             | | | |              | | (_)         | | (_)
+#   __ _ _   _| |_| |__   ___ _ __ | |_ _  ___ __ _| |_ _  ___  _ __
+#  / _` | | | | __| '_ \ / _ \ '_ \| __| |/ __/ _` | __| |/ _ \| '_ \
+# | (_| | |_| | |_| | | |  __/ | | | |_| | (_| (_| | |_| | (_) | | | |
+#  \__,_|\__,_|\__|_| |_|\___|_| |_|\__|_|\___\__,_|\__|_|\___/|_| |_|
+#
+# Includes endpoints used to handle the authentication process for
+# a Business Owner
+################################################################################
+
+
+def header_decoder (request):
+    """
+    Endpoint used to verify a business owner has active JWT session before
+    sending data to dashboard pages.
+    Backend gets JWT and tries to match a corrsponding User and Business
+    If match occurs, return a valid flag
+    """
+
+    response_data = dict()
+    response_data['valid'] = False
+
+    if request.method == "POST":
+
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        # Find business from provided token
+        access = body.get('access')
+        business = get_business_from_token(access)
+        if business is None:
+            response_data['error'] = "Incorrect credentials"
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+        response_data['valid'] = True
+        response_data['business'] = business_to_object(business)
+
+        includeEmployees = request.POST.get('employees', None)
+        if includeEmployees is not None:
+
+            employee_objects = []
+            employees = Employee.objects.filter(works_at=business_id)
+            for employee in employees:
+                employee_obj = employee_to_object(employee)
+                employee_objects.append(employee_obj)
+
+            response_data['employees'] = employee_objects
+
+
+
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
+###################################################################################
+
+################################################################################
 class CustomUserCreate(APIView):
     permission_classes = [AllowAny]
 
@@ -31,35 +101,68 @@ class CustomUserCreate(APIView):
             if newUser:
                 return Response(status=status.HTTP_201_CREATED)
         return Response(reg_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+##################################################################################
 
-# Create your views here.
-#####################################################################
-#            TEST CASE PLACED HERE FOR DATE_MANAGER
-#####################################################################
-def index(response):
-    date = "02/03/2022"
-    time = "10:30"
-    date_2 = "10/10/2023"
-    time_2 = "10:30"
-    is_expired = date_manager.has_expired(date, time)
-    is_expired_2 = date_manager.has_expired(date_2, time_2)
-    print(is_expired)
-    print(is_expired_2)
-    return HttpResponse("This is a test of our first view")
+################################################################################
+def signup(request):
 
-def view1(response, id):
-    ls = Business.objects.get(id=id)
-    response_data = {"name": ls.name, "email": ls.email, "description": ls.description}
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
+    response = dict()
+    response['valid'] = False
 
-######################################################################################
-#   _____ ______ _______   _    _          _   _ _____  _      ______ _____   _____
-#  / ____|  ____|__   __| | |  | |   /\   | \ | |  __ \| |    |  ____|  __ \ / ____|
-# | |  __| |__     | |    | |__| |  /  \  |  \| | |  | | |    | |__  | |__) | (___
-# | | |_ |  __|    | |    |  __  | / /\ \ | . ` | |  | | |    |  __| |  _  / \___ \
-# | |__| | |____   | |    | |  | |/ ____ \| |\  | |__| | |____| |____| | \ \ ____) |
-#  \_____|______|  |_|    |_|  |_/_/    \_\_| \_|_____/|______|______|_|  \_\_____/
-#####################################################################################
+    if request.method == "POST":
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        email = body['email']
+        name = body['user_name']
+
+        business_data = body['businessData']
+
+        reg_serializer = RegisterUserSerializer(data=body)
+        if reg_serializer.is_valid():
+            created_user = reg_serializer.save()
+            if created_user:
+
+                # Handle business creation
+                ####################################################
+                business_name = business_data.get('name')
+                business_email = business_data.get('email')
+                business_phone = business_data.get('phone')
+                business_description = business_data.get('description')
+
+                business = Business(name=business_name, email=business_email,
+                phone=business_phone, description=business_description,
+                owner=created_user)
+                business.save()
+                ####################################################
+
+                response['valid'] = True
+
+                # Handle Email notification
+                #####################################################
+                subject = "Welcome to Petit " + name
+                content = "Welcome to Petit, your email has been verified"
+                authentication.send_email(email, subject, content)
+                print('New account was created with email: ' + email)
+                #######################################################
+        else:
+            response['error'] = 'An account with this email already exists!'
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
+################################################################################
+
+################################################################################
+#  ____            _
+# |  _ \          (_)
+# | |_) |_   _ ___ _ _ __   ___  ___ ___
+# |  _ <| | | / __| | '_ \ / _ \/ __/ __|
+# | |_) | |_| \__ \ | | | |  __/\__ \__ \
+# |____/ \__,_|___/_|_| |_|\___||___/___/
+#
+# This section handles most of the backend Endpoints
+# These are related to Salons, and Dashboard
+# Some methods include both POST and GET requests
+################################################################################
 
 def get_appointment(request, id):
     """
@@ -77,12 +180,19 @@ def get_appointment(request, id):
     response_data = appointment_to_object(appointment)
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
+################################################################################
 
-#################################
-# BUSINESS GET REQUESTS        #
-###############################
-
+################################################################################
 def get_business(request, business_id):
+    """
+    Provides all information about a business with a specific id
+    It can also handle PUT requests.
+
+    The PUT request is used when editing the business settings
+    It verifies the user is authenticated and then it performs the changes
+    At the end, it also returns all information so it can be updated on the
+    front-end
+    """
 
     # Check if business with provided id exists
     try:
@@ -157,8 +267,16 @@ def get_business(request, business_id):
         return HttpResponse(json.dumps(put_response), content_type="application/json")
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
+################################################################################
 
+
+################################################################################
 def get_business_stats(request, business_id):
+    """
+    This endpoint is called for dashboard Home
+    It returns stats and bits of important information
+    about the Owner's business
+    """
 
     response = dict()
     response['valid'] = False
@@ -172,19 +290,32 @@ def get_business_stats(request, business_id):
         return HttpResponse(json.dumps(response), content_type="application/json")
 
     response['valid'] = True
-    response['employees'] = len(Employee.objects.filter(works_at=business))
-    response['appointments'] = len(Appointment.objects.filter(business_id=business))
+    response['employees'] = len(Employee.objects.filter(works_at=business).values('id'))
+
+    appointments = []
+
+    appointment_query = Appointment.objects.select_related('provider_id').filter(business_id=business).order_by('-id')
+
+
+    for appointment in appointment_query:
+        appointment_object = appointment_to_object(appointment)
+        appointments.append(appointment_object)
+
+    response['recentAppointments'] = appointments[:10]
+    response['appointments'] = len(appointments)
     response['views'] = business.views
 
     return HttpResponse(json.dumps(response), content_type="application/json")
+################################################################################
 
 
+################################################################################
 def get_complete_business(request, business_id):
     """
     Returns an object with all data of a particular business
     This endpoint is inteded to be called when the client accesses the
-    business site. Unlike get_business, this method will add a 'visit' value to the
-    business table.
+    business site. Unlike get_business, this method will add a 'visit' value
+    to the business table.
     """
 
     # Check if business with provided id exists
@@ -193,21 +324,23 @@ def get_complete_business(request, business_id):
     except django.db.models.ObjectDoesNotExist:
         business = None
 
+    # Add views amount
     if business is not None:
         business.views = business.views + 1
         business.save()
 
     response_data = business_to_object(business)
     return HttpResponse(json.dumps(response_data), content_type="application/json")
+################################################################################
 
-
+################################################################################
 def get_businesses(request):
     """
     Returns an object with the list business based on query parameters
     ex: state, city, zip
     If none provide, returns all businesses
-    Unlike the other endpoints, this only extracts minimal amount of data to make
-    the request more optimized
+    Unlike the other endpoints, this only extracts minimal amount of data to
+    make the request more optimized
     """
 
     init_time = time.time()
@@ -251,51 +384,9 @@ def get_businesses(request):
     response_data['time'] = time.time() -init_time
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
+################################################################################
 
-#################################
-# BUSINESS RELATED GET REQUESTS#
-###############################
-
-
-def get_business_employees(request, business_id):
-
-    init_time = time.time()
-
-    employees = Employee.objects.select_related('works_at').filter(works_at=business_id)
-
-    response_data = dict()
-    response_data['valid'] = False
-
-    if len(employees) < 1:
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-    if request.method == 'GET':
-        response_data['valid'] = True
-        response_data['business'] = employees[0].works_at.name
-
-        employee_objects = []
-        for employee in employees:
-            employee_obj = employee_to_object(employee)
-            employee_objects.append(employee_obj)
-
-        response_data['employees'] = employee_objects
-
-        response_data['time'] = time.time() -init_time
-
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-    elif request.method == 'POST':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        access = body.get('access')
-
-        requesting_business = get_business_from_token(access)
-
-        if requesting_business != business:
-            return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-        pass
-
+################################################################################
 def get_business_appointments(request, business_id):
 
     response_data = dict()
@@ -321,9 +412,16 @@ def get_business_appointments(request, business_id):
     response_data['appointments'] = appointment_objects
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
+################################################################################
 
-
+################################################################################
 def get_business_schedule(request):
+    """
+    This endpoint is in charge of providing appropiate JSON objects of appointments
+    for the Appointments page in the dashboard.
+    Its difference with the get_appointments is that the format has been adapted
+    to be read by DayPilot Schedule library
+    """
 
     response = dict()
     response['valid'] = False
@@ -359,14 +457,15 @@ def get_business_schedule(request):
         response['schedules'] = schedules
 
     return HttpResponse(json.dumps(response), content_type="application/json")
+################################################################################
 
-
-
+################################################################################
 def get_employee_timeslots(request):
     """
-    Returns an object with the list of available time slots at a specified
+    Returns a response with the list of available time slots at a specified
     date for a specific employee.
     If user doesnt provide date, it will consider the current date
+    This is used for the Appointments page from the client side
     """
 
     # Get query parameters
@@ -411,152 +510,18 @@ def get_employee_timeslots(request):
     response_data['slots'] = get_available_slots_per_employee(date, employee)
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
+###################################################################################
 
-
-############################################################################################
-#  _____   ____   _____ _______   _    _          _   _ _____  _      ______ _____   _____
-# |  __ \ / __ \ / ____|__   __| | |  | |   /\   | \ | |  __ \| |    |  ____|  __ \ / ____|
-# | |__) | |  | | (___    | |    | |__| |  /  \  |  \| | |  | | |    | |__  | |__) | (___
-# |  ___/| |  | |\___ \   | |    |  __  | / /\ \ | . ` | |  | | |    |  __| |  _  / \___ \
-# | |    | |__| |____) |  | |    | |  | |/ ____ \| |\  | |__| | |____| |____| | \ \ ____) |
-# |_|     \____/|_____/   |_|    |_|  |_/_/    \_\_| \_|_____/|______|______|_|  \_\_____/
-###########################################################################################
-
-#              _   _                _   _           _   _
-#             | | | |              | | (_)         | | (_)
-#   __ _ _   _| |_| |__   ___ _ __ | |_ _  ___ __ _| |_ _  ___  _ __
-#  / _` | | | | __| '_ \ / _ \ '_ \| __| |/ __/ _` | __| |/ _ \| '_ \
-# | (_| | |_| | |_| | | |  __/ | | | |_| | (_| (_| | |_| | (_) | | | |
-#  \__,_|\__,_|\__|_| |_|\___|_| |_|\__|_|\___\__,_|\__|_|\___/|_| |_|
-######################################################################
-
-def login(request):
-    if request.method == "GET":
-        if not request.COOKIES.get('email'):
-            pass
-        # response_data.set_cookie(cookie_name, value, max_age=None, expires=None)
-    elif request.method == "POST":
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        email = body['email']
-        password = body['password']
-
-        try:
-            email_exist = Business.objects.get(email=email)
-        except django.db.models.ObjectDoesNotExist:
-            email_exist = None
-
-        if email_exist is None:
-            print('Authentication failed: email doesnt exist')
-            return HttpResponse(json.dumps("Email doesnt exist."), content_type="application/json")
-
-        encrypted_password = encryption.encrypt_password(password)
-
-        if encrypted_password != email_exist.password:
-            print('Incorrect password')
-            return HttpResponse(json.dumps("Incorrect password."), content_type="application/json")
-
-        print('User authenticated!')
-        print(email_exist)
-
-    return HttpResponse(json.dumps("Login."), content_type="application/json")
-
-#request api / authentication => get request include token in the header. with that data in the header, get it inside the views
-#JWT decode method. Using That if null return response of
-# Try to get bussiness id and check if it exist
-# if not return response
-# if it is not null store Business object in fild called bussiness.
-def header_decoder (request):
-
-    response_data = dict()
-    response_data['valid'] = False
-
-    if request.method == "POST":
-
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-
-        # Find business from provided token
-        access = body.get('access')
-        business = get_business_from_token(access)
-        if business is None:
-            response_data['error'] = "Incorrect credentials"
-            return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-
-        response_data['valid'] = True
-        response_data['business'] = business_to_object(business)
-
-        includeEmployees = request.POST.get('employees', None)
-        if includeEmployees is not None:
-
-            employee_objects = []
-            employees = Employee.objects.filter(works_at=business_id)
-            for employee in employees:
-                employee_obj = employee_to_object(employee)
-                employee_objects.append(employee_obj)
-
-            response_data['employees'] = employee_objects
-
-
-
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-def signup(request):
-
-    response = dict()
-    response['valid'] = False
-
-    if request.method == "POST":
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-
-        email = body['email']
-        name = body['user_name']
-
-        business_data = body['businessData']
-
-        reg_serializer = RegisterUserSerializer(data=body)
-        if reg_serializer.is_valid():
-            created_user = reg_serializer.save()
-            if created_user:
-
-                # Handle business creation
-                ####################################################
-                business_name = business_data.get('name')
-                business_email = business_data.get('email')
-                business_phone = business_data.get('phone')
-                business_description = business_data.get('description')
-
-                business = Business(name=business_name, email=business_email,
-                phone=business_phone, description=business_description,
-                owner=created_user)
-                business.save()
-                ####################################################
-
-                response['valid'] = True
-
-                # Handle Email notification
-                #####################################################
-                subject = "Welcome to Petit " + name
-                content = "Welcome to Petit, your email has been verified"
-                authentication.send_email(email, subject, content)
-                print('New account was created with email: ' + email)
-                #######################################################
-        else:
-            response['error'] = 'An account with this email already exists!'
-
-    return HttpResponse(json.dumps(response), content_type="application/json")
-
- #  _               _
- # | |             (_)
- # | |__  _   _ ___ _ _ __   ___  ___ ___
- # | '_ \| | | / __| | '_ \ / _ \/ __/ __|
- # | |_) | |_| \__ \ | | | |  __/\__ \__ \
- # |_.__/ \__,_|___/_|_| |_|\___||___/___/
- #########################################
-
+################################################################################
+# CLIENT FOCUSED ENDPOINTS
+################################################################################
 def make_appointment(request):
+    """
+    This endpoint handles making an appointment from the client side.
+    It gets the data and makes an additional check just in case someone
+    else made a request faster. If all goes well, it will send the user an email
+    with their confirmation code and details
+    """
 
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
@@ -623,19 +588,27 @@ def make_appointment(request):
 
         full_url_path = "localhost:3000/appointments/" + response_data['url']
 
-        #appointment confermation email to client
-        content_client = "Appontment confirmation with Petit"
-        subject_client = "Your appointment was created successfully: " + full_url_path
+        #appointment confirmation email to client
+        content_client = "Your appointment details: \n\nDate: {}\n\nTime: {}\n\nService: {}\n\nPrice: {}\n\nStylist: {}\n\nLocation: {}"
+        content_client += "\n\nAppointment code: {}\n\nUnable to come? Edit your appointment at http://localhost:3000/confirmation/{} \n\nThank you for choosing Petit"
+        content_client = content_client.format(app_date, start_time, service.name, "$"+str(service.price),
+        employee.first+' '+employee.last, address_to_object(address).get('toString'), response_data['url'],
+        response_data['url'])
+
+        subject_client = "Appointment confirmation with "+business.name
         authentication.send_email(client_email, subject_client, content_client)
 
-        #appointment confermation email to
-        content_business = "Appointment with your client " + client_name + " was made successfully"
-        subject_business = "Your appointment with " + client_name + " has been created: " + full_url_path
+        #appointment confirmation email to
+        content_business = "Appointment details: \n\nDate: {}\n\nTime: {}\n\nService: {}\n\nEmployee: {}\n\nLocation: {}\n\nAppointment code: {}"
+        content_business = content_business.format(app_date, start_time, service.name, employee.first+' '+employee.last,
+        address_to_object(address).get('toString'), response_data['url'])
+        subject_business = "New appointment made by " + client_name
         authentication.send_email(bussiness_email, subject_business, content_business)
 
         print('New appointment was created with email: ' + client_name)
 
         return HttpResponse(json.dumps(response_data), content_type="application/json")
+#######################################################################################
 
 def delete_appointment(request):
 
@@ -811,6 +784,129 @@ def contact_business(request, business_id):
         response['valid'] = True
     return HttpResponse(json.dumps(response), content_type="application/json")
 
+
+################################################################################
+#  _____
+# |  __ \
+# | |__) |___  ___ _____   _____ _ __ _   _
+# |  _  // _ \/ __/ _ \ \ / / _ \ '__| | | |
+# | | \ \  __/ (_| (_) \ V /  __/ |  | |_| |
+# |_|  \_\___|\___\___/ \_/ \___|_|   \__, |
+#                                      __/ |
+#                                     |___/
+#
+# Includes the endpoints that handle the recovery process
+# from the backend side
+# It is divided in three steps: Check Email, Check Code, Update Password
+###############################################################################
+
+def recovery_check_email(request):
+    """
+    Gets user email input and tries to find an account associated
+    If there is one, it looks in the recovery table for an existing
+    recovery record. If there is not, it creates a new one.
+    Send the generated code through email method
+    """
+
+    response = dict()
+    response['valid'] = False
+
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        email = body.get('email')
+
+        try:
+            user = newUser.objects.get(email=email)
+        except django.db.models.ObjectDoesNotExist:
+            response['error'] = 'Account with this email doesnt exist!'
+            return HttpResponse(json.dumps(response), content_type="application/json")
+
+        response['valid'] = True
+
+        code = encryption.generate_random_code(6)
+
+        # Handle data in table
+        try:
+            recovery = Recovery.objects.get(owner_id=user)
+            recovery.code = code
+        except django.db.models.ObjectDoesNotExist:
+            recovery = Recovery(owner_id=user, code=code)
+
+        recovery.save()
+
+        # Send code to client email
+        content_client = "Account password reset request"
+        subject_client = "Your recovery code: " + code
+        authentication.send_email(email, subject_client, content_client)
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
+################################################################################
+
+################################################################################
+def recovery_check_code(request):
+    """
+    Check code sent by the client.
+    Compares in the database if it matches
+    If it doesnt, send invalid flag
+    """
+
+    response = dict()
+    response['valid'] = False
+
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        email = body.get('email')
+        code = body.get('code')
+
+        try:
+            user = newUser.objects.get(email=email)
+        except django.db.models.ObjectDoesNotExist:
+            response['error'] = 'Account with this email doesnt exist!'
+            return HttpResponse(json.dumps(response), content_type="application/json")
+        try:
+            recovery = Recovery.objects.get(owner_id=user, code=code)
+        except django.db.models.ObjectDoesNotExist:
+            response['error'] = 'Incorrect recovery code'
+            return HttpResponse(json.dumps(response), content_type="application/json")
+
+        response['valid'] = True
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
+################################################################################
+
+################################################################################
+def recovery_update_password(request):
+    """
+    Receives client new password and updates it on the user table
+    This is the last step on the recovery process from the backend side
+    """
+
+    response = dict()
+    response['valid'] = False
+
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        password = body.get('password')
+        email = body.get('email')
+
+        try:
+            user = newUser.objects.get(email=email)
+            user.set_password(password)
+            user.save()
+        except django.db.models.ObjectDoesNotExist:
+            response['error'] = 'Account with this email doesnt exist!'
+            return HttpResponse(json.dumps(response), content_type="application/json")
+
+        response['valid'] = True
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
 ##########################################################################################
 #  _____  ____    _                _     _           _
 # |  __ \|  _ \  | |              | |   (_)         | |
@@ -820,6 +916,10 @@ def contact_business(request, business_id):
 # |_____/|____/   \__\___/   \___/|_.__/| |\___|\___|\__|___/
 #                                      _/ |
 #                                     |__/
+#
+# All these methods are used to transform Django Models from queries
+# into customized dictionaries that will be passed later as JSON objects
+# for HTTP responses
 #########################################################################################
 
 def enhanced_business_to_object(business):
@@ -839,9 +939,9 @@ def enhanced_business_to_object(business):
     business_obj['email'] = business.email
 
     return business_obj
+################################################################################
 
-
-
+################################################################################
 def business_to_object(business=None):
 
     business_obj = dict()
@@ -879,7 +979,9 @@ def business_to_object(business=None):
     business_obj['employees'] = employees
 
     return business_obj
+################################################################################
 
+################################################################################
 def appointment_to_object(appointment=None):
 
     response_data = dict()
@@ -891,14 +993,18 @@ def appointment_to_object(appointment=None):
     response_data['valid'] = True
     response_data['finish'] = date_manager.has_expired(appointment.date, appointment.start)
 
-    response_data['business'] = appointment.business_id.name
-    response_data['businessEmail'] = appointment.business_id.email
+    if appointment.business_id is not None:
+        response_data['business'] = appointment.business_id.name
+        response_data['businessId'] = appointment.business_id.id
+        response_data['businessEmail'] = appointment.business_id.email
 
     response_data['clientName'] = appointment.client_name
     response_data['clientEmail'] = appointment.client_email
     response_data['clientPhone'] = appointment.client_phone
 
     response_data['provider'] = appointment.provider_id.first + " " + appointment.provider_id.last
+    response_data['providerEmail'] = appointment.provider_id.email
+    response_data['providerPhone'] = appointment.provider_id.phone
     response_data['date'] = appointment.date
     response_data['start'] = appointment.start
     response_data['end'] = appointment.end
@@ -906,8 +1012,9 @@ def appointment_to_object(appointment=None):
     response_data['address'] = address_to_string(appointment.address_id)
 
     return response_data
+################################################################################
 
-
+################################################################################
 def appointment_to_schedule_object(appointment=None):
     response_data = dict()
 
@@ -934,8 +1041,9 @@ def appointment_to_schedule_object(appointment=None):
 
     response_data['backColor'] = color
     return response_data
+################################################################################
 
-
+################################################################################
 def employee_to_object(employee=None):
     employee_obj = dict()
 
@@ -947,7 +1055,9 @@ def employee_to_object(employee=None):
     employee_obj['phone'] = employee.phone
 
     return employee_obj
+################################################################################
 
+################################################################################
 def service_to_object(service=None):
     service_obj = dict()
     service_obj['valid'] = False
@@ -962,7 +1072,9 @@ def service_to_object(service=None):
     service_obj['category'] = service.category
 
     return service_obj
+################################################################################
 
+################################################################################
 def address_to_object(address=None):
 
     response_data = dict()
@@ -978,112 +1090,7 @@ def address_to_object(address=None):
     response_data['state'] = address.state
     response_data['zip'] = address.zip
     response_data['toString'] = address.street + ', ' + address.city + ', ' + address.state + ' ' + address.zip
-
-
     return response_data
-
-######################################################################
-#  _____
-# |  __ \
-# | |__) |___  ___ _____   _____ _ __ _   _
-# |  _  // _ \/ __/ _ \ \ / / _ \ '__| | | |
-# | | \ \  __/ (_| (_) \ V /  __/ |  | |_| |
-# |_|  \_\___|\___\___/ \_/ \___|_|   \__, |
-#                                      __/ |
-#                                     |___/
-#####################################################################
-
-def recovery_check_email(request):
-
-    response = dict()
-    response['valid'] = False
-
-    if request.method == 'POST':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-
-        email = body.get('email')
-
-        try:
-            user = newUser.objects.get(email=email)
-        except django.db.models.ObjectDoesNotExist:
-            response['error'] = 'Account with this email doesnt exist!'
-            return HttpResponse(json.dumps(response), content_type="application/json")
-
-        response['valid'] = True
-
-        code = encryption.generate_random_code(6)
-
-        # Handle data in table
-        try:
-            recovery = Recovery.objects.get(owner_id=user)
-            recovery.code = code
-        except django.db.models.ObjectDoesNotExist:
-            recovery = Recovery(owner_id=user, code=code)
-
-        recovery.save()
-
-        content_client = "Account password reset request"
-        subject_client = "Your recovery code: " + code
-        authentication.send_email(email, subject_client, content_client)
-
-
-
-    return HttpResponse(json.dumps(response), content_type="application/json")
-
-
-def recovery_check_code(request):
-
-    response = dict()
-    response['valid'] = False
-
-    if request.method == 'POST':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-
-        email = body.get('email')
-        code = body.get('code')
-
-        try:
-            user = newUser.objects.get(email=email)
-        except django.db.models.ObjectDoesNotExist:
-            response['error'] = 'Account with this email doesnt exist!'
-            return HttpResponse(json.dumps(response), content_type="application/json")
-        try:
-            recovery = Recovery.objects.get(owner_id=user, code=code)
-        except django.db.models.ObjectDoesNotExist:
-            response['error'] = 'Incorrect recovery code'
-            return HttpResponse(json.dumps(response), content_type="application/json")
-
-        response['valid'] = True
-
-    return HttpResponse(json.dumps(response), content_type="application/json")
-
-
-def recovery_update_password(request):
-
-    response = dict()
-    response['valid'] = False
-
-    if request.method == 'POST':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-
-        password = body.get('password')
-        email = body.get('email')
-
-        try:
-            user = newUser.objects.get(email=email)
-            user.set_password(password)
-            user.save()
-        except django.db.models.ObjectDoesNotExist:
-            response['error'] = 'Account with this email doesnt exist!'
-            return HttpResponse(json.dumps(response), content_type="application/json")
-
-        response['valid'] = True
-
-    return HttpResponse(json.dumps(response), content_type="application/json")
-
 
 ###################################################################
 #  _    _ _   _ _ _ _   _
