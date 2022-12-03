@@ -1,0 +1,2 @@
+/backend/* http://127.0.0.1:8000/:splat 200
+/* /index.html 200

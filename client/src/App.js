@@ -19,7 +19,6 @@ import Confirm from "./pages/customer/Confirm.jsx";
 import Appointment from "./pages/customer/Appointment.jsx";
 import SalonSite from "./pages/customer/SalonSite.jsx";
 import ContactUs from "./pages/customer/ContactUs.jsx";
-import Cancel from "./pages/customer/Cancel.jsx";
 
 class App extends Component {
 
@@ -44,7 +43,6 @@ class App extends Component {
 
             <Route path="appointment/:id" element={<Appointment/>}/>
             <Route path="salon/:id" element={<SalonSite/>}/>
-            <Route path="cancel" element={<Cancel/>}/>
 
 
           </Route>
