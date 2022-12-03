@@ -6,6 +6,13 @@ import "../../css/customer/salonsite.css";
 class ContactUs extends Component{
   constructor(props){
     super(props);
+    this.state = {message: '', name: '', email: ''};
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event){
+    this.setState({...this.state, [event.target.name] : event.target.value})
   }
 
 
@@ -26,18 +33,21 @@ class ContactUs extends Component{
 
                 <div class="salon-contact-upper">
                   <div class="salon-contact-inputbox">
-                    <input type="text" class="salon-contact-input" placeholder="Name:"/>
+                    <input type="text" class="salon-contact-input" placeholder="Name:"
+                    name="name" value={this.state.name} onChange={this.handleChange}/>
                   </div>
 
                   <div class="salon-contact-inputbox">
-                    <input type="text" class="salon-contact-input" placeholder="Email:"/>
+                    <input type="text" class="salon-contact-input" placeholder="Email:"
+                    name="email" value={this.state.email} onChange={this.handleChange}/>
                   </div>
 
                 </div>
 
                 <div class="salon-contact-lower">
-                  <textarea class="salon-contact-input" name="description" rows="8" cols="80"
-                  resizable="" placeholder="Your message:"/>
+                  <textarea class="salon-contact-input" name="message" rows="8" cols="80"
+                  resizable="" placeholder="Your message:" value={this.state.message}
+                  onChange={this.handleChange}/>
                 </div>
 
                 <div class="side-submit-btn yellow-btn send-salon-msg-btn">

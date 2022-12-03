@@ -22,6 +22,7 @@ export default class Employees extends Component {
       stage: "waiting",
       employees: [],
       changes: [],
+      imageUrl: '',
 
       first: '',
       last: '',
@@ -35,6 +36,8 @@ export default class Employees extends Component {
     this.addItem = this.addItem.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+
+    this.handleImageError = this.handleImageError.bind(this);
   }
 
   ////////////////////////////General Change Methods///////////////////////
@@ -83,14 +86,8 @@ export default class Employees extends Component {
     addItem(){
 
       if(this.state.name === '' || this.state.phone === '' || this.state.email === ''){
-        console.log('Empty inputs. Ignoring')
         return;
       }
-
-      let imageFile = this.state.selectedFile;
-      let filename = null
-      if(imageFile !== null)
-        filename = this.state.selectedFile;
 
       const newEmployee = {
         id: 1 + Math.random(),
@@ -99,8 +96,7 @@ export default class Employees extends Component {
         last: this.state.last,
         phone: this.state.phone,
         email: this.state.email,
-        imageFile: this.state.selectedFile,
-        fileName: filename,
+        url : this.state.imageUrl,
         action: 'add'
       };
 
@@ -117,7 +113,8 @@ export default class Employees extends Component {
         first: '',
         last: '',
         phone: '',
-        email: ''
+        email: '',
+        imageUrl: ''
       });
     }
 
@@ -166,6 +163,7 @@ export default class Employees extends Component {
 
   handleSubmit(){
 
+
     let url = 'http://127.0.0.1:8000/api/salon/'+this.state.apiResponse.business.id+'/employees/'
 
     let data = {
@@ -173,6 +171,8 @@ export default class Employees extends Component {
       changeLog: this.state.changes,
 
     }
+
+    this.setState({...this.state, stage: 'waiting'})
 
     fetch(url, {
       method: 'PUT',
@@ -184,21 +184,23 @@ export default class Employees extends Component {
     .then(res => {
 
       if(res.valid){
-        this.setState({...this.state, employees: res.employees})
+        this.setState({...this.state, employees: res.employees, stage: 'loaded'})
       } else {
         this.setState({...this.state, authenticated: false, stage: 'failed'})
       }
-
     })
-
   }
+
+  handleImageError(){
+    this.setState({...this.state, imageUrl: ''})
+  }
+
+
   /////////////////////////////////////////////////////////////////////////////
 
 
 
   render(){
-
-    const hasImage = this.state.selectedImage !== null;
 
     const stage = this.state.stage;
 
@@ -210,6 +212,9 @@ export default class Employees extends Component {
         );
 
       case "loaded":
+
+      let hasUrl = this.state.imageUrl !== '';
+
       return(
         <div>
           <BusinessNavbar exitFunc={this.handleLogout}/>
@@ -223,7 +228,7 @@ export default class Employees extends Component {
             <div class="employees">
               {this.state.employees.map(employee =>
               (<EditEmployeeCard key={employee.id} name={employee.name} specialty="Master Stylist"
-                email={employee.email} phone={employee.phone}
+                email={employee.email} phone={employee.phone} url={employee.url}
                 removeAction={() => this.deleteItem(employee.id)} />)
               )}
 
@@ -244,21 +249,13 @@ export default class Employees extends Component {
                 <div class="emp-adder-img-div">
 
                   <div class="emp-img-container">
-                  {hasImage ?
-                    <img class="emp-img-adder" src={this.state.selectedImage} alt=""/>
-                    :
-                    <img class="emp-img-adder" src={default_img} alt=""/>
-                  }
+
+                    <img class="emp-img-adder" src={
+                      hasUrl ? this.state.imageUrl : default_img} alt="" onError={this.handleImageError}/>
                   </div>
 
-                  <div class="upload-btn dark-btn" onClick={this.clickFileUpload}>
-                    UPLOAD
-                    <input  ref="fileField"
-                    class="file-input" type="file"
-                    id="img" name="img" accept="image/*"
-                    onChange={this.onSelectFile}
-                    />
-                  </div>
+                  <input type="text" class="emp-input url-input" name="imageUrl" value={this.state.imageUrl}
+                  onChange={this.handleChange} placeholder="Image url:"/>
                 </div>
 
                 <div class="emp-info-inputs">

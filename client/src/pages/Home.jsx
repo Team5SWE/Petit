@@ -18,7 +18,7 @@ export default class Home extends Component{
 
     this.state= {searchOps: ['name', 'address', 'city', 'state', 'zip'],
     searchValue: '',  findBy: '', salons: [], sortBy: '',
-    sortOps: ['Name (A-Z)', 'Name (Z-A)', 'Popularity'], searching: false,
+    sortOps: ['Name (A-Z)', 'Name (Z-A)', 'Popularity', 'Newest', 'Oldest'], searching: false,
     pages: 0, selectedPage: 1}
     this.handleChange = this.handleChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -133,7 +133,7 @@ export default class Home extends Component{
             {
               !this.state.searching ? this.state.salons?.map(salon => (
                 <SalonCard key={salon.id} name={salon.name} location={salon.email}
-                params={this.state} identifier={salon.id}/>
+                params={this.state} identifier={salon.id} url={salon.url}/>
               )) : <SectionLoader/>
             }
 
@@ -185,6 +185,7 @@ export default class Home extends Component{
             <div class="about-info">
               <h2 class="page-title">Features</h2>
               <p class="about-desc">
+                <ul><strong>For Customers</strong></ul>
                 <ul>Save time, save money</ul>
                 <ul>Text/call all your favorite salons to find the best deals and book appointments with just one click!
                   No more waiting on hold or talking to an automated assistant.</ul>
@@ -192,11 +193,15 @@ export default class Home extends Component{
                 <ul>If you're running late to your appointment, just cancel it on Petit,
                   and no show fees will never be an issue again.</ul>
                 <ul>No more phone tag</ul>
-                <ul>The call feature allows you to connect with any salon instantly and
-                  get the most up-to-date information while you're on the go.</ul>
-                <ul>Customizable time slots and services</ul>
+
                 <ul>Search through our extensive database of salons' services offered and booking availability
                   for your desired timeslots and take control of your appointment schedule.</ul>
+
+                <ul><strong>For Business Owners</strong></ul>
+                <ul>Automate your appointment system. No more secretary taking calls!</ul>
+                <ul>We give you the controller! Manage your employees, services and settings</ul>
+                <ul>Use our statistics to have a glimpse of your business progress</ul>
+
              <br />
              <br />
              </p>

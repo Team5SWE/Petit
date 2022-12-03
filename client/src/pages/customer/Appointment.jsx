@@ -101,6 +101,8 @@ class Appointment extends Component {
       addressId: this.state.address
     }
 
+    this.setState({...this.state, stage: 'waiting'})
+
     fetch('http://127.0.0.1:8000/api/make_appointment/', {
       method: 'POST',
       mode: 'cors',

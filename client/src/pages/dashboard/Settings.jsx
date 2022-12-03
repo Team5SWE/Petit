@@ -25,6 +25,7 @@ export default class Settings extends Component{
       loaded: false,
       stage: 'waiting',
       apiResponse: "",
+      imageUrl: "",
 
       addresses: [],
       changes: []
@@ -39,6 +40,8 @@ export default class Settings extends Component{
     this.addItem = this.addItem.bind(this);
     this.handleAddressChange = this.handleAddressChange.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+
+    this.handleImageError = this.handleImageError.bind(this);
   }
 
   handleChange(e){
@@ -102,11 +105,13 @@ handleSubmit(){
       email: this.state.email,
       phone: this.state.phone,
       description: this.state.description,
-
-      addresses: this.state.addresses
+      addresses: this.state.addresses,
+      url: this.state.imageUrl
     },
     access: localStorage.getItem('access')
   }
+
+  this.setState({...this.state, stage: 'waiting'})
 
   let apiUrl = 'http://127.0.0.1:8000/api/salon/'+this.state.apiResponse.business.id+'/'
   fetch(apiUrl, {
@@ -135,6 +140,7 @@ fetchInputData(res){
       phone: res.business.phone,
 
       addresses: res.business.addresses,
+      imageUrl: res.business.url,
 
       apiResponse: res,
       authenticated: res.valid,
@@ -222,6 +228,11 @@ fetchInputData(res){
     }
     this.setState({...this.state, addresses: addressList})
   }
+
+  handleImageError(){
+    this.setState({...this.state, imageUrl: ''})
+  }
+
 ///////////////////////////////////////////////////////////////////////////////
 
   render(){
@@ -237,6 +248,9 @@ fetchInputData(res){
         );
 
       case "loaded":
+
+      let hasUrl = this.state.imageUrl !== '';
+
       return(
         <div>
 
@@ -253,20 +267,13 @@ fetchInputData(res){
 
                 <div class="logo-input-section">
                   <div class="logo-img-container">
-                  {
-                    hasImage ? <img class="logo-img" src={this.state.selectedImage} alt="selected"/> :
-                     <img class="logo-img" src={default_salon} alt="selected"/>
-                  }
+                    <img class="logo-img" src={hasUrl ? this.state.imageUrl : default_salon}
+                    alt="selected" onError={this.handleImageError}/>
                   </div>
 
-                  <div class="upload-btn dark-btn" onClick={this.clickFileUpload}>
-                    UPLOAD
-                    <input  ref="fileField"
-                    class="file-input" type="file"
-                    id="img" name="img" accept="image/*"
-                    onChange={this.onSelectFile}
-                    />
-                  </div>
+                  <input type="text" class="text-input" name="imageUrl"
+                  value={this.state.imageUrl} onChange={this.handleChange} placeholder="Image url:"/>
+
                 </div>
 
                 <div class="text-inputs-container">

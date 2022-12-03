@@ -39,12 +39,11 @@ class Calendar extends Component {
   }
   render() {
     return (
-      <div style={styles.wrap}>
-        <div style={styles.left}>
+      <div >
+        <div class="picker-container" style={styles.wrap}>
           <DayPilotNavigator
             selectMode={"week"}
-            showMonths={3}
-            skipMonths={3}
+            showMonths={1}
             startDate={this.props.startDate}
             selectionDay={this.props.startDate}
             onTimeRangeSelected={ args => {

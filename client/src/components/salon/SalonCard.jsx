@@ -2,13 +2,27 @@ import {React, Component} from "react";
 import logo from "../../assets/default_salon.png"
 
 export default class SalonCard extends Component {
+  constructor(props){
+    super(props);
+    this.state = {imageUrl: this.props.url}
+
+    this.handleImageError = this.handleImageError.bind(this);
+  }
+
+  handleImageError(){
+    this.setState({...this.state, imageUrl: ''})
+  }
 
   render(){
+
+    let hasUrl = this.state.imageUrl !== undefined && this.state.imageUrl !== '';
+
     return(
       <div class="salon-card">
 
         <div class="salon-card-iconbox">
-          <img class="circled-icon" src={logo} alt="salon logo"/>
+          <img class="contained-image" src={hasUrl ? this.state.imageUrl : logo}
+          alt="salon logo" onError={this.handleImageError}/>
         </div>
 
         <div class="salon-card-info">

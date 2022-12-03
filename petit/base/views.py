@@ -1,4 +1,5 @@
 import django.db.models
+from django.db.models import Count
 from django.shortcuts import render
 from django.http import HttpResponse
 import json
@@ -26,11 +27,12 @@ import os
 # methods used to manipulate data
 #
 # Section index:
-# 1. Authentication Endpoints: Line
-# 2.Recovery Endpoints: Line
-# 3.Business Endpoints: Line
-# 4.Django Models to JSON: Line
-# 5.Utilities methods: Line
+# 1. Authentication Endpoints: Line 38
+# 2.Business Endpoints: Line 155
+# 3.Contact Endpoints: Line 797
+# 4.Recovery Endpoints: Line 853
+# 5.Django Models to JSON: Line 975
+# 6.Utilities methods: Line 1164
 ################################################################################
 
 
@@ -132,7 +134,7 @@ def signup(request):
 
                 business = Business(name=business_name, email=business_email,
                 phone=business_phone, description=business_description,
-                owner=created_user)
+                owner=created_user, url='')
                 business.save()
                 ####################################################
 
@@ -224,6 +226,7 @@ def get_business(request, business_id):
         business.phone = changes.get('phone')
         business.email = changes.get('email')
         business.description = changes.get('description')
+        business.url = changes.get('url')
         business.save()
 
         addresses = changes.get('addresses')
@@ -296,6 +299,12 @@ def get_business_stats(request, business_id):
 
     appointment_query = Appointment.objects.select_related('provider_id').filter(business_id=business).order_by('-id')
 
+    top_services = Appointment.objects.filter(business_id=business).values('service').annotate(total=Count('service')).order_by('-total')
+
+    if len(top_services) > 0:
+        response['popularService'] = top_services[0].get('service')
+    else:
+        response['popularService'] = '-'
 
     for appointment in appointment_query:
         appointment_object = appointment_to_object(appointment)
@@ -365,10 +374,25 @@ def get_businesses(request):
     response_data = dict()
 
     # Sort if query parameter included
+    # Sort by popularity by default
     if sort_by is not None:
 
         if sort_by == "Name (A-Z)":
             business_list = sorted(business_list, key=lambda x : x.name)
+
+        elif sort_by == "Name (Z-A)":
+            business_list = sorted(business_list, key=lambda x : x.name, reverse=True)
+
+        elif sort_by == "Popularity":
+            business_list = sorted(business_list, key=lambda x : x.views, reverse=True)
+
+        elif sort_by == "Newest":
+            business_list = sorted(business_list, key=lambda x : x.id, reverse=True)
+
+        elif sort_by == "Oldest":
+            business_list = sorted(business_list, key=lambda x : x.id)
+    else :
+        business_list = sorted(business_list, key=lambda x : x.views, reverse=True)
 
     # Convert all businesses to dictionaries
     businesses = []
@@ -624,13 +648,26 @@ def delete_appointment(request):
 
         # If provided appointmentId is invalid, return invalid object
         try:
-            appointment = Appointment.objects.get(token=appointment_id)
+            appointment = Appointment.objects.select_related('business_id').get(token=appointment_id)
+
+            subject = "Appointment from "+appointment.client_name+" has been canceled"
+            content = 'This is an email notifying you the cancellation of the appointment for '+appointment.client_name
+            authentication.send_email(appointment.business_id.email, subject, content)
+
+            subject = "Appointment Cancelation"
+            content = "This is an email confirming your cancellation for the appointment with {} on {} at {}"
+            content = content.format(appointment.business_id.name, appointment.date, appointment.start)
+            authentication.send_email(appointment.client_email, subject, content)
+
         except django.db.models.ObjectDoesNotExist:
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
         response_data['valid'] = True
 
         Appointment.objects.filter(token=appointment_id).delete()
+
+
+
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
@@ -732,12 +769,12 @@ def api_employees(request, business_id):
             employee_email = change['email']
             employee_phone = change['phone']
             employee_action = change['action']
-
+            employee_url = change['url']
 
             if employee_action == 'add':
 
                 employee = Employee(first=employee_first, last=employee_last,
-                email=employee_email, phone=employee_phone, works_at=business)
+                email=employee_email, phone=employee_phone, works_at=business, url=employee_url)
                 employee.save()
 
             else:
@@ -758,6 +795,17 @@ def api_employees(request, business_id):
     # Response
     return HttpResponse(json.dumps(response), content_type="application/json")
 
+################################################################################
+#   _____            _             _
+#  / ____|          | |           | |
+# | |     ___  _ __ | |_ __ _  ___| |_
+# | |    / _ \| '_ \| __/ _` |/ __| __|
+# | |___| (_) | | | | || (_| | (__| |_
+#  \_____\___/|_| |_|\__\__,_|\___|\__|
+#
+# These endpoints handle sending messages both to the main website and a
+# particular business
+################################################################################
 
 def contact_business(request, business_id):
     response = dict()
@@ -783,7 +831,24 @@ def contact_business(request, business_id):
 
         response['valid'] = True
     return HttpResponse(json.dumps(response), content_type="application/json")
+################################################################################
 
+################################################################################
+def contact_site(request):
+    response = dict()
+    response['valid'] = False
+
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+
+        name = body.get('name')
+        email = body.get('email')
+        message = body.get('message')
+
+        subject_client = "New message from "+name
+        content_client = 'Sender: '+name+'\nEmail: '+email+'\nMessage: '+message
+        authentication.send_email('petit2022nreply@outlook.com', subject_client, content_client)
 
 ################################################################################
 #  _____
@@ -937,6 +1002,7 @@ def enhanced_business_to_object(business):
     business_obj['id'] = business.id
     business_obj['name'] = business.name
     business_obj['email'] = business.email
+    business_obj['url'] = business.url
 
     return business_obj
 ################################################################################
@@ -957,6 +1023,7 @@ def business_to_object(business=None):
     business_obj['email'] = business.email
     business_obj['phone'] = business.phone
     business_obj['description'] = business.description
+    business_obj['url'] = business.url
 
     addresses = []
     for address in Address.objects.filter(business_id=business):
@@ -1005,6 +1072,7 @@ def appointment_to_object(appointment=None):
     response_data['provider'] = appointment.provider_id.first + " " + appointment.provider_id.last
     response_data['providerEmail'] = appointment.provider_id.email
     response_data['providerPhone'] = appointment.provider_id.phone
+    response_data['providerUrl'] = appointment.provider_id.url
     response_data['date'] = appointment.date
     response_data['start'] = appointment.start
     response_data['end'] = appointment.end
@@ -1053,6 +1121,7 @@ def employee_to_object(employee=None):
     employee_obj['last'] = employee.last
     employee_obj['email'] = employee.email
     employee_obj['phone'] = employee.phone
+    employee_obj['url'] = employee.url
 
     return employee_obj
 ################################################################################

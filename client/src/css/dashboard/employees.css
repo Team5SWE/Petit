@@ -41,6 +41,12 @@
   border-radius: 80%;
 }
 
+.emp-img-div{
+  display: flex;
+  justify-content: center;
+  padding-bottom: 15px;
+}
+
 .emp-btns{
   display: flex;
   flex-direction: column;
@@ -112,6 +118,10 @@
   padding: 0.5rem;
   width: 100%;
   box-sizing: border-box;
+}
+
+.url-input{
+  width: 100px;
 }
 
 .input-box{

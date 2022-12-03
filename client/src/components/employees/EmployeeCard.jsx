@@ -2,8 +2,23 @@ import {React, Component} from "react";
 import profile from "../../assets/default_employee.jpeg";
 
 export default class EmployeeCard extends Component{
+  constructor(props){
+    super(props);
+    this.state = {imageUrl: this.props.url}
+
+    this.handleImageError = this.handleImageError.bind(this);
+  }
+
+
+  handleImageError(){
+    this.setState({...this.state, imageUrl: ''})
+  }
+
 
   render(){
+
+    let hasUrl = this.state.imageUrl !== undefined && this.state.imageUrl !== '';
+
     return(
 
       <div class="employee">
@@ -11,7 +26,10 @@ export default class EmployeeCard extends Component{
         <div class="employee-box">
 
           <div class="emp-img-div">
-            <img class="emp-img" src={profile} alt=""/>
+            <div class="emp-img-container">
+              <img class="emp-img-adder"
+              src={ hasUrl ? this.state.imageUrl : profile} alt="" onError={this.handleImageError}/>
+            </div>
           </div>
 
           <div class="emp-desc">

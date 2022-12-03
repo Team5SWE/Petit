@@ -15,11 +15,13 @@ class SalonSite extends Component{
     super(props);
     const {id} = props.params;
     this.state = {businessData: null,
-    stage: 'waiting', busId: id, name: '', email: '', message: '', sending: false}
+    stage: 'waiting', busId: id, name: '', email: '', message: '', sending: false,
+    imageUrl: ''}
 
     this.handleChange = this.handleChange.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
 
+    this.handleImageError = this.handleImageError.bind(this);
   }
 
   componentDidMount() {
@@ -31,7 +33,7 @@ class SalonSite extends Component{
       .then(res => res.json())
       .then(res => {
         if(res.valid){
-          this.setState({...this.state, businessData: res, stage:'loaded'})
+          this.setState({...this.state, businessData: res, stage:'loaded', imageUrl: res.url})
         } else {
           this.setState({...this.state, stage: 'failed'})
         }
@@ -40,6 +42,10 @@ class SalonSite extends Component{
 
   handleChange(event){
     this.setState({...this.state, [event.target.name] : event.target.value})
+  }
+
+  handleImageError(){
+    this.setState({...this.state, imageUrl: ''})
   }
 
 
@@ -73,9 +79,7 @@ class SalonSite extends Component{
       body: JSON.stringify(data)
     }).then(this.setState({...this.state,
       sending: false, name: '', email: '', message: ''}));
-
   }
-
 
 
   render(){
@@ -90,6 +94,9 @@ class SalonSite extends Component{
         );
 
       case "loaded":
+
+      let hasUrl = this.state.imageUrl !== undefined && this.state.imageUrl !== '';
+
       return(
         <div>
           <Navbar/>
@@ -98,7 +105,8 @@ class SalonSite extends Component{
             <div class="salon-presentation-container salon-site-subsection">
 
               <div class="logo-img-container">
-                <img class="logo-img" src={logo} alt="logo"/>
+                <img class="logo-img" src={hasUrl ? this.state.imageUrl : logo} alt="logo"
+                onError={this.handleImageError}/>
               </div>
 
               <div class="salon-presentation-description">
@@ -135,7 +143,7 @@ class SalonSite extends Component{
 
               {this.state.businessData.employees?.map(employee => (
                 <EmployeeCard key={employee.id} specialty="Master Stylist" name={employee.name}
-                 email={employee.email}/>
+                 email={employee.email} url={employee.url}/>
               ))
               }
 

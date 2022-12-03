@@ -54,8 +54,9 @@
   gap: 15px;
 }
 
-.app-stripe-img{
+.app-stripe-img-container{
   width: 75px;
+  height: 75px;
 }
 
 
@@ -78,8 +79,9 @@
     font-size: 0.8rem;
   }
 
-  .app-stripe-img{
+  .app-stripe-img-container{
     width: 50px;
+    height: 50px;
   }
 
 }

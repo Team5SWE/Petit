@@ -49,6 +49,7 @@ class Business(models.Model):
     description = models.TextField()
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     views = models.IntegerField(default=0)
+    url = models.TextField(default='')
 
 class Service (models.Model):
     name = models.CharField(max_length=100)
@@ -63,6 +64,7 @@ class Employee(models.Model):
     email = models.CharField(max_length=50)
     phone = models.CharField(max_length=16)
     works_at = models.ForeignKey(Business, on_delete=models.CASCADE)
+    url = models.TextField(default='')
 
 
 # Full Address:
