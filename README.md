@@ -28,10 +28,10 @@ Or if you desire, install them manually on the python console
 3. Run development server by using command `python manage.py runserver`
 
 ### For Frontend
-1.Change directory to navigate inside the project
-2.Cd into client folder
-3.Run npm start
-4.Can connect using http://localhost:3000/
+1. Change directory to navigate inside the project
+2. Cd into client folder
+3. Run npm start
+4. Can connect using http://localhost:3000/
 
 Important!
 Both React and Django apps have to be running for a satisfactory result
