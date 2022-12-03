@@ -27,7 +27,7 @@ Guillermo Clara, Jisoo Park, Nga Vu, Aleeza Iftikhar, Bao Le
 Or if you desire, install them manually on the python console
 3. Run development server by using command `python manage.py runserver`
 
-###For Frontend
+### For Frontend
 1.Change directory to navigate inside the project
 2.Cd into client folder
 3.Run npm start
