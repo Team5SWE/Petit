@@ -3,7 +3,7 @@ Web application that provides an appointment system between salon business owner
 
 ## Tech Stack
 
-HTML, Python, JavaScript, Django, and MySQL, React  
+HTML, Python, JavaScript, Django, MySQL, React  
 
 ## Group Members
 
