@@ -22,10 +22,11 @@ Guillermo Clara, Jisoo Park, Nga Vu, Aleeza Iftikhar, Bao Le
 1. Clone the project using command `git clone https://github.com/Team5SWE/Petit.git `
 
 ### For Backend
-1. Change directory to navigate inside the project
+1. Change directory to navigate inside the project 
 2. Run command `pip install -r requirements.txt` to install all the libraries used by this project. 
 Or if you desire, install them manually on the python console
-3. Run development server by using command `python manage.py runserver`
+3. Make sure to add the .env file inside petit/petit/ folder
+4. Run development server by using command `python manage.py runserver`
 
 ### For Frontend
 1. Change directory to navigate inside the project
