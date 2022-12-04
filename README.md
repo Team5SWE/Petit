@@ -8,7 +8,7 @@ LIVE DEMO: https://gilded-jalebi-846bdf.netlify.app/
 
 ## Tech Stack
 
-HTML, Python, JavaScript, Django, MySQL, React  
+HTML/CSS, Python, JavaScript, Django, MySQL, React  
 
 ## Group Members
 
