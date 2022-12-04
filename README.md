@@ -1,6 +1,11 @@
 # Project
 Web application that provides an appointment system between salon business owners and clients
 
+## Live Demo
+This repo is configured for local usage (localhost)
+If you dont want to run anything visit our
+LIVE DEMO: https://gilded-jalebi-846bdf.netlify.app/
+
 ## Tech Stack
 
 HTML, Python, JavaScript, Django, MySQL, React  
